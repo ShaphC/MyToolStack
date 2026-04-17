@@ -1,0 +1,27 @@
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --card: #ffffff;
+  --border: #1d4ed8;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --text: #ffffff;
+  --card: #111111;
+  --border: #3b82f6;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), sans-serif;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
