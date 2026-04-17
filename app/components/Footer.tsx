@@ -23,7 +23,7 @@ export default function Footer() {
           {/* PRODUCT */}
           <div>
             <h4>Product</h4>
-            <p>Features</p>
+            <p >Features</p>
             <p>Pricing</p>
           </div>
 

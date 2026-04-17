@@ -10,6 +10,11 @@ export default function HomePage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
+    const scrollTo = (id: string) => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+    };
+
   useEffect(() => {
     setTimeout(() => setMounted(true), 100);
   }, []);
@@ -44,13 +49,16 @@ export default function HomePage() {
 
         <div style={styles.heroButtons}>
           <button
-            onClick={() => router.push("/signup")}
+            onClick={() => router.push("/login")}
             style={styles.cta}
           >
             Start Building Tools
           </button>
 
-          <button style={styles.secondaryBtn}>
+          <button 
+            onClick={() => scrollTo("features")}
+            style={styles.secondaryBtn}
+        >
             View Tools
           </button>
         </div>
@@ -118,7 +126,12 @@ export default function HomePage() {
 
             <p style={styles.mostPopular}>For Casual Users</p>
 
-            <button style={styles.cta}>Try Now</button>
+            <button 
+                onClick={() => router.push("/login")}
+                style={styles.cta}
+            >
+                Try Now
+            </button>
           </div>
 
           <div style={styles.proCard}>
@@ -156,7 +169,7 @@ export default function HomePage() {
         <h2>Stop wasting time on repetitive work</h2>
 
         <button
-          onClick={() => router.push("/signup")}
+          onClick={() => router.push("/login")}
           style={styles.cta}
         >
           Build Your First Tool
