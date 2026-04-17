@@ -16,7 +16,7 @@ export default function Navbar() {
     <nav style={styles.nav}>
       {/* LOGO */}
       <div style={styles.logo} onClick={() => router.push("/")}>
-        ⚡ ToolStack
+        ⚡ SimpleStack
       </div>
 
       {/* LINKS */}

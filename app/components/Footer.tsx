@@ -15,7 +15,7 @@ export default function Footer() {
               style={styles.logo}
               onClick={() => router.push("/")}
             >
-              ⚡ ToolStack
+              ⚡ SimpleStack
             </h4>
             {/* <p>Build your own internal tools faster.</p> */}
           </div>
@@ -48,7 +48,7 @@ export default function Footer() {
         </div>
 
         <p style={styles.copy}>
-          © {new Date().getFullYear()} ToolStack. All rights reserved.
+          © {new Date().getFullYear()} SimpleStack. All rights reserved.
         </p>
       </div>
     </footer>
