@@ -79,25 +79,25 @@ export default function HomePage() {
           <ToolCard
             title="Track client work without spreadsheets"
             desc="Log sessions, calculate totals, stay organized"
-            route="/time-tracker"
+            // route="/time-tracker"
           />
 
           <ToolCard
             title="Stop rewriting the same messages"
             desc="Create templates with variables and reuse instantly"
-            route="/message-repeater"
+            // route="/message-repeater"
           />
 
           <ToolCard
             title="Send secure info safely"
             desc="Share sensitive data with protected links"
-            route="/secure-link"
+            // route="/secure-link"
           />
 
           <ToolCard
             title="Generate secure codes instantly"
             desc="Create random numbers for workflows"
-            route="/number-generator"
+            // route="/number-generator"
           />
         </div>
       </section>
