@@ -123,7 +123,7 @@ export default function HomePage() {
 
           <div style={styles.proCard}>
             <h3>Pro</h3>
-            <p style={styles.price}>$10/mo</p>
+            <p style={styles.price}>$49.99/mo</p>
 
             <div>
               <div>✔ Unlimited tools</div>
