@@ -17,7 +17,7 @@ export default function Signup() {
       email,
       password,
       options: {
-        emailRedirectTo: "http://172.31.2.129:3000/auth/callback",
+        emailRedirectTo: "https://simplestack.vercel.app/auth/callback",
       },
     });
 
