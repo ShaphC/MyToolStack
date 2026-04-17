@@ -28,7 +28,7 @@ export default function UpgradePage() {
 
           <div style={styles.card}>
             <h2>Pro Plan</h2>
-            <p style={styles.price}>$10/month</p>
+            <p style={styles.price}>$49.99/month</p>
 
             <div style={styles.features}>
               <div>✔ Unlimited tools</div>
