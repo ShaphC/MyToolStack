@@ -3,15 +3,45 @@
   --text: #000000;
   --card: #ffffff;
   --border: #1d4ed8;
+  --muted: #6b7280;
+  --sectionAlt: #f9fafb;
+
+  /* 🌈 LIGHT GRADIENT */
+  --gradient: radial-gradient(
+    circle at 20% 20%,
+    rgba(29, 78, 216, 0.15),
+    transparent 40%
+  );
 }
 
+/* 🌙 DARK MODE */
 [data-theme="dark"] {
-  --bg: #0a0a0a;
-  --text: #ffffff;
-  --card: #111111;
+  --bg: #0b0f19;
+  --text: #f3f4f6;
+  --card: #111827;
   --border: #3b82f6;
+  --muted: #9ca3af;
+  --sectionAlt: #1d4ed8;
+
+  /* ✨ STRIPE-STYLE GRADIENT */
+  --gradient: radial-gradient(
+      circle at 20% 20%,
+      rgba(59, 130, 246, 0.25),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(139, 92, 246, 0.2),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(236, 72, 153, 0.15),
+      transparent 40%
+    );
 }
 
+/* 🌍 BASE */
 html, body {
   height: 100%;
   margin: 0;
@@ -19,19 +49,36 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-geist-sans), sans-serif;
-  transition: background 0.25s ease, color 0.25s ease;
 }
 
+/* 🧊 SMOOTH UI TRANSITIONS */
+body, button, input, div, nav {
+  transition: background 0.25s ease,
+              color 0.25s ease,
+              border 0.25s ease,
+              box-shadow 0.2s ease,
+              transform 0.1s ease;
+}
+
+/* 🌙 DARK NAVBAR FIX */
+[data-theme="dark"] nav {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+/* 📦 GLOBAL BOX MODEL */
 * {
   box-sizing: border-box;
 }
 
+/* 🔄 SPINNER */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
+/* 🚨 SHAKE (ERROR FEEDBACK) */
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-6px); }

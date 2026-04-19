@@ -106,8 +106,8 @@ const styles: any = {
     bottom: "20px",
     right: "20px",
     width: "340px",
-    background: "#ffffff",
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    border: "2px solid var(--border)",
     borderRadius: "14px",
     boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
     zIndex: 100,
@@ -123,7 +123,7 @@ const styles: any = {
     fontWeight: "bold",
     fontSize: "1rem",
     cursor: "pointer",
-    color: "#000000",
+    color: "var(--text)",
   },
 
   close: {
@@ -134,6 +134,7 @@ const styles: any = {
     background: "transparent",
     cursor: "pointer",
     fontSize: "1rem",
+    color: "var(--text)",
   },
 
   content: {
@@ -148,23 +149,24 @@ const styles: any = {
     fontSize: "1.3rem",
     fontWeight: "bold",
     marginBottom: "0.6rem",
-    color: "#000000",
+    color: "var(--muted)",
   },
 
   text: {
     fontSize: "1rem",
     marginBottom: "1rem",
-    color: "#000000",
+    color: "var(--muted)",
   },
 
   input: {
     width: "100%",
     padding: "0.7rem",
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    color: "var(--text)",
+    border: "2px solid var(--border)",
     borderRadius: "8px",
     marginBottom: "0.7rem",
     fontSize: "1rem",
-    color: "#000000",
   },
 
   button: {

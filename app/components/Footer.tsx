@@ -60,8 +60,8 @@ const styles: any = {
     borderTop: "1px solid #e5e7eb",
     marginTop: "3rem",
     padding: "3rem 2rem",
-    background: "#ffffff",
-    color: "#000000",
+    background: "var(--bg)",
+    color: "var(--text)",
   },
 
   container: {

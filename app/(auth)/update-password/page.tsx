@@ -121,7 +121,8 @@ const styles: any = {
     width: "100%",
     maxWidth: "380px",
     padding: "2rem",
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    border: "2px solid var(--border)",
     borderRadius: "12px",
     display: "flex",
     flexDirection: "column",
@@ -136,14 +137,16 @@ const styles: any = {
 
   subtitle: {
     textAlign: "center",
-    color: "#4b5563",
+    color: "var(--mute)",
     marginBottom: "1rem",
   },
 
   input: {
     padding: "0.75rem",
     paddingRight: "2.8rem",
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    color: "var(--text)",
+    border: "2px solid var(--border)",
     borderRadius: "8px",
   },
 

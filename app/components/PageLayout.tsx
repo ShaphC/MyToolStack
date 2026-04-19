@@ -28,8 +28,8 @@ const styles: any = {
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
-    background: "#ffffff",
-    color: "#000000",
+    background: "var(--bg)",
+    color: "var(--text)",
     fontFamily: "sans-serif",
   },
 
@@ -43,5 +43,7 @@ const styles: any = {
   container: {
     width: "100%",
     maxWidth: "1100px", // 🔥 centered layout
+    background: "var(--bg)",
+    color: "var(--text)",
   },
 };

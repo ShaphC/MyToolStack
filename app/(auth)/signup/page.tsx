@@ -84,7 +84,7 @@ export default function Signup() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
-                style={styles.inputWithIcon}
+                style={styles.input}
               />
 
               <button
@@ -164,6 +164,8 @@ const styles: any = {
   },
 
   container: {
+    background: "var(--bg)",
+    color: "var(--text)",
     flex: 1,
     display: "flex",
     alignItems: "center",
@@ -174,7 +176,8 @@ const styles: any = {
     width: "100%",
     maxWidth: "380px",
     padding: "2rem",
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    border: "2px solid var(--border)",
     borderRadius: "12px",
     display: "flex",
     flexDirection: "column",
@@ -189,14 +192,16 @@ const styles: any = {
 
   subtitle: {
     textAlign: "center",
-    color: "#4b5563",
+    color: "var(--muted)",
     marginBottom: "1rem",
   },
 
   input: {
     width: "100%",
     padding: "0.75rem",
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    color: "var(--text)",
+    border: "2px solid var(--border)",
     borderRadius: "8px",
   },
 
@@ -205,13 +210,13 @@ const styles: any = {
     width: "100%",
   },
 
-  inputWithIcon: {
-    width: "100%",
-    padding: "0.75rem",
-    paddingRight: "2.8rem",
-    border: "2px solid #1d4ed8",
-    borderRadius: "8px",
-  },
+  // inputWithIcon: {
+  //   width: "100%",
+  //   padding: "0.75rem",
+  //   paddingRight: "2.8rem",
+  //   border: "2px solid #1d4ed8",
+  //   borderRadius: "8px",
+  // },
 
   iconBtn: {
     position: "absolute",

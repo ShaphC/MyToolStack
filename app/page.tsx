@@ -215,8 +215,8 @@ function ToolCard({ title, desc, route }: any) {
 const styles: any = {
   page: {
     minHeight: "100vh",
-    background: "#ffffff",
-    color: "#000000",
+    background: "var(--bg)",
+    color: "var(--text)",
     fontFamily: "sans-serif",
   },
 
@@ -233,6 +233,8 @@ const styles: any = {
   },
 
   container: {
+    background: "var(--bg)",
+    color: "var(--text)",
     maxWidth: "1100px",
     margin: "0 auto",
     padding: "0 2rem",
@@ -275,12 +277,13 @@ const styles: any = {
   title: { fontSize: "3rem", marginBottom: "1rem" },
 
   subtitle: {
+    color: "var(--muted)",
     maxWidth: "600px",
     margin: "0 auto 1rem",
   },
 
   proof: {
-    color: "#6b7280",
+    color: "var(--muted)",
     marginBottom: "2rem",
   },
 
@@ -304,6 +307,7 @@ const styles: any = {
     padding: "0.8rem 1.4rem",
     borderRadius: "8px",
     background: "transparent",
+    color: "var(--text)",
   },
 
   section: {
@@ -313,7 +317,7 @@ const styles: any = {
 
   sectionAlt: {
     padding: "4rem 2rem",
-    background: "#f9fafb",
+    background: "var(--sectionAlt)",
     textAlign: "center",
   },
 
@@ -335,7 +339,8 @@ const styles: any = {
   },
 
   card: {
-    border: "2px solid #1d4ed8",
+    background: "var(--card)",
+    border: "2px solid var(--border)",
     borderRadius: "12px",
     padding: "1rem",
     transition: "all 0.2s ease",
