@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Button from "./ui/Button";
 
 export default function EmailCapture() {
   const [visible, setVisible] = useState(false);
@@ -88,9 +89,9 @@ export default function EmailCapture() {
               style={styles.input}
             />
 
-            <button onClick={handleSubmit} style={styles.button}>
+            <Button onClick={handleSubmit} style={styles.button}>
               Send me the course
-            </button>
+            </Button>
 
             {status && <p style={styles.status}>{status}</p>}
           </div>

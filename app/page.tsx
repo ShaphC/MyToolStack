@@ -5,19 +5,39 @@ import { useEffect, useState } from "react";
 import Navbar from "@/app/components/NavBar";
 import EmailCapture from "@/app/components/EmailCapture";
 import Footer from "@/app/components/Footer";
+import Button from "./components/ui/Button";
 
 export default function HomePage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
 
     const scrollTo = (id: string) => {
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
-  useEffect(() => {
-    setTimeout(() => setMounted(true), 100);
-  }, []);
+    useEffect(() => {
+        setTimeout(() => setMounted(true), 100);
+    }, []);
+
+    useEffect(() => {
+        if (window.location.hash) {
+            const id = window.location.hash.replace("#", "");
+            
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+        }
+    }, []);
 
   return (
     <main style={styles.page}>
@@ -48,19 +68,19 @@ export default function HomePage() {
         </p>
 
         <div style={styles.heroButtons}>
-          <button
+          <Button
             onClick={() => router.push("/login")}
             style={styles.cta}
           >
             Start Building Tools
-          </button>
+          </Button>
 
-          <button 
+          <Button 
             onClick={() => scrollTo("features")}
             style={styles.secondaryBtn}
         >
             View Tools
-          </button>
+          </Button>
         </div>
       </section>
 
@@ -83,7 +103,7 @@ export default function HomePage() {
       <section id="features" style={styles.section}>
         <h2 style={styles.sectionTitle}>Your Toolkit</h2>
 
-        <div style={styles.grid}>
+        <div style={isMobile ? styles.gridMobile : styles.gridDesktop}>
           <ToolCard
             title="Track client work without spreadsheets"
             desc="Log sessions, calculate totals, stay organized"
@@ -126,12 +146,12 @@ export default function HomePage() {
 
             <p style={styles.mostPopular}>For Casual Users</p>
 
-            <button 
+            <Button 
                 onClick={() => router.push("/login")}
                 style={styles.cta}
             >
                 Try Now
-            </button>
+            </Button>
           </div>
 
           <div style={styles.proCard}>
@@ -146,12 +166,12 @@ export default function HomePage() {
 
             <p style={styles.mostPopular}>Most Popular</p>
 
-            <button
+            <Button
                 onClick={() => router.push("/upgrade")}
                 style={styles.cta}
                 >
                 Upgrade
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -168,12 +188,12 @@ export default function HomePage() {
       <section style={styles.ctaSection}>
         <h2>Stop wasting time on repetitive work</h2>
 
-        <button
+        <Button
           onClick={() => router.push("/login")}
           style={styles.cta}
         >
           Build Your First Tool
-        </button>
+        </Button>
       </section>
 
       {/* FOOTER */}
@@ -329,23 +349,33 @@ const styles: any = {
     flexWrap: "wrap",
   },
 
-  sectionTitle: { fontSize: "1.8rem" },
+    sectionTitle: { fontSize: "1.8rem" },
 
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-    gap: "1.5rem",
-    marginTop: "2rem",
-  },
+    gridDesktop: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.5rem",
+        marginTop: "2rem",
+    },
 
-  card: {
-    background: "var(--card)",
-    border: "2px solid var(--border)",
-    borderRadius: "12px",
-    padding: "1rem",
-    transition: "all 0.2s ease",
-    cursor: "pointer",
-  },
+    gridMobile: {
+        display: "flex",
+        gap: "1rem",
+        overflowX: "auto",
+        paddingBottom: "1rem",
+        marginTop: "2rem",
+        scrollSnapType: "x mandatory",
+    },
+
+    card: {
+        flex: "0 0 260px",
+        scrollSnapAlign: "start",
+        background: "var(--card)",
+        border: "2px solid var(--border)",
+        borderRadius: "12px",
+        padding: "1rem",
+        cursor: "pointer",
+    },
 
   imagePlaceholder: {
     height: "120px",
@@ -359,7 +389,7 @@ const styles: any = {
 
   pricingGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
     gap: "2rem",
     marginTop: "2rem",
   },
