@@ -15,7 +15,7 @@ export default function ResetPassword() {
     setLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://simplestack.verce.app/update-password",
+      redirectTo: "https://simplestack.vercel.app//update-password",
     });
 
     setLoading(false);
