@@ -260,7 +260,7 @@ const styles: any = {
 
   forgot: {
     fontSize: "0.85rem",
-    color: "#1d4ed8",
+    color: "var(--text)",
     cursor: "pointer",
     textAlign: "right",
     marginTop: "-0.25rem",
