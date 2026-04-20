@@ -23,7 +23,7 @@ export default function DashboardLayout({
       // 🔐 GET USER
       const { data } = await supabase.auth.getUser();
 
-      // ⏳ Ensure spinner shows for at least 2s
+      // ⏳ Ensure spinner shows for at least 1s
       const elapsed = Date.now() - start;
       const remaining = 1000 - elapsed;
       if (remaining > 0) {
@@ -170,8 +170,8 @@ const styles: any = {
   wrapper: {
     display: "flex",
     minHeight: "100vh",
-    background: "#ffffff",
-    color: "#000000",
+    background: "var(--bg)",
+    color: "var(--text)",
     fontFamily: "sans-serif",
   },
 
@@ -203,7 +203,7 @@ const styles: any = {
     padding: "0.5rem",
     borderRadius: "6px",
     textDecoration: "none",
-    color: "#000000",
+    color: "var(--text)",
     transition: "all 0.15s ease",
   },
 
@@ -218,7 +218,7 @@ const styles: any = {
 
   user: {
     fontSize: "0.85rem",
-    color: "#4b5563",
+    color: "var(--text)",
     marginBottom: "0.5rem",
   },
 
@@ -246,8 +246,8 @@ const styles: any = {
     justifyContent: "center",
     alignItems: "center",
     gap: "1rem",
-    background: "#ffffff",
-    color: "#000000",
+    background: "var(--bg)",
+    color: "var(--text)",
   },
 
   spinner: {

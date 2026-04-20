@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import PageLayout from "../components/PageLayout";
 
 const tools = [
   {
@@ -37,6 +38,7 @@ const tools = [
 
 export default function Home() {
   return (
+    <PageLayout>
     <main style={styles.container}>
       <h1 style={styles.title}>Toolbox</h1>
       <p style={styles.subtitle}>
@@ -56,15 +58,16 @@ export default function Home() {
         ))}
       </div>
     </main>
+    </PageLayout>
   );
 }
 
 const styles: any = {
   container: {
     padding: "3rem",
-    background: "#fff",
+    background: "var(--bg)",
     minHeight: "100vh",
-    color: "#0a0a0a",
+    color: "var(--text)",
     fontFamily: "sans-serif",
   },
 
@@ -75,7 +78,7 @@ const styles: any = {
 
   subtitle: {
     marginBottom: "2rem",
-    color: "#555",
+    color: "var(--muted)",
   },
 
   grid: {
@@ -89,6 +92,6 @@ const styles: any = {
     padding: "1.5rem",
     borderRadius: "12px",
     textDecoration: "none",
-    color: "#0a0a0a",
+    color: "var(--text)",
   },
 };

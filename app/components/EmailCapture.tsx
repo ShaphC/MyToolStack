@@ -150,7 +150,7 @@ const styles: any = {
     fontSize: "1.3rem",
     fontWeight: "bold",
     marginBottom: "0.6rem",
-    color: "var(--muted)",
+    color: "var(--text)",
   },
 
   text: {
