@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { useRouter } from "next/navigation";
 import PageLayout from "@/app/components/PageLayout";
+import { useToast } from "@/app/context/ToastContext";
 
 export default function UpdatePassword() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function UpdatePassword() {
   const [loading, setLoading] = useState(false);
   const [validSession, setValidSession] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const { showToast } = useToast();
 
   // 🔐 CHECK TOKEN SESSION
   useEffect(() => {
@@ -50,6 +53,12 @@ export default function UpdatePassword() {
       setErrorMsg(error.message);
       return;
     }
+
+    showToast("Password updated successfully!", "success");
+
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 1200);
 
     router.push("/dashboard");
   };

@@ -5,6 +5,7 @@ import { supabase } from "@/app/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PageLayout from "@/app/components/PageLayout";
+import { useToast } from "@/app/context/ToastContext";
 
 export default function Login() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [shake, setShake] = useState(false);
+
+  const { showToast } = useToast();
 
   useEffect(() => {
     const saved = localStorage.getItem("saved_email");
@@ -53,8 +56,11 @@ export default function Login() {
 
     if (error) {
       triggerError("Wrong email or password");
+      showToast("Wrong email or password", "error");
       return;
     }
+
+    showToast("Welcome back!", "success");
 
     router.push("/dashboard");
   };

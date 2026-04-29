@@ -123,6 +123,13 @@ export default function DashboardLayout({
             icon="🔐"
             active={pathname === "/apps/message-repeater"}
           />
+
+          <SidebarLink
+            href="/apps/link-bridge"
+            label="LinkBrdige"
+            icon="🔐"
+            active={pathname === "/apps/link-bridge"}
+          />
         </nav>
 
         <div style={{ marginTop: "2rem" }}>

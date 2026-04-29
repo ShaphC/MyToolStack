@@ -34,6 +34,12 @@ const tools = [
     description: "Create reusable templates foe messages to send",
     image: "/images/message.png",
   },
+  {
+    name: "LinkBridge",
+    slug: "link-bridge",
+    description: "Share links without overthinking.",
+    image: "/images/bridge.png",
+  },
 ];
 
 export default function Home() {
