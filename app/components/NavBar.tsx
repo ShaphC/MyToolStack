@@ -126,12 +126,12 @@ export default function Navbar() {
               Improvements
             </button>
 
-            <button
+            {/* <button
               onClick={() => router.push("/contact")}
               style={styles.link}
             >
               Contact
-            </button>
+            </button> */}
           </>
         ) : (
           <>

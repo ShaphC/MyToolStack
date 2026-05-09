@@ -272,6 +272,23 @@ export default function HomePage() {
         </Button>
       </section>
 
+      {/* CONTACT */}
+      {/* <section id="contact" style={styles.contactSection}>
+        <h2 style={styles.sectionTitle}>Contact</h2>
+
+        <p style={styles.contactText}>
+          Have an idea, issue, or app request?
+          Reach out anytime.
+        </p>
+
+        <Button
+          onClick={() => router.push("/contact")}
+          style={styles.cta}
+        >
+          Contact Us
+        </Button>
+      </section> */}
+
       {/* FOOTER */}
       <Footer />
       </div>
@@ -576,5 +593,17 @@ const styles: any = {
 
   improvementText: {
     lineHeight: 1.5,
+  },
+
+  contactSection: {
+    padding: "5rem 2rem",
+    textAlign: "center",
+    borderTop: "1px solid var(--border)",
+  },
+
+  contactText: {
+    color: "var(--muted)",
+    marginTop: "1rem",
+    marginBottom: "2rem",
   },
 };
