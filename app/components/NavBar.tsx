@@ -282,14 +282,14 @@ const styles: any = {
   nav: {
     position: "sticky",
     top: 0,
-    zIndex: 100,
+    zIndex: 50,
     display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
-    padding: "1rem 2rem",
-    borderBottom: "1px solid rgba(255,255,255,0.08)",
+    alignItems: "center",
+    padding: "1rem 1.5rem",
+    background: "var(--bg)",
+    borderBottom: "1px solid rgba(0,0,0,0.08)",
     backdropFilter: "blur(10px)",
-    background: "rgba(0,0,0,0.5)",
   },
 
   logo: {
