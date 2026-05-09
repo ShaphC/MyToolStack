@@ -6,11 +6,13 @@ import Navbar from "@/app/components/NavBar";
 import EmailCapture from "@/app/components/EmailCapture";
 import Footer from "@/app/components/Footer";
 import Button from "./components/ui/Button";
+import { supabase } from "@/app/lib/supabase";
 
 export default function HomePage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [improvements, setImprovements] = useState<any[]>([]);
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth < 768);
@@ -38,6 +40,20 @@ export default function HomePage() {
             }, 100);
         }
     }, []);
+
+    useEffect(() => {
+      fetchImprovements();
+    }, []);
+
+    const fetchImprovements = async () => {
+      const { data } = await supabase
+        .from("improvements")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+      setImprovements(data || []);
+    };
 
   return (
     <main style={styles.page}>
@@ -128,6 +144,66 @@ export default function HomePage() {
             // route="/number-generator"
           />
         </div>
+      </section>
+
+      {/* IMPROVEMENTS */}
+      <section id="improvements" style={styles.section}>
+        <h2 style={styles.sectionTitle}>
+          🚀 Latest Improvements
+        </h2>
+
+        <p style={styles.sectionSubtitle}>
+          SimpleStack is actively being improved every week.
+        </p>
+
+        <div style={styles.improvementsFeed}>
+          {improvements.map((item, index) => (
+            <div
+              key={item.id}
+              style={{
+                ...styles.improvementItem,
+                borderLeft: `6px solid ${item.color}`,
+                background:
+                  index % 2 === 0
+                    ? "rgba(255,255,255,0.03)"
+                    : "rgba(255,255,255,0.05)",
+              }}
+            >
+              <div style={styles.improvementTop}>
+                <span
+                  style={{
+                    ...styles.improvementDot,
+                    background: item.color,
+                  }}
+                />
+
+                <span style={styles.improvementDate}>
+                  {new Date(item.created_at).toLocaleDateString()}
+                </span>
+              </div>
+
+              <div style={styles.improvementText}>
+                {item.text}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          onClick={async () => {
+            const { data } = await supabase.auth.getUser();
+
+            if (!data.user) {
+              router.push("/login?redirect=/improvements");
+              return;
+            }
+
+            router.push("/improvements");
+          }}
+          style={styles.secondaryBtn}
+        >
+          View Full Changelog
+        </Button>
       </section>
 
       {/* PRICING */}
@@ -349,33 +425,33 @@ const styles: any = {
     flexWrap: "wrap",
   },
 
-    sectionTitle: { fontSize: "1.8rem" },
+  sectionTitle: { fontSize: "1.8rem" },
 
-    gridDesktop: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "1.5rem",
-        marginTop: "2rem",
-    },
+  gridDesktop: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+      gap: "1.5rem",
+      marginTop: "2rem",
+  },
 
-    gridMobile: {
-        display: "flex",
-        gap: "1rem",
-        overflowX: "auto",
-        paddingBottom: "1rem",
-        marginTop: "2rem",
-        scrollSnapType: "x mandatory",
-    },
+  gridMobile: {
+      display: "flex",
+      gap: "1rem",
+      overflowX: "auto",
+      paddingBottom: "1rem",
+      marginTop: "2rem",
+      scrollSnapType: "x mandatory",
+  },
 
-    card: {
-        flex: "0 0 260px",
-        scrollSnapAlign: "start",
-        background: "var(--card)",
-        border: "2px solid var(--border)",
-        borderRadius: "12px",
-        padding: "1rem",
-        cursor: "pointer",
-    },
+  card: {
+      flex: "0 0 260px",
+      scrollSnapAlign: "start",
+      background: "var(--card)",
+      border: "2px solid var(--border)",
+      borderRadius: "12px",
+      padding: "1rem",
+      cursor: "pointer",
+  },
 
   imagePlaceholder: {
     height: "120px",
@@ -456,5 +532,49 @@ const styles: any = {
   copy: {
     textAlign: "center",
     color: "#6b7280",
+  },
+
+  sectionSubtitle: {
+    color: "var(--muted)",
+    marginBottom: "2rem",
+  },
+
+  improvementsFeed: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+    marginTop: "2rem",
+    marginBottom: "2rem",
+    maxWidth: "800px",
+    marginInline: "auto",
+  },
+
+  improvementItem: {
+    padding: "1rem",
+    borderRadius: "12px",
+    textAlign: "left",
+    transition: "all 0.2s ease",
+  },
+
+  improvementTop: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    marginBottom: "0.5rem",
+  },
+
+  improvementDot: {
+    width: "10px",
+    height: "10px",
+    borderRadius: "50%",
+  },
+
+  improvementDate: {
+    fontSize: "0.8rem",
+    color: "var(--muted)",
+  },
+
+  improvementText: {
+    lineHeight: 1.5,
   },
 };

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PageLayout from "@/app/components/PageLayout";
 import { useToast } from "@/app/context/ToastContext";
+import { useSearchParams } from "next/navigation";
 
 export default function Login() {
   const router = useRouter();
@@ -19,6 +20,10 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [shake, setShake] = useState(false);
+  const searchParams = useSearchParams();
+
+  const redirect =
+    searchParams.get("redirect") || "/dashboard";
 
   const { showToast } = useToast();
 
@@ -62,7 +67,7 @@ export default function Login() {
 
     showToast("Welcome back!", "success");
 
-    router.push("/dashboard");
+    router.push(redirect);
   };
 
   const triggerError = (msg: string) => {
