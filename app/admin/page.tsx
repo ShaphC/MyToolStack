@@ -22,16 +22,15 @@ export default function AdminPage() {
 
     const user = authData.user;
 
-    console.log(user)
-
     if (!user) {
       router.push("/login");
       return;
     }
 
-    const { data: profile, error } = await supabase
-        .from("profiles")
-        .select("role")
+    const { data: adminData, error } = await supabase
+        .from("admins")
+        .select("*")
+        .eq("user_id", user.id)
         .single();
 
     if (error) {
@@ -39,12 +38,10 @@ export default function AdminPage() {
         return;
     }
 
-    if (profile?.role !== "admin") {
+    if (!adminData) {
         router.push("/dashboard");
         return;
     }
-
-    console.log(profile)
 
     setAuthorized(true);
 
@@ -88,7 +85,7 @@ export default function AdminPage() {
               <div key={user.id} style={styles.userCard}>
                 <div>
                   <div style={styles.userId}>
-                    {user.id}
+                    {user.email}
                   </div>
 
                   <div style={styles.meta}>
