@@ -6,71 +6,105 @@ import { useRouter } from "next/navigation";
 import PageLayout from "@/app/components/PageLayout";
 
 export default function AdminPage() {
-  const router = useRouter();
+    const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
-  const [authorized, setAuthorized] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [authorized, setAuthorized] = useState(false);
 
-  const [users, setUsers] = useState<any[]>([]);
+    const [users, setUsers] = useState<any[]>([]);
+    const [contacts, setContacts] = useState<any[]>([]);
+    const [requests, setRequests] = useState<any[]>([]);    
 
-  useEffect(() => {
-    checkAdmin();
-  }, []);
+    useEffect(() => {
+        checkAdmin();
+    }, []);
 
-  const checkAdmin = async () => {
-    const { data: authData } = await supabase.auth.getUser();
+    const checkAdmin = async () => {
+        const { data: authData } = await supabase.auth.getUser();
 
-    const user = authData.user;
+        const user = authData.user;
 
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+        if (!user) {
+        router.push("/login");
+        return;
+        }
 
-    const { data: adminData, error } = await supabase
-        .from("admins")
+        const { data: adminData, error } = await supabase
+            .from("admins")
+            .select("*")
+            .eq("user_id", user.id)
+            .single();
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        if (!adminData) {
+            router.push("/dashboard");
+            return;
+        }
+
+        setAuthorized(true);
+
+        await Promise.all([
+          fetchUsers(),
+          fetchContacts(),
+          fetchRequests(),
+        ]);
+
+        setLoading(false);
+    };
+
+    const fetchContacts = async () => {
+      const { data, error } = await supabase
+        .from("contact_messages")
         .select("*")
-        .eq("user_id", user.id)
-        .single();
+        .order("created_at", { ascending: false });
 
-    if (error) {
+      if (error) {
         console.error(error);
         return;
-    }
+      }
 
-    if (!adminData) {
-        router.push("/dashboard");
+      setContacts(data || []);
+    };
+
+    const fetchRequests = async () => {
+      const { data, error } = await supabase
+        .from("app_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(error);
         return;
+      }
+
+      setRequests(data || []);
+    };
+
+    const fetchUsers = async () => {
+        const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+            setUsers(data || []);
+            console.log(data);
+        };
+
+        if (loading) {
+            return (
+            <PageLayout>
+                <main style={styles.center}>
+                <p>Loading...</p>
+                </main>
+            </PageLayout>
+        );
     }
 
-    setAuthorized(true);
-
-    fetchUsers();
-
-    setLoading(false);
-  };
-
-  const fetchUsers = async () => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    setUsers(data || []);
-    console.log(data);
-  };
-
-  if (loading) {
-    return (
-      <PageLayout>
-        <main style={styles.center}>
-          <p>Loading...</p>
-        </main>
-      </PageLayout>
-    );
-  }
-
-  if (!authorized) return null;
+    if (!authorized) return null;
 
   return (
     <PageLayout>
@@ -99,6 +133,50 @@ export default function AdminPage() {
                   <div style={styles.meta}>
                     Admin: {user.is_admin ? "Yes" : "No"}
                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={styles.card}>
+          <h2>Contact Messages</h2>
+
+          <div style={styles.list}>
+            {contacts.map((msg) => (
+              <div key={msg.id} style={styles.userCard}>
+                <div style={styles.userId}>
+                  {msg.email}
+                </div>
+
+                <div style={styles.meta}>
+                  {msg.subject}
+                </div>
+
+                <div style={styles.message}>
+                  {msg.message}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={styles.card}>
+          <h2>App Requests</h2>
+
+          <div style={styles.list}>
+            {requests.map((req) => (
+              <div key={req.id} style={styles.userCard}>
+                <div style={styles.userId}>
+                  {req.email}
+                </div>
+
+                <div style={styles.meta}>
+                  {req.title}
+                </div>
+
+                <div style={styles.message}>
+                  {req.request}
                 </div>
               </div>
             ))}
@@ -159,5 +237,11 @@ const styles: any = {
     color: "var(--muted)",
     marginTop: "0.25rem",
     fontSize: "0.9rem",
+  },
+
+  message: {
+    marginTop: "0.75rem",
+    lineHeight: 1.5,
+    whiteSpace: "pre-wrap",
   },
 };
