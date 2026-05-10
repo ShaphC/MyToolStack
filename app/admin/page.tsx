@@ -106,85 +106,98 @@ export default function AdminPage() {
 
     if (!authorized) return null;
 
-  return (
-    <PageLayout>
-      <main style={styles.container}>
-        <h1 style={styles.title}>Admin Dashboard</h1>
+return (
+  <PageLayout>
+    <main style={styles.container}>
+      <h1 style={styles.title}>Admin Dashboard</h1>
 
-        <div style={styles.card}>
-          <h2>Users</h2>
+      <div style={styles.dashboardGrid}>
+        
+        {/* LEFT COLUMN */}
+        <div style={styles.leftColumn}>
+          <div style={styles.card}>
+            <h2>Users</h2>
 
-          <div style={styles.list}>
-            {users.map((user) => (
-              <div key={user.id} style={styles.userCard}>
-                <div>
+            <div style={styles.list}>
+              {users.map((user) => (
+                <div key={user.id} style={styles.userCard}>
+                  <div>
+                    <div style={styles.userId}>
+                      {user.email}
+                    </div>
+
+                    <div style={styles.meta}>
+                      Plan: {user.plan || "free"}
+                    </div>
+
+                    <div style={styles.meta}>
+                      Status: {user.status || "active"}
+                    </div>
+
+                    <div style={styles.meta}>
+                      Admin: {user.is_admin ? "Yes" : "No"}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div style={styles.rightColumn}>
+          
+          {/* APP REQUESTS */}
+          <div style={styles.card}>
+            <h2>App Requests</h2>
+
+            <div style={styles.list}>
+              {requests.map((req) => (
+                <div key={req.id} style={styles.userCard}>
                   <div style={styles.userId}>
-                    {user.email}
+                    {req.email}
                   </div>
 
                   <div style={styles.meta}>
-                    Plan: {user.plan || "free"}
+                    {req.title}
+                  </div>
+
+                  <div style={styles.message}>
+                    {req.request}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CONTACTS */}
+          <div style={styles.card}>
+            <h2>Contact Messages</h2>
+
+            <div style={styles.list}>
+              {contacts.map((msg) => (
+                <div key={msg.id} style={styles.userCard}>
+                  <div style={styles.userId}>
+                    {msg.email}
                   </div>
 
                   <div style={styles.meta}>
-                    Status: {user.status || "active"}
+                    {msg.subject}
                   </div>
 
-                  <div style={styles.meta}>
-                    Admin: {user.is_admin ? "Yes" : "No"}
+                  <div style={styles.message}>
+                    {msg.message}
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
         </div>
-
-        <div style={styles.card}>
-          <h2>Contact Messages</h2>
-
-          <div style={styles.list}>
-            {contacts.map((msg) => (
-              <div key={msg.id} style={styles.userCard}>
-                <div style={styles.userId}>
-                  {msg.email}
-                </div>
-
-                <div style={styles.meta}>
-                  {msg.subject}
-                </div>
-
-                <div style={styles.message}>
-                  {msg.message}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div style={styles.card}>
-          <h2>App Requests</h2>
-
-          <div style={styles.list}>
-            {requests.map((req) => (
-              <div key={req.id} style={styles.userCard}>
-                <div style={styles.userId}>
-                  {req.email}
-                </div>
-
-                <div style={styles.meta}>
-                  {req.title}
-                </div>
-
-                <div style={styles.message}>
-                  {req.request}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    </PageLayout>
-  );
+      </div>
+    </main>
+  </PageLayout>
+);
 }
 
 const styles: any = {
@@ -196,7 +209,7 @@ const styles: any = {
   },
 
   container: {
-    maxWidth: "1000px",
+    maxWidth: "1300px",
     margin: "0 auto",
     padding: "2rem",
   },
@@ -212,6 +225,7 @@ const styles: any = {
     borderRadius: "12px",
     padding: "1.5rem",
     background: "var(--card)",
+    overflow: "hidden",
   },
 
   list: {
@@ -219,6 +233,9 @@ const styles: any = {
     flexDirection: "column",
     gap: "1rem",
     marginTop: "1rem",
+    maxHeight: "70vh",
+    overflowY: "auto",
+    paddingRight: "0.25rem",
   },
 
   userCard: {
@@ -243,5 +260,23 @@ const styles: any = {
     marginTop: "0.75rem",
     lineHeight: 1.5,
     whiteSpace: "pre-wrap",
+  },
+
+  dashboardGrid: {
+    display: "grid",
+    gridTemplateColumns: "1.1fr 0.9fr",
+    gap: "1.5rem",
+    alignItems: "start",
+  },
+
+  leftColumn: {
+    display: "flex",
+    flexDirection: "column",
+  },
+
+  rightColumn: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
   },
 };
