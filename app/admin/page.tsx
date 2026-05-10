@@ -29,18 +29,22 @@ export default function AdminPage() {
       return;
     }
 
-    // const { data: profile } = await supabase
-    //   .from("profiles")
-    //   .select("is_admin")
-    //   .eq("id", user.id)
-    //   .single();
+    const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .single();
 
-    // if (!profile?.is_admin) {
-    //   router.push("/admin");
-    //   return;
-    // }
+    if (error) {
+        console.error(error);
+        return;
+    }
 
-    // console.log(profile)
+    if (profile?.role !== "admin") {
+        router.push("/dashboard");
+        return;
+    }
+
+    console.log(profile)
 
     setAuthorized(true);
 
