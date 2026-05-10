@@ -128,6 +128,7 @@ const styles: any = {
     padding: "1rem",
     borderRadius: "12px",
     transition: "all 0.2s ease",
+    background: "var(--bg)"
   },
 
   itemTop: {

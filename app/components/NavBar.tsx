@@ -54,19 +54,46 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
+
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     checkUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const checkUser = async () => {
     const { data } = await supabase.auth.getUser();
-    setLoggedIn(!!data.user);
+
+    if (!data.user) {
+      setLoggedIn(false);
+      setIsAdmin(false);
+      return;
+    }
+
+    setLoggedIn(true);
+
+    // ADMIN CHECK
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    setIsAdmin(profile?.role == 'admin');
   };
 
   const logout = async () => {
     await supabase.auth.signOut();
+
     router.push("/");
   };
 
@@ -87,7 +114,7 @@ export default function Navbar() {
 
   return (
     <nav style={styles.nav}>
-      {/* LOGO */}
+      {/* LEFT */}
       <div
         style={styles.logo}
         onClick={() => {
@@ -101,7 +128,7 @@ export default function Navbar() {
         ⚡ SimpleStack
       </div>
 
-      {/* CENTER LINKS */}
+      {/* CENTER */}
       <div style={styles.centerLinks}>
         {!loggedIn ? (
           <>
@@ -126,12 +153,12 @@ export default function Navbar() {
               Improvements
             </button>
 
-            {/* <button
-              onClick={() => router.push("/contact")}
+            <button
+              onClick={() => scrollTo("contact")}
               style={styles.link}
             >
               Contact
-            </button> */}
+            </button>
           </>
         ) : (
           <>
@@ -162,11 +189,20 @@ export default function Navbar() {
             >
               Contact
             </button>
+
+            {isAdmin && (
+              <button
+                onClick={() => router.push("/admin")}
+                style={styles.mobileLink}
+              >
+                Admin
+              </button>
+            )}
           </>
         )}
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       <div style={styles.right}>
         <ThemeToggle />
 
@@ -238,6 +274,38 @@ export default function Navbar() {
               >
                 Improvements
               </button>
+
+              <button
+                onClick={() => {
+                  scrollTo("contact");
+                  setOpen(false);
+                }}
+                style={styles.mobileLink}
+              >
+                Contact
+              </button>
+
+              <div style={styles.mobileAuth}>
+                <button
+                  onClick={() => {
+                    router.push("/login");
+                    setOpen(false);
+                  }}
+                  style={styles.mobileLogin}
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={() => {
+                    router.push("/signup");
+                    setOpen(false);
+                  }}
+                  style={styles.mobileSignup}
+                >
+                  Sign Up
+                </button>
+              </div>
             </>
           ) : (
             <>
@@ -270,6 +338,38 @@ export default function Navbar() {
               >
                 Requests
               </button>
+
+              <button
+                onClick={() => {
+                  router.push("/contact");
+                  setOpen(false);
+                }}
+                style={styles.mobileLink}
+              >
+                Contact
+              </button>
+
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    router.push("/admin");
+                    setOpen(false);
+                  }}
+                  style={styles.mobileLink}
+                >
+                  Admin
+                </button>
+              )}
+
+              <button
+                onClick={() => {
+                  logout();
+                  setOpen(false);
+                }}
+                style={styles.mobileLogout}
+              >
+                Logout
+              </button>
             </>
           )}
         </div>
@@ -282,36 +382,37 @@ const styles: any = {
   nav: {
     position: "sticky",
     top: 0,
-    zIndex: 50,
+    zIndex: 100,
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "space-between",
     padding: "1rem 1.5rem",
     background: "var(--bg)",
+    backdropFilter: "blur(12px)",
     borderBottom: "1px solid rgba(0,0,0,0.08)",
-    backdropFilter: "blur(10px)",
   },
 
   logo: {
     fontWeight: "bold",
+    fontSize: "1.1rem",
     cursor: "pointer",
-    minWidth: "160px",
+    minWidth: "170px",
   },
 
   centerLinks: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "1.5rem",
     flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "1.75rem",
   },
 
   right: {
     display: "flex",
     alignItems: "center",
-    gap: "0.75rem",
-    minWidth: "160px",
     justifyContent: "flex-end",
+    gap: "0.75rem",
+    minWidth: "170px",
   },
 
   link: {
@@ -320,6 +421,7 @@ const styles: any = {
     color: "var(--text)",
     cursor: "pointer",
     fontSize: "0.95rem",
+    transition: "0.2s ease",
   },
 
   login: {
@@ -338,12 +440,13 @@ const styles: any = {
     padding: "0.5rem 1rem",
     borderRadius: "8px",
     cursor: "pointer",
+    fontWeight: "bold",
   },
 
   mobileMenu: {
     display: "none",
+    fontSize: "1.5rem",
     cursor: "pointer",
-    fontSize: "1.4rem",
   },
 
   mobileDropdown: {
@@ -355,8 +458,10 @@ const styles: any = {
     borderBottom: "1px solid rgba(255,255,255,0.08)",
     display: "flex",
     flexDirection: "column",
-    padding: "1rem",
+    alignItems: "center",
     gap: "1rem",
+    padding: "1.5rem 1rem",
+    zIndex: 999,
   },
 
   mobileLink: {
@@ -364,7 +469,75 @@ const styles: any = {
     border: "none",
     color: "var(--text)",
     fontSize: "1rem",
-    textAlign: "center",
     cursor: "pointer",
   },
+
+  mobileAdmin: {
+    background: "#1d4ed8",
+    color: "#fff",
+    border: "none",
+    padding: "0.7rem 1rem",
+    borderRadius: "8px",
+    cursor: "pointer",
+    width: "100%",
+    maxWidth: "240px",
+    fontWeight: "bold",
+  },
+
+  mobileLogout: {
+    background: "transparent",
+    border: "1px solid #dc2626",
+    color: "#dc2626",
+    padding: "0.7rem 1rem",
+    borderRadius: "8px",
+    cursor: "pointer",
+    width: "100%",
+    maxWidth: "240px",
+  },
+
+  mobileAuth: {
+    width: "100%",
+    maxWidth: "240px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+    marginTop: "0.5rem",
+  },
+
+  mobileLogin: {
+    border: "1px solid #1d4ed8",
+    background: "transparent",
+    color: "var(--text)",
+    padding: "0.75rem",
+    borderRadius: "8px",
+    cursor: "pointer",
+    width: "100%",
+  },
+
+  mobileSignup: {
+    background: "#1d4ed8",
+    color: "#fff",
+    border: "none",
+    padding: "0.75rem",
+    borderRadius: "8px",
+    cursor: "pointer",
+    width: "100%",
+    fontWeight: "bold",
+  },
 };
+
+/* ---------- MOBILE ---------- */
+
+if (typeof window !== "undefined") {
+  const style = document.createElement("style");
+
+  style.innerHTML = `
+    @media (max-width: 768px) {
+      .desktop-links {
+        display: none;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+}

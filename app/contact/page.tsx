@@ -23,7 +23,7 @@ export default function ContactPage() {
     setLoading(true);
 
     const { error } = await supabase.from("contact_messages").insert({
-      name,
+    //   name,
       email,
       message,
     });
