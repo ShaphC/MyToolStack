@@ -14,6 +14,7 @@ export default function AdminPage() {
     const [users, setUsers] = useState<any[]>([]);
     const [contacts, setContacts] = useState<any[]>([]);
     const [requests, setRequests] = useState<any[]>([]);    
+    const [hovered, setHovered] = useState<string | null>(null);
 
     useEffect(() => {
         checkAdmin();
@@ -106,6 +107,31 @@ export default function AdminPage() {
 
     if (!authorized) return null;
 
+    const toggleRead = async (
+      table: "contact_messages" | "app_requests",
+      id: string,
+      current: boolean
+    ) => {
+      const { error } = await supabase
+        .from(table)
+        .update({
+          is_read: !current,
+        })
+        .eq("id", id);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      // refresh
+      if (table === "contact_messages") {
+        fetchContacts();
+      } else {
+        fetchRequests();
+      }
+    };
+
 return (
   <PageLayout>
     <main style={styles.container}>
@@ -153,7 +179,27 @@ return (
 
             <div style={styles.list}>
               {requests.map((req) => (
-                <div key={req.id} style={styles.userCard}>
+                <div
+                  key={req.id}
+                  onMouseEnter={() => setHovered(req.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() =>
+                    toggleRead(
+                      "app_requests",
+                      req.id,
+                      req.is_read
+                    )
+                  }
+                  style={{
+                    ...styles.userCard,
+                    ...(req.is_read
+                      ? styles.readCard
+                      : styles.unreadCard),
+                    ...(hovered === req.id
+                      ? styles.hoverCard
+                      : {}),
+                  }}
+                >
                   <div style={styles.userId}>
                     {req.email}
                   </div>
@@ -176,7 +222,27 @@ return (
 
             <div style={styles.list}>
               {contacts.map((msg) => (
-                <div key={msg.id} style={styles.userCard}>
+                <div
+                  key={msg.id}
+                  onMouseEnter={() => setHovered(msg.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() =>
+                    toggleRead(
+                      "contact_messages",
+                      msg.id,
+                      msg.is_read
+                    )
+                  }
+                  style={{
+                    ...styles.userCard,
+                    ...(msg.is_read
+                      ? styles.readCard
+                      : styles.unreadCard),
+                    ...(hovered === msg.id
+                      ? styles.hoverCard
+                      : {}),
+                  }}
+                >
                   <div style={styles.userId}>
                     {msg.email}
                   </div>
@@ -242,6 +308,9 @@ const styles: any = {
     border: "1px solid var(--border)",
     borderRadius: "8px",
     padding: "1rem",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    background: "var(--card)",
   },
 
   userId: {
@@ -278,5 +347,17 @@ const styles: any = {
     display: "flex",
     flexDirection: "column",
     gap: "1.5rem",
+  },
+
+  readCard: {
+    border: "1px solid var(--border)",
+  },
+
+  unreadCard: {
+    border: "2px solid #dc2626",
+  },
+
+  hoverCard: {
+    transform: "translateY(-2px)",
   },
 };
