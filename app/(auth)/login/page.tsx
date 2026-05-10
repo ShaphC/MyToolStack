@@ -139,7 +139,20 @@ function LoginContent() {
                 onTouchStart={() => setShowPassword(true)}
                 onTouchEnd={() => setShowPassword(false)}
               >
-                👁️
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    fill="#6b7280"
+                  >
+                    <path d="M12 6c-5 0-9.27 3.11-11 6 1.73 2.89 6 6 11 6s9.27-3.11 
+                    11-6c-1.73-2.89-6-6-11-6zm0 10c-2.21 
+                    0-4-1.79-4-4s1.79-4 4-4 
+                    4 1.79 4 4-1.79 4-4 
+                    4zm0-6.5A2.5 2.5 0 1 0 12 
+                    14a2.5 2.5 0 0 0 0-5z" />
+                </svg>
               </div>
             </div>
 
