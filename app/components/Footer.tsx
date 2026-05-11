@@ -1,54 +1,127 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/app/lib/supabase";
 
 export default function Footer() {
   const router = useRouter();
 
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    checkUser();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const checkUser = async () => {
+    const { data } = await supabase.auth.getUser();
+
+    setLoggedIn(!!data.user);
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
   return (
     <footer style={styles.footer}>
       <div style={styles.container}>
-        <div style={styles.grid}>
+        <div
+          style={{
+            ...styles.grid,
+            ...(isMobile ? styles.mobileGrid : {}),
+          }}
+        >
           {/* LOGO */}
-          <div>
+          <div style={isMobile ? styles.mobileSection : {}}>
             <h4
               style={styles.logo}
-              onClick={() => router.push("/")}
+              onClick={() => {
+                if (loggedIn) {
+                  router.push("/dashboard");
+                } else {
+                  router.push("/");
+                }
+              }}
             >
               ⚡ SimpleStack
             </h4>
-            {/* <p>Build your own internal tools faster.</p> */}
           </div>
 
           {/* PRODUCT */}
-          <div>
+          <div style={isMobile ? styles.mobileSection : {}}>
             <h4>Product</h4>
-            <p >Features</p>
-            <p>Pricing</p>
-          </div>
 
-          {/* TOOLS */}
-          <div>
-            <h4>Tools</h4>
-            <p>Time Tracker</p>
-            <p>Message Repeater</p>
-            <p>Secure Link</p>
+            <p
+              style={styles.link}
+              onClick={() => router.push("/#features")}
+            >
+              Features
+            </p>
+
+            <p
+              style={styles.link}
+              onClick={() => router.push("/#pricing")}
+            >
+              Pricing
+            </p>
           </div>
 
           {/* ACCOUNT */}
-          <div>
+          <div style={isMobile ? styles.mobileSection : {}}>
             <h4>Account</h4>
-            <p onClick={() => router.push("/login")} style={styles.link}>
-              Login
-            </p>
-            <p onClick={() => router.push("/signup")} style={styles.link}>
-              Sign Up
-            </p>
+
+            {!loggedIn ? (
+              <>
+                <p
+                  onClick={() => router.push("/login")}
+                  style={styles.link}
+                >
+                  Login
+                </p>
+
+                <p
+                  onClick={() => router.push("/signup")}
+                  style={styles.link}
+                >
+                  Sign Up
+                </p>
+              </>
+            ) : (
+              <p
+                onClick={logout}
+                style={styles.link}
+              >
+                Logout
+              </p>
+            )}
           </div>
         </div>
 
         <p style={styles.copy}>
-          © {new Date().getFullYear()} SimpleStack. All rights reserved.
+          © {new Date().getFullYear()} SimpleStack.
+          All rights reserved.
         </p>
       </div>
     </footer>
@@ -71,9 +144,19 @@ const styles: any = {
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
     gap: "2rem",
     marginBottom: "2rem",
+  },
+
+  mobileGrid: {
+    textAlign: "center",
+  },
+
+  mobileSection: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 
   logo: {
@@ -83,11 +166,14 @@ const styles: any = {
 
   link: {
     cursor: "pointer",
-    textDecoration: "underline",
+    marginTop: "0.5rem",
+    color: "var(--text)",
   },
 
   copy: {
     textAlign: "center",
     color: "#6b7280",
+    marginTop: "2rem",
+    fontSize: "0.9rem",
   },
 };
