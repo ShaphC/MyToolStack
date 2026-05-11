@@ -71,16 +71,16 @@ export default function HomePage() {
         <div style={styles.gradientBg} />
 
         <h1 style={styles.title}>
-          Build the tools you wish you had.
+          Access the tools you wish you had.
         </h1>
 
         <p style={styles.subtitle}>
-          Stop repeating the same work every day. Create your own internal tools
-          to automate tasks, save time, and move faster.
+          A growing collection of simple tools designed to save time,
+          reduce friction, and help you get real work done faster.
         </p>
 
         <p style={styles.proof}>
-          Used for tracking time, generating messages, and automating workflows.
+          Built for freelancers, creators, and operators.
         </p>
 
         <div style={styles.heroButtons}>
@@ -88,61 +88,91 @@ export default function HomePage() {
             onClick={() => router.push("/login")}
             style={styles.cta}
           >
-            Start Building Tools
+            Access Your Tools
           </Button>
 
           <Button 
             onClick={() => scrollTo("features")}
             style={styles.secondaryBtn}
         >
-            View Tools
+            See What's Included
           </Button>
         </div>
       </section>
 
       {/* PROBLEM */}
       <section style={styles.sectionAlt}>
-        <h2>You’re doing too much manually</h2>
+        <h2>Small problems slow down your day</h2>
 
         <div style={styles.problemGrid}>
-          <div>❌ Rewriting the same messages</div>
-          <div>❌ Tracking time in messy notes</div>
-          <div>❌ Copy-pasting data everywhere</div>
+          <div>⚡ Repeating the same tasks</div>
+          <div>⚡ Jumping between too many apps</div>
+          <div>⚡ Wasting time on unnecessary friction</div>
         </div>
 
         <h3 style={{ marginTop: "2rem" }}>
-          Fix it with your own tools
+          SimpleStack gives you tools that remove the friction.
         </h3>
       </section>
       <div style={styles.container}>
       {/* TOOLS */}
       <section id="features" style={styles.section}>
-        <h2 style={styles.sectionTitle}>Your Toolkit</h2>
+        <h2 style={styles.sectionTitle}>
+          Designed for speed and simplicity
+        </h2>
 
-        <div style={isMobile ? styles.gridMobile : styles.gridDesktop}>
-          <ToolCard
-            title="Track client work without spreadsheets"
-            desc="Log sessions, calculate totals, stay organized"
-            // route="/time-tracker"
-          />
+        <p style={styles.sectionSubtitle}>
+          Tools should help you move faster — not create more work.
+        </p>
 
-          <ToolCard
-            title="Stop rewriting the same messages"
-            desc="Create templates with variables and reuse instantly"
-            // route="/message-repeater"
-          />
+        <div
+          style={
+            isMobile
+              ? styles.featureGridMobile
+              : styles.featureGridDesktop
+          }
+        >
+          <div style={styles.featureCard}>
+            <img
+              src="/images/workflow.png"
+              style={styles.featureImage}
+            />
 
-          <ToolCard
-            title="Send secure info safely"
-            desc="Share sensitive data with protected links"
-            // route="/secure-link"
-          />
+            <h3>Reduce repetitive work</h3>
 
-          <ToolCard
-            title="Generate secure codes instantly"
-            desc="Create random numbers for workflows"
-            // route="/number-generator"
-          />
+            <p>
+              Handle common tasks faster with tools designed
+              to eliminate busywork.
+            </p>
+          </div>
+
+          <div style={styles.featureCard}>
+            <img
+              src="/images/simple.png"
+              style={styles.featureImage}
+            />
+
+            <h3>Simple by default</h3>
+
+            <p>
+              No bloated dashboards or complicated setup.
+              Just tools that work immediately.
+            </p>
+          </div>
+
+          <div style={styles.featureCard}>
+            <img
+              src="/images/focus.png"
+              style={styles.featureImage}
+            />
+
+            <h3>Stay focused</h3>
+
+            <p>
+              Spend less time managing systems and more time
+              doing meaningful work.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -232,12 +262,12 @@ export default function HomePage() {
 
           <div style={styles.proCard}>
             <h3>Pro</h3>
-            <p style={styles.price}>$49.99/mo</p>
+            <p style={styles.price}>$19.99/mo</p>
 
             <div>
-              <div>✔ Unlimited tools</div>
-              <div>✔ Access anywhere</div>
-              <div>✔ Future premium features</div>
+              <div>✔ Premium features</div>
+              <div>✔ Full access to all tools</div>
+              <div>✔ Access to future releases</div>
             </div>
 
             <p style={styles.mostPopular}>Most Popular</p>
@@ -256,38 +286,21 @@ export default function HomePage() {
         </p>
 
         <p style={styles.trust}>
-          Built for developers, freelancers, and operators who want to move faster.
+          Built for freelancers, creators, and operators who want to move faster.
         </p>
       </section>
 
       {/* CTA */}
       <section style={styles.ctaSection}>
-        <h2>Stop wasting time on repetitive work</h2>
+        <h2>Get access to tools that make work easier</h2>
 
         <Button
           onClick={() => router.push("/login")}
           style={styles.cta}
         >
-          Build Your First Tool
+          Start Using SimpleStack
         </Button>
       </section>
-
-      {/* CONTACT */}
-      {/* <section id="contact" style={styles.contactSection}>
-        <h2 style={styles.sectionTitle}>Contact</h2>
-
-        <p style={styles.contactText}>
-          Have an idea, issue, or app request?
-          Reach out anytime.
-        </p>
-
-        <Button
-          onClick={() => router.push("/contact")}
-          style={styles.cta}
-        >
-          Contact Us
-        </Button>
-      </section> */}
 
       {/* FOOTER */}
       <Footer />
@@ -605,5 +618,40 @@ const styles: any = {
     color: "var(--muted)",
     marginTop: "1rem",
     marginBottom: "2rem",
+  },
+
+  featureGridDesktop: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "1.5rem",
+    marginTop: "3rem",
+  },
+
+  featureGridMobile: {
+    display: "flex",
+    gap: "1rem",
+    overflowX: "auto",
+    paddingBottom: "1rem",
+    marginTop: "3rem",
+    scrollSnapType: "x mandatory",
+  },
+
+  featureCard: {
+    flex: "0 0 280px",
+    scrollSnapAlign: "start",
+
+    border: "1px solid var(--border)",
+    borderRadius: "16px",
+    padding: "1rem",
+    background: "var(--card)",
+    textAlign: "left",
+  },
+
+  featureImage: {
+    width: "100%",
+    height: "200px",
+    objectFit: "cover",
+    borderRadius: "12px",
+    marginBottom: "1rem",
   },
 };
