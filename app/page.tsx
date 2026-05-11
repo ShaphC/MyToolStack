@@ -115,62 +115,59 @@ export default function HomePage() {
         </h3>
       </section>
       <div style={styles.container}>
-      {/* TOOLS */}
-      <section id="features" style={styles.section}>
+      {/* BENEFITS */}
+      <section id="benefits" style={styles.section}>
         <h2 style={styles.sectionTitle}>
-          Designed for speed and simplicity
+          Why people use SimpleStack
         </h2>
 
         <p style={styles.sectionSubtitle}>
-          Tools should help you move faster — not create more work.
+          Simple tools that remove friction from everyday work.
         </p>
 
         <div
           style={
             isMobile
-              ? styles.featureGridMobile
-              : styles.featureGridDesktop
+              ? styles.benefitGridMobile
+              : styles.benefitGridDesktop
           }
         >
-          <div style={styles.featureCard}>
-            <img
-              src="/images/workflow.png"
-              style={styles.featureImage}
-            />
+          <div style={styles.benefitCard}>
+            <div style={styles.benefitIcon}>
+              ⚡
+            </div>
 
-            <h3>Reduce repetitive work</h3>
+            <h3>Move faster</h3>
 
             <p>
-              Handle common tasks faster with tools designed
-              to eliminate busywork.
+              Spend less time on repetitive tasks and more time
+              getting meaningful work done.
             </p>
           </div>
 
-          <div style={styles.featureCard}>
-            <img
-              src="/images/simple.png"
-              style={styles.featureImage}
-            />
+          <div style={styles.benefitCard}>
+            <div style={styles.benefitIcon}>
+              ✨
+            </div>
 
-            <h3>Simple by default</h3>
+            <h3>Less clutter</h3>
 
             <p>
-              No bloated dashboards or complicated setup.
-              Just tools that work immediately.
+              Clean tools without bloated dashboards,
+              unnecessary setup, or distractions.
             </p>
           </div>
 
-          <div style={styles.featureCard}>
-            <img
-              src="/images/focus.png"
-              style={styles.featureImage}
-            />
+          <div style={styles.benefitCard}>
+            <div style={styles.benefitIcon}>
+              🎯
+            </div>
 
             <h3>Stay focused</h3>
 
             <p>
-              Spend less time managing systems and more time
-              doing meaningful work.
+              Keep your workflow simple so you can focus
+              on what actually matters.
             </p>
           </div>
         </div>
@@ -310,32 +307,6 @@ export default function HomePage() {
   );
 }
 
-/* ---------- TOOL CARD ---------- */
-
-function ToolCard({ title, desc, route }: any) {
-  const router = useRouter();
-
-  return (
-    <div
-      style={styles.card}
-      onClick={() => router.push(route)}
-      onMouseEnter={(e: any) => {
-        e.currentTarget.style.transform = "scale(1.03)";
-        e.currentTarget.style.boxShadow =
-          "0 10px 30px rgba(0,0,0,0.1)";
-      }}
-      onMouseLeave={(e: any) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.boxShadow = "none";
-      }}
-    >
-      <div style={styles.imagePlaceholder}>Preview</div>
-      <h3>{title}</h3>
-      <p>{desc}</p>
-    </div>
-  );
-}
-
 /* ---------- STYLES ---------- */
 
 const styles: any = {
@@ -346,43 +317,12 @@ const styles: any = {
     fontFamily: "sans-serif",
   },
 
-  nav: {
-    position: "sticky",
-    top: 0,
-    backdropFilter: "blur(10px)",
-    background: "rgba(255,255,255,0.8)",
-    zIndex: 10,
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "1rem 2rem",
-    borderBottom: "1px solid #e5e7eb",
-  },
-
   container: {
     background: "var(--bg)",
     color: "var(--text)",
     maxWidth: "1100px",
     margin: "0 auto",
     padding: "0 2rem",
-  },
-
-  logo: { fontWeight: "bold" },
-
-  navLinks: { display: "flex", gap: "1.5rem" },
-
-  auth: { display: "flex", gap: "0.5rem" },
-
-  login: {
-    border: "1px solid #1d4ed8",
-    background: "transparent",
-    padding: "0.4rem 0.8rem",
-  },
-
-  signup: {
-    background: "#1d4ed8",
-    color: "#fff",
-    padding: "0.4rem 0.8rem",
-    border: "none",
   },
 
   hero: {
@@ -457,42 +397,6 @@ const styles: any = {
 
   sectionTitle: { fontSize: "1.8rem" },
 
-  gridDesktop: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-      gap: "1.5rem",
-      marginTop: "2rem",
-  },
-
-  gridMobile: {
-      display: "flex",
-      gap: "1rem",
-      overflowX: "auto",
-      paddingBottom: "1rem",
-      marginTop: "2rem",
-      scrollSnapType: "x mandatory",
-  },
-
-  card: {
-      flex: "0 0 260px",
-      scrollSnapAlign: "start",
-      background: "var(--card)",
-      border: "2px solid var(--border)",
-      borderRadius: "12px",
-      padding: "1rem",
-      cursor: "pointer",
-  },
-
-  imagePlaceholder: {
-    height: "120px",
-    background: "#f3f4f6",
-    borderRadius: "8px",
-    marginBottom: "0.75rem",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
   pricingGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
@@ -541,29 +445,6 @@ const styles: any = {
     padding: "5rem 2rem",
   },
 
-  footer: {
-    borderTop: "1px solid #e5e7eb",
-    padding: "3rem 2rem",
-    marginTop: "2rem",
-  },
-
-  footerGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-    gap: "2rem",
-    marginBottom: "2rem",
-  },
-
-  link: {
-    cursor: "pointer",
-    textDecoration: "underline",
-  },
-
-  copy: {
-    textAlign: "center",
-    color: "#6b7280",
-  },
-
   sectionSubtitle: {
     color: "var(--muted)",
     marginBottom: "2rem",
@@ -608,26 +489,14 @@ const styles: any = {
     lineHeight: 1.5,
   },
 
-  contactSection: {
-    padding: "5rem 2rem",
-    textAlign: "center",
-    borderTop: "1px solid var(--border)",
-  },
-
-  contactText: {
-    color: "var(--muted)",
-    marginTop: "1rem",
-    marginBottom: "2rem",
-  },
-
-  featureGridDesktop: {
+  benefitGridDesktop: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
     gap: "1.5rem",
     marginTop: "3rem",
   },
 
-  featureGridMobile: {
+  benefitGridMobile: {
     display: "flex",
     gap: "1rem",
     overflowX: "auto",
@@ -636,22 +505,27 @@ const styles: any = {
     scrollSnapType: "x mandatory",
   },
 
-  featureCard: {
+  benefitCard: {
     flex: "0 0 280px",
     scrollSnapAlign: "start",
 
-    border: "1px solid var(--border)",
-    borderRadius: "16px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+
     padding: "1rem",
-    background: "var(--card)",
-    textAlign: "left",
   },
 
-  featureImage: {
-    width: "100%",
-    height: "200px",
-    objectFit: "cover",
-    borderRadius: "12px",
+  benefitIcon: {
+    width: "72px",
+    height: "72px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "2rem",
+    borderRadius: "18px",
+    background: "rgba(29,78,216,0.08)",
     marginBottom: "1rem",
   },
 };
