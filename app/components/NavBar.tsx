@@ -58,8 +58,18 @@ export default function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     checkUser();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
 
     const {
       data: { subscription },
@@ -67,7 +77,10 @@ export default function Navbar() {
       checkUser();
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const checkUser = async () => {
@@ -81,19 +94,17 @@ export default function Navbar() {
 
     setLoggedIn(true);
 
-    // ADMIN CHECK
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", data.user.id)
       .single();
 
-    setIsAdmin(profile?.role == 'admin');
+    setIsAdmin(profile?.role === "admin");
   };
 
   const logout = async () => {
     await supabase.auth.signOut();
-
     router.push("/");
   };
 
@@ -113,237 +124,234 @@ export default function Navbar() {
   };
 
   return (
-    <nav style={styles.nav}>
-      {/* LEFT */}
-      <div
-        style={styles.logo}
-        onClick={() => {
-          if (loggedIn) {
-            router.push("/dashboard");
-          } else {
-            router.push("/");
-          }
-        }}
-      >
-        ⚡ SimpleStack
-      </div>
-
-      {/* CENTER */}
-      <div style={styles.centerLinks}>
-        {!loggedIn ? (
-          <>
+    <>
+      <nav style={styles.nav}>
+        {/* MOBILE NAV */}
+        {isMobile ? (
+          <div style={styles.mobileNav}>
+            {/* LEFT */}
             <button
-              onClick={() => scrollTo("features")}
-              style={styles.link}
+              onClick={() => setOpen(!open)}
+              style={styles.hamburger}
             >
-              Features
+              ☰
             </button>
 
-            <button
-              onClick={() => scrollTo("pricing")}
-              style={styles.link}
+            {/* CENTER */}
+            <div
+              style={styles.mobileLogo}
+              onClick={() => {
+                if (loggedIn) {
+                  router.push("/dashboard");
+                } else {
+                  router.push("/");
+                }
+              }}
             >
-              Pricing
-            </button>
+              ⚡ SimpleStack
+            </div>
 
-            <button
-              onClick={() => scrollTo("improvements")}
-              style={styles.link}
-            >
-              Improvements
-            </button>
-
-            <button
-              onClick={() => scrollTo("contact")}
-              style={styles.link}
-            >
-              Contact
-            </button>
-          </>
+            {/* RIGHT */}
+            <div>
+              <ThemeToggle />
+            </div>
+          </div>
         ) : (
-          <>
-            <button
-              onClick={() => router.push("/dashboard")}
-              style={styles.link}
+          /* DESKTOP NAV */
+          <div style={styles.desktopNav}>
+            {/* LEFT */}
+            <div
+              style={styles.logo}
+              onClick={() => {
+                if (loggedIn) {
+                  router.push("/dashboard");
+                } else {
+                  router.push("/");
+                }
+              }}
             >
-              Dashboard
-            </button>
+              ⚡ SimpleStack
+            </div>
 
-            <button
-              onClick={() => router.push("/improvements")}
-              style={styles.link}
-            >
-              Improvements
-            </button>
+            {/* CENTER */}
+            <div style={styles.centerLinks}>
+              {!loggedIn ? (
+                <>
+                  <button
+                    onClick={() => scrollTo("features")}
+                    style={styles.link}
+                  >
+                    Features
+                  </button>
 
-            <button
-              onClick={() => router.push("/requests")}
-              style={styles.link}
-            >
-              Requests
-            </button>
+                  <button
+                    onClick={() => scrollTo("pricing")}
+                    style={styles.link}
+                  >
+                    Pricing
+                  </button>
 
-            <button
-              onClick={() => router.push("/contact")}
-              style={styles.link}
-            >
-              Contact
-            </button>
+                  <button
+                    onClick={() => scrollTo("improvements")}
+                    style={styles.link}
+                  >
+                    Improvements
+                  </button>
 
-            {isAdmin && (
-              <button
-                onClick={() => router.push("/admin")}
-                style={styles.mobileLink}
-              >
-                Admin
-              </button>
-            )}
-          </>
+                  <button
+                    onClick={() => scrollTo("contact")}
+                    style={styles.link}
+                  >
+                    Contact
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => router.push("/dashboard")}
+                    style={styles.link}
+                  >
+                    Dashboard
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/improvements")}
+                    style={styles.link}
+                  >
+                    Improvements
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/requests")}
+                    style={styles.link}
+                  >
+                    Requests
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/contact")}
+                    style={styles.link}
+                  >
+                    Contact
+                  </button>
+
+                  {isAdmin && (
+                    <button
+                      onClick={() => router.push("/admin")}
+                      style={styles.link}
+                    >
+                      Admin
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* RIGHT */}
+            <div style={styles.right}>
+              <ThemeToggle />
+
+              {!loggedIn ? (
+                <>
+                  <button
+                    onClick={() => router.push("/login")}
+                    style={styles.login}
+                  >
+                    Login
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/signup")}
+                    style={styles.signup}
+                  >
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={logout}
+                  style={styles.login}
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          </div>
         )}
-      </div>
-
-      {/* RIGHT */}
-      <div style={styles.right}>
-        <ThemeToggle />
-
-        {!loggedIn ? (
-          <>
-            <button
-              onClick={() => router.push("/login")}
-              style={styles.login}
-            >
-              Login
-            </button>
-
-            <button
-              onClick={() => router.push("/signup")}
-              style={styles.signup}
-            >
-              Sign Up
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={logout}
-            style={styles.login}
-          >
-            Logout
-          </button>
-        )}
-
-        {/* MOBILE MENU */}
-        <div
-          style={styles.mobileMenu}
-          onClick={() => setOpen(!open)}
-        >
-          ☰
-        </div>
-      </div>
+      </nav>
 
       {/* MOBILE DROPDOWN */}
-      {open && (
-        <div style={styles.mobileDropdown}>
+      {isMobile && open && (
+        <div style={styles.dropdown}>
           {!loggedIn ? (
             <>
               <button
-                onClick={() => {
-                  scrollTo("features");
-                  setOpen(false);
-                }}
+                onClick={() => scrollTo("features")}
                 style={styles.mobileLink}
               >
                 Features
               </button>
 
               <button
-                onClick={() => {
-                  scrollTo("pricing");
-                  setOpen(false);
-                }}
+                onClick={() => scrollTo("pricing")}
                 style={styles.mobileLink}
               >
                 Pricing
               </button>
 
               <button
-                onClick={() => {
-                  scrollTo("improvements");
-                  setOpen(false);
-                }}
+                onClick={() => scrollTo("improvements")}
                 style={styles.mobileLink}
               >
                 Improvements
               </button>
 
               <button
-                onClick={() => {
-                  scrollTo("contact");
-                  setOpen(false);
-                }}
+                onClick={() => scrollTo("contact")}
                 style={styles.mobileLink}
               >
                 Contact
               </button>
 
-              <div style={styles.mobileAuth}>
-                <button
-                  onClick={() => {
-                    router.push("/login");
-                    setOpen(false);
-                  }}
-                  style={styles.mobileLogin}
-                >
-                  Login
-                </button>
+              <button
+                onClick={() => router.push("/login")}
+                style={styles.mobileButton}
+              >
+                Login
+              </button>
 
-                <button
-                  onClick={() => {
-                    router.push("/signup");
-                    setOpen(false);
-                  }}
-                  style={styles.mobileSignup}
-                >
-                  Sign Up
-                </button>
-              </div>
+              <button
+                onClick={() => router.push("/signup")}
+                style={styles.mobilePrimary}
+              >
+                Sign Up
+              </button>
             </>
           ) : (
             <>
               <button
-                onClick={() => {
-                  router.push("/dashboard");
-                  setOpen(false);
-                }}
+                onClick={() => router.push("/dashboard")}
                 style={styles.mobileLink}
               >
                 Dashboard
               </button>
 
               <button
-                onClick={() => {
-                  router.push("/improvements");
-                  setOpen(false);
-                }}
+                onClick={() => router.push("/improvements")}
                 style={styles.mobileLink}
               >
                 Improvements
               </button>
 
               <button
-                onClick={() => {
-                  router.push("/requests");
-                  setOpen(false);
-                }}
+                onClick={() => router.push("/requests")}
                 style={styles.mobileLink}
               >
                 Requests
               </button>
 
               <button
-                onClick={() => {
-                  router.push("/contact");
-                  setOpen(false);
-                }}
+                onClick={() => router.push("/contact")}
                 style={styles.mobileLink}
               >
                 Contact
@@ -351,10 +359,7 @@ export default function Navbar() {
 
               {isAdmin && (
                 <button
-                  onClick={() => {
-                    router.push("/admin");
-                    setOpen(false);
-                  }}
+                  onClick={() => router.push("/admin")}
                   style={styles.mobileLink}
                 >
                   Admin
@@ -362,10 +367,7 @@ export default function Navbar() {
               )}
 
               <button
-                onClick={() => {
-                  logout();
-                  setOpen(false);
-                }}
+                onClick={logout}
                 style={styles.mobileLogout}
               >
                 Logout
@@ -374,7 +376,7 @@ export default function Navbar() {
           )}
         </div>
       )}
-    </nav>
+    </>
   );
 }
 
@@ -383,36 +385,49 @@ const styles: any = {
     position: "sticky",
     top: 0,
     zIndex: 100,
+    background: "var(--bg)",
+    borderBottom: "1px solid rgba(0,0,0,0.08)",
+    padding: "1rem 1.5rem",
+  },
+
+  desktopNav: {
+    maxWidth: "1200px",
+    margin: "0 auto",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "1rem 1.5rem",
-    background: "var(--bg)",
-    backdropFilter: "blur(12px)",
-    borderBottom: "1px solid rgba(0,0,0,0.08)",
+  },
+
+  mobileNav: {
+    display: "grid",
+    gridTemplateColumns: "40px 1fr 50px",
+    alignItems: "center",
+  },
+
+  hamburger: {
+    background: "transparent",
+    border: "none",
+    fontSize: "1.5rem",
+    color: "var(--text)",
+    cursor: "pointer",
+  },
+
+  mobileLogo: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: "1.1rem",
+    cursor: "pointer",
   },
 
   logo: {
     fontWeight: "bold",
     fontSize: "1.1rem",
     cursor: "pointer",
-    minWidth: "170px",
   },
 
   centerLinks: {
-    flex: 1,
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "1.75rem",
-  },
-
-  right: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: "0.75rem",
-    minWidth: "170px",
+    gap: "1.5rem",
   },
 
   link: {
@@ -421,7 +436,12 @@ const styles: any = {
     color: "var(--text)",
     cursor: "pointer",
     fontSize: "0.95rem",
-    transition: "0.2s ease",
+  },
+
+  right: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
   },
 
   login: {
@@ -443,101 +463,49 @@ const styles: any = {
     fontWeight: "bold",
   },
 
-  mobileMenu: {
-    display: "none",
-    fontSize: "1.5rem",
-    cursor: "pointer",
-  },
-
-  mobileDropdown: {
-    position: "absolute",
-    top: "72px",
-    left: 0,
-    width: "100%",
-    background: "var(--card)",
-    borderBottom: "1px solid rgba(255,255,255,0.08)",
+  dropdown: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
     gap: "1rem",
-    padding: "1.5rem 1rem",
-    zIndex: 999,
+    padding: "1.5rem",
+    background: "var(--card)",
+    borderBottom: "1px solid var(--border)",
   },
 
   mobileLink: {
     background: "transparent",
     border: "none",
+    textAlign: "left",
     color: "var(--text)",
     fontSize: "1rem",
     cursor: "pointer",
   },
 
-  mobileAdmin: {
+  mobileButton: {
+    padding: "0.8rem",
+    borderRadius: "8px",
+    border: "1px solid #1d4ed8",
+    background: "transparent",
+    color: "var(--text)",
+    cursor: "pointer",
+  },
+
+  mobilePrimary: {
+    padding: "0.8rem",
+    borderRadius: "8px",
+    border: "none",
     background: "#1d4ed8",
     color: "#fff",
-    border: "none",
-    padding: "0.7rem 1rem",
-    borderRadius: "8px",
     cursor: "pointer",
-    width: "100%",
-    maxWidth: "240px",
     fontWeight: "bold",
   },
 
   mobileLogout: {
-    background: "transparent",
+    padding: "0.8rem",
+    borderRadius: "8px",
     border: "1px solid #dc2626",
-    color: "#dc2626",
-    padding: "0.7rem 1rem",
-    borderRadius: "8px",
-    cursor: "pointer",
-    width: "100%",
-    maxWidth: "240px",
-  },
-
-  mobileAuth: {
-    width: "100%",
-    maxWidth: "240px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.75rem",
-    marginTop: "0.5rem",
-  },
-
-  mobileLogin: {
-    border: "1px solid #1d4ed8",
     background: "transparent",
-    color: "var(--text)",
-    padding: "0.75rem",
-    borderRadius: "8px",
+    color: "#dc2626",
     cursor: "pointer",
-    width: "100%",
-  },
-
-  mobileSignup: {
-    background: "#1d4ed8",
-    color: "#fff",
-    border: "none",
-    padding: "0.75rem",
-    borderRadius: "8px",
-    cursor: "pointer",
-    width: "100%",
-    fontWeight: "bold",
   },
 };
-
-/* ---------- MOBILE ---------- */
-
-if (typeof window !== "undefined") {
-  const style = document.createElement("style");
-
-  style.innerHTML = `
-    @media (max-width: 768px) {
-      .desktop-links {
-        display: none;
-      }
-    }
-  `;
-
-  document.head.appendChild(style);
-}
