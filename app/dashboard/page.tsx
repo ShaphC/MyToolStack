@@ -45,25 +45,25 @@ const tools = [
 export default function Home() {
   return (
     <PageLayout>
-    <main style={styles.container}>
-      <h1 style={styles.title}>Toolbox</h1>
-      <p style={styles.subtitle}>
-        Simple tools to get real work done
-      </p>
+      <main style={styles.container}>
+        <h1 style={styles.title}>Toolbox</h1>
+        <p style={styles.subtitle}>
+          Simple tools to get real work done
+        </p>
 
-      <div style={styles.grid}>
-        {tools.map((tool) => (
-          <Link
-            key={tool.slug}
-            href={`/apps/${tool.slug}`}
-            style={styles.card}
-          >
-            <h2>{tool.name}</h2>
-            <p>{tool.description}</p>
-          </Link>
-        ))}
-      </div>
-    </main>
+        <div style={styles.grid}>
+          {tools.map((tool) => (
+            <Link
+              key={tool.slug}
+              href={`/apps/${tool.slug}`}
+              style={styles.card}
+            >
+              <h2>{tool.name}</h2>
+              <p>{tool.description}</p>
+            </Link>
+          ))}
+        </div>
+      </main>
     </PageLayout>
   );
 }
