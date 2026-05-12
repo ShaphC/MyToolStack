@@ -199,6 +199,24 @@ export default function AdminPage() {
           </div>
         </div>
 
+
+        <div
+          style={styles.quickActionCard}
+          onClick={() => router.push("/admin/improvements")}
+        >
+          <div style={styles.quickActionIcon}>🚀</div>
+
+          <div>
+            <h3 style={styles.quickActionTitle}>
+              Manage Improvements
+            </h3>
+
+            <p style={styles.quickActionText}>
+              Add updates that appear on the homepage changelog.
+            </p>
+          </div>
+        </div>
+
         {/* GRID */}
         <div
           style={{
@@ -618,6 +636,45 @@ const styles: any = {
   empty: {
     padding: "2rem",
     textAlign: "center",
+    color: "var(--muted)",
+  },
+
+  quickActionCard: {
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+
+    padding: "1.25rem",
+    borderRadius: "16px",
+    border: "1px solid var(--border)",
+    background: "var(--card)",
+
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+
+    marginBottom: "1.5rem",
+  },
+
+  quickActionIcon: {
+    width: "56px",
+    height: "56px",
+    borderRadius: "14px",
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    fontSize: "1.5rem",
+
+    background: "rgba(29,78,216,0.12)",
+  },
+
+  quickActionTitle: {
+    margin: 0,
+  },
+
+  quickActionText: {
+    marginTop: "0.35rem",
     color: "var(--muted)",
   },
 };
