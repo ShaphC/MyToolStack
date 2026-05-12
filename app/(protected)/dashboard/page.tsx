@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import PageLayout from "../components/PageLayout";
+import PageLayout from "../../components/PageLayout";
 
 const tools = [
   {
