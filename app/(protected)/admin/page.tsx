@@ -200,21 +200,45 @@ export default function AdminPage() {
         </div>
 
 
-        <div
-          style={styles.quickActionCard}
-          onClick={() => router.push("/admin/improvements")}
-        >
-          <div style={styles.quickActionIcon}>🚀</div>
+        {/* QUICK ACTIONS */}
+        <div style={styles.quickActionsGrid}>
+          
+          {/* IMPROVEMENTS */}
+          <div
+            onClick={() => router.push("/admin/improvements")}
+            style={styles.quickActionCard}
+          >
+            <div style={styles.quickActionIcon}>🚀</div>
 
-          <div>
-            <h3 style={styles.quickActionTitle}>
-              Manage Improvements
-            </h3>
+            <div>
+              <h3 style={styles.quickActionTitle}>
+                Manage Improvements
+              </h3>
 
-            <p style={styles.quickActionText}>
-              Add updates that appear on the homepage changelog.
-            </p>
+              <p style={styles.quickActionText}>
+                Add updates that appear on the homepage changelog.
+              </p>
+            </div>
           </div>
+
+          {/* TASKS */}
+          <div
+            onClick={() => router.push("/admin/tasks")}
+            style={styles.quickActionCard}
+          >
+            <div style={styles.quickActionIcon}>📝</div>
+
+            <div>
+              <h3 style={styles.quickActionTitle}>
+                Manage Tasks
+              </h3>
+
+              <p style={styles.quickActionText}>
+                Track planned work, priorities, and progress.
+              </p>
+            </div>
+          </div>
+
         </div>
 
         {/* GRID */}
@@ -639,6 +663,13 @@ const styles: any = {
     color: "var(--muted)",
   },
 
+  quickActionsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    gap: "1rem",
+    marginBottom: "2rem",
+  },
+
   quickActionCard: {
     display: "flex",
     alignItems: "center",
@@ -646,35 +677,39 @@ const styles: any = {
 
     padding: "1.25rem",
     borderRadius: "16px",
+
     border: "1px solid var(--border)",
     background: "var(--card)",
 
     cursor: "pointer",
     transition: "all 0.2s ease",
-
-    marginBottom: "1.5rem",
   },
 
   quickActionIcon: {
     width: "56px",
     height: "56px",
-    borderRadius: "14px",
 
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
 
+    borderRadius: "14px",
+
+    background: "rgba(37,99,235,0.1)",
     fontSize: "1.5rem",
 
-    background: "rgba(29,78,216,0.12)",
+    flexShrink: 0,
   },
 
   quickActionTitle: {
-    margin: 0,
+    fontSize: "1rem",
+    fontWeight: "bold",
+    marginBottom: "0.35rem",
   },
 
   quickActionText: {
-    marginTop: "0.35rem",
     color: "var(--muted)",
+    lineHeight: 1.5,
+    fontSize: "0.92rem",
   },
 };
