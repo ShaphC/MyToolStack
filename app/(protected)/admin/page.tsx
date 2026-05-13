@@ -239,6 +239,24 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* FINANCE */}
+          <div
+            onClick={() => router.push("/admin/finance")}
+            style={styles.quickActionCard}
+          >
+            <div style={styles.quickActionIcon}>💸</div>
+
+            <div>
+              <h3 style={styles.quickActionTitle}>
+                Finance Tracker
+              </h3>
+
+              <p style={styles.quickActionText}>
+                Track upcoming payments, due dates, and totals.
+              </p>
+            </div>
+          </div>
+
         </div>
 
         {/* GRID */}
