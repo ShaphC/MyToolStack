@@ -25,14 +25,17 @@ export default function AdminTasksPage() {
 
   const fetchTasks = async () => {
     const { data } = await supabase
-      .from("admin_tasks")
-      .select("*")
-      .order("completed", {
+    .from("admin_tasks")
+    .select("*")
+    .order("priority", {
         ascending: true,
-      })
-      .order("created_at", {
+    })
+    .order("completed", {
+        ascending: true,
+    })
+    .order("created_at", {
         ascending: false,
-      });
+    });
 
     setTasks(data || []);
   };
