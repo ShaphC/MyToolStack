@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/app/lib/supabase";
 import PageLayout from "@/app/components/PageLayout";
+import AdminModal from "@/app/components/admin/AdminModal";
+import ConfirmModal from "@/app/components/admin/ConfirmModal";
 
 export default function AdminTasksPage() {
   const [tasks, setTasks] = useState<any[]>([]);
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] =
+    useState("");
 
   const [priority, setPriority] =
     useState("medium");
@@ -19,23 +22,29 @@ export default function AdminTasksPage() {
   const [editingId, setEditingId] =
     useState<string | null>(null);
 
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const [deleteId, setDeleteId] =
+    useState<string | null>(null);
+
   useEffect(() => {
     fetchTasks();
   }, []);
 
   const fetchTasks = async () => {
     const { data } = await supabase
-    .from("admin_tasks")
-    .select("*")
-    .order("priority", {
+      .from("admin_tasks")
+      .select("*")
+      .order("priority", {
         ascending: true,
-    })
-    .order("completed", {
+      })
+      .order("completed", {
         ascending: true,
-    })
-    .order("created_at", {
+      })
+      .order("created_at", {
         ascending: false,
-    });
+      });
 
     setTasks(data || []);
   };
@@ -96,6 +105,8 @@ export default function AdminTasksPage() {
 
     resetForm();
 
+    setShowModal(false);
+
     fetchTasks();
   };
 
@@ -110,17 +121,17 @@ export default function AdminTasksPage() {
     setEditingId(task.id);
 
     setTitle(task.title);
-    setDescription(task.description || "");
+
+    setDescription(
+      task.description || ""
+    );
+
     setPriority(task.priority);
+
+    setShowModal(true);
   };
 
   const deleteTask = async (id: string) => {
-    const confirmed = confirm(
-      "Delete this task?"
-    );
-
-    if (!confirmed) return;
-
     const { error } = await supabase
       .from("admin_tasks")
       .delete()
@@ -166,61 +177,16 @@ export default function AdminTasksPage() {
               Internal roadmap and work tracker.
             </p>
           </div>
-        </div>
 
-        {/* FORM */}
-
-        <div style={styles.card}>
-          <input
-            placeholder="Task title"
-            value={title}
-            onChange={(e) =>
-              setTitle(e.target.value)
-            }
-            style={styles.input}
-          />
-
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            style={styles.textarea}
-          />
-
-          <div style={styles.row}>
-            <select
-              value={priority}
-              onChange={(e) =>
-                setPriority(e.target.value)
-              }
-              style={styles.select}
-            >
-              <option value="high">
-                High Priority
-              </option>
-
-              <option value="medium">
-                Medium Priority
-              </option>
-
-              <option value="low">
-                Low Priority
-              </option>
-            </select>
-
-            <button
-              onClick={saveTask}
-              style={styles.button}
-            >
-              {loading
-                ? "Saving..."
-                : editingId
-                ? "Update Task"
-                : "Add Task"}
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              resetForm();
+              setShowModal(true);
+            }}
+            style={styles.addButton}
+          >
+            + Add Task
+          </button>
         </div>
 
         {/* TASKS */}
@@ -281,7 +247,7 @@ export default function AdminTasksPage() {
 
                   <button
                     onClick={() =>
-                      deleteTask(task.id)
+                      setDeleteId(task.id)
                     }
                     style={styles.deleteBtn}
                   >
@@ -299,6 +265,87 @@ export default function AdminTasksPage() {
           ))}
         </div>
       </main>
+
+      <AdminModal
+        open={showModal}
+        title={
+          editingId
+            ? "Edit Task"
+            : "Add Task"
+        }
+        onClose={() => {
+          setShowModal(false);
+          resetForm();
+        }}
+      >
+        <input
+          placeholder="Task title"
+          value={title}
+          onChange={(e) =>
+            setTitle(e.target.value)
+          }
+          style={styles.input}
+        />
+
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) =>
+            setDescription(e.target.value)
+          }
+          style={styles.textarea}
+        />
+
+        <div style={styles.row}>
+          <select
+            value={priority}
+            onChange={(e) =>
+              setPriority(e.target.value)
+            }
+            style={styles.select}
+          >
+            <option value="high">
+              High Priority
+            </option>
+
+            <option value="medium">
+              Medium Priority
+            </option>
+
+            <option value="low">
+              Low Priority
+            </option>
+          </select>
+
+          <button
+            onClick={saveTask}
+            style={styles.button}
+          >
+            {loading
+              ? "Saving..."
+              : editingId
+              ? "Update Task"
+              : "Add Task"}
+          </button>
+        </div>
+      </AdminModal>
+
+      <ConfirmModal
+        open={!!deleteId}
+        title="Delete Task"
+        description="Are you sure you want to delete this task?"
+        confirmText="Delete"
+        onClose={() =>
+          setDeleteId(null)
+        }
+        onConfirm={async () => {
+          if (!deleteId) return;
+
+          await deleteTask(deleteId);
+
+          setDeleteId(null);
+        }}
+      />
     </PageLayout>
   );
 }
@@ -312,6 +359,13 @@ const styles: any = {
 
   topBar: {
     marginBottom: "2rem",
+
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "1rem",
+
+    flexWrap: "wrap",
   },
 
   title: {
@@ -322,13 +376,6 @@ const styles: any = {
   subtitle: {
     color: "var(--muted)",
     marginTop: "0.5rem",
-  },
-
-  card: {
-    border: "1px solid var(--border)",
-    borderRadius: "16px",
-    padding: "1.5rem",
-    background: "var(--card)",
   },
 
   input: {
@@ -357,6 +404,7 @@ const styles: any = {
     justifyContent: "space-between",
     gap: "1rem",
     marginTop: "1rem",
+    flexWrap: "wrap",
   },
 
   select: {
@@ -373,6 +421,16 @@ const styles: any = {
     border: "none",
     padding: "0.9rem 1.25rem",
     borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "bold",
+  },
+
+  addButton: {
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    padding: "1rem 1.25rem",
+    borderRadius: "12px",
     cursor: "pointer",
     fontWeight: "bold",
   },

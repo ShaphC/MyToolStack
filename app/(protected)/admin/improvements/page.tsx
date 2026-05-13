@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { useRouter } from "next/navigation";
 import PageLayout from "@/app/components/PageLayout";
+import AdminModal from "@/app/components/admin/AdminModal";
+import ConfirmModal from "@/app/components/admin/ConfirmModal";
 
 export default function AdminImprovementsPage() {
   const router = useRouter();
@@ -11,13 +13,14 @@ export default function AdminImprovementsPage() {
   const [text, setText] = useState("");
   const [color, setColor] = useState("#2563eb");
 
-  const [editingId, setEditingId] = useState<string | null>(
-    null
-  );
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
 
   const [improvements, setImprovements] = useState<any[]>([]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchImprovements();
@@ -43,14 +46,12 @@ export default function AdminImprovementsPage() {
 
     setLoading(true);
 
-    const { error } = await supabase
-      .from("improvements")
-      .insert([
-        {
-          text,
-          color,
-        },
-      ]);
+    const { error } = await supabase.from("improvements").insert([
+      {
+        text,
+        color,
+      },
+    ]);
 
     setLoading(false);
 
@@ -60,7 +61,7 @@ export default function AdminImprovementsPage() {
     }
 
     resetForm();
-
+    setShowModal(false);
     fetchImprovements();
   };
 
@@ -85,7 +86,7 @@ export default function AdminImprovementsPage() {
     }
 
     resetForm();
-
+    setShowModal(false);
     fetchImprovements();
   };
 
@@ -93,15 +94,10 @@ export default function AdminImprovementsPage() {
     setEditingId(item.id);
     setText(item.text);
     setColor(item.color);
+    setShowModal(true);
   };
 
   const deleteImprovement = async (id: string) => {
-    const confirmed = confirm(
-      "Delete this improvement?"
-    );
-
-    if (!confirmed) return;
-
     const { error } = await supabase
       .from("improvements")
       .delete()
@@ -120,80 +116,21 @@ export default function AdminImprovementsPage() {
       <main style={styles.container}>
         <div style={styles.topBar}>
           <div>
-            <h1 style={styles.title}>
-              Improvements
-            </h1>
-
+            <h1 style={styles.title}>Improvements</h1>
             <p style={styles.subtitle}>
               Publish updates that appear on the homepage.
             </p>
           </div>
 
           <button
-            onClick={() => router.push("/admin")}
-            style={styles.backBtn}
+            onClick={() => {
+              resetForm();
+              setShowModal(true);
+            }}
+            style={styles.addButton}
           >
-            Back
+            + Add Improvement
           </button>
-        </div>
-
-        {/* FORM */}
-        <div style={styles.card}>
-          <h2>
-            {editingId
-              ? "Edit Improvement"
-              : "Add Improvement"}
-          </h2>
-
-          <textarea
-            placeholder="What changed?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            style={styles.textarea}
-          />
-
-          <div style={styles.row}>
-            <div style={styles.colorRow}>
-              <span>Accent Color</span>
-
-              <input
-                type="color"
-                value={color}
-                onChange={(e) =>
-                  setColor(e.target.value)
-                }
-                style={styles.colorInput}
-              />
-            </div>
-
-            <div style={styles.actions}>
-              {editingId && (
-                <button
-                  onClick={resetForm}
-                  style={styles.cancelBtn}
-                >
-                  Cancel
-                </button>
-              )}
-
-              <button
-                onClick={
-                  editingId
-                    ? updateImprovement
-                    : addImprovement
-                }
-                style={styles.button}
-              >
-                {loading
-                  ? editingId
-                    ? "Saving..."
-                    : "Publishing..."
-                  : editingId
-                  ? "Save Changes"
-                  : "Publish"}
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* LIST */}
@@ -215,15 +152,11 @@ export default function AdminImprovementsPage() {
                 />
 
                 <div style={styles.date}>
-                  {new Date(
-                    item.created_at
-                  ).toLocaleDateString()}
+                  {new Date(item.created_at).toLocaleDateString()}
                 </div>
               </div>
 
-              <div style={styles.text}>
-                {item.text}
-              </div>
+              <div style={styles.text}>{item.text}</div>
 
               <div style={styles.cardActions}>
                 <button
@@ -234,9 +167,7 @@ export default function AdminImprovementsPage() {
                 </button>
 
                 <button
-                  onClick={() =>
-                    deleteImprovement(item.id)
-                  }
+                  onClick={() => setDeleteId(item.id)}
                   style={styles.deleteBtn}
                 >
                   Delete
@@ -246,6 +177,64 @@ export default function AdminImprovementsPage() {
           ))}
         </div>
       </main>
+
+      {/* MODAL */}
+      <AdminModal
+        open={showModal}
+        title={editingId ? "Edit Improvement" : "Add Improvement"}
+        onClose={() => {
+          setShowModal(false);
+          resetForm();
+        }}
+      >
+        <textarea
+          placeholder="What changed?"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          style={styles.textarea}
+        />
+
+        <div style={styles.row}>
+          <div style={styles.colorRow}>
+            <span>Accent Color</span>
+
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              style={styles.colorInput}
+            />
+          </div>
+
+          <button
+            onClick={
+              editingId ? updateImprovement : addImprovement
+            }
+            style={styles.button}
+          >
+            {loading
+              ? "Saving..."
+              : editingId
+              ? "Save Changes"
+              : "Publish"}
+          </button>
+        </div>
+      </AdminModal>
+
+      {/* DELETE MODAL */}
+      <ConfirmModal
+        open={!!deleteId}
+        title="Delete Improvement"
+        description="Are you sure you want to delete this improvement?"
+        confirmText="Delete"
+        onClose={() => setDeleteId(null)}
+        onConfirm={async () => {
+          if (!deleteId) return;
+
+          await deleteImprovement(deleteId);
+          setDeleteId(null);
+        }}
+      />
     </PageLayout>
   );
 }
@@ -268,92 +257,20 @@ const styles: any = {
   title: {
     fontSize: "2rem",
     fontWeight: "bold",
-    marginBottom: "0.5rem",
   },
 
   subtitle: {
     color: "var(--muted)",
   },
 
-  card: {
-    border: "1px solid var(--border)",
-    borderRadius: "16px",
-    padding: "1.5rem",
-    background: "var(--card)",
-    marginBottom: "2rem",
-  },
-
-  textarea: {
-    width: "100%",
-    minHeight: "140px",
-    marginTop: "1rem",
-    padding: "1rem",
-
-    borderRadius: "12px",
-    border: "1px solid var(--border)",
-
-    background: "var(--bg)",
-    color: "var(--text)",
-
-    resize: "vertical",
-    outline: "none",
-  },
-
-  row: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: "1rem",
-    gap: "1rem",
-    flexWrap: "wrap",
-  },
-
-  colorRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.75rem",
-  },
-
-  colorInput: {
-    width: "48px",
-    height: "48px",
-    border: "none",
-    background: "transparent",
-    cursor: "pointer",
-  },
-
-  actions: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.75rem",
-  },
-
-  button: {
+  addButton: {
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "0.85rem 1.25rem",
-    borderRadius: "10px",
+    padding: "1rem 1.25rem",
+    borderRadius: "12px",
     cursor: "pointer",
     fontWeight: "bold",
-  },
-
-  cancelBtn: {
-    background: "transparent",
-    border: "1px solid var(--border)",
-    color: "var(--text)",
-    padding: "0.85rem 1.25rem",
-    borderRadius: "10px",
-    cursor: "pointer",
-  },
-
-  backBtn: {
-    border: "1px solid var(--border)",
-    background: "transparent",
-    color: "var(--text)",
-    padding: "0.75rem 1rem",
-    borderRadius: "10px",
-    cursor: "pointer",
   },
 
   feed: {
@@ -414,5 +331,51 @@ const styles: any = {
     padding: "0.6rem 0.9rem",
     borderRadius: "8px",
     cursor: "pointer",
+  },
+
+  textarea: {
+    width: "100%",
+    minHeight: "140px",
+    marginTop: "1rem",
+    padding: "1rem",
+    borderRadius: "12px",
+    border: "1px solid var(--border)",
+    background: "var(--bg)",
+    color: "var(--text)",
+    resize: "vertical",
+    outline: "none",
+  },
+
+  row: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "1rem",
+    gap: "1rem",
+    flexWrap: "wrap",
+  },
+
+  colorRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+  },
+
+  colorInput: {
+    width: "48px",
+    height: "48px",
+    border: "none",
+    background: "transparent",
+    cursor: "pointer",
+  },
+
+  button: {
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    padding: "0.85rem 1.25rem",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "bold",
   },
 };

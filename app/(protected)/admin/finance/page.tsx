@@ -6,16 +6,25 @@ import {
   useRef,
   useState,
 } from "react";
+
 import { Calendar } from "lucide-react";
+
 import { supabase } from "@/app/lib/supabase";
+
 import PageLayout from "@/app/components/PageLayout";
+
+import AdminModal from "@/app/components/admin/AdminModal";
+
+import ConfirmModal from "@/app/components/admin/ConfirmModal";
 
 export default function FinancePage() {
   const [entries, setEntries] = useState<any[]>([]);
+
   const dateRef =
     useRef<HTMLInputElement | null>(null);
 
   const [title, setTitle] = useState("");
+
   const [amount, setAmount] = useState("");
 
   const [dueDate, setDueDate] = useState("");
@@ -26,26 +35,11 @@ export default function FinancePage() {
   const [loading, setLoading] =
     useState(false);
 
-  const formatDate = (date: string) => {
-    if (!date) return "";
+  const [showModal, setShowModal] =
+    useState(false);
 
-    const [year, month, day] = date
-      .split("-")
-      .map(Number);
-
-    return new Date(
-      year,
-      month - 1,
-      day
-    ).toLocaleDateString(
-      "en-US",
-      {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }
-    );
-  };
+  const [deleteId, setDeleteId] =
+    useState<string | null>(null);
 
   useEffect(() => {
     fetchEntries();
@@ -70,9 +64,32 @@ export default function FinancePage() {
     );
   }, [entries]);
 
+  const formatDate = (date: string) => {
+    if (!date) return "";
+
+    const [year, month, day] = date
+      .split("-")
+      .map(Number);
+
+    return new Date(
+      year,
+      month - 1,
+      day
+    ).toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }
+    );
+  };
+
   const resetForm = () => {
     setTitle("");
+
     setAmount("");
+
     setDueDate("");
 
     setEditingId(null);
@@ -120,6 +137,8 @@ export default function FinancePage() {
 
     resetForm();
 
+    setShowModal(false);
+
     fetchEntries();
   };
 
@@ -128,20 +147,16 @@ export default function FinancePage() {
 
     setTitle(entry.title);
 
-    setAmount(entry.amount);
+    setAmount(String(entry.amount));
 
     setDueDate(entry.due_date);
+
+    setShowModal(true);
   };
 
   const deleteEntry = async (
     id: string
   ) => {
-    const confirmed = confirm(
-      "Delete this entry?"
-    );
-
-    if (!confirmed) return;
-
     const { error } = await supabase
       .from("financial_entries")
       .delete()
@@ -155,11 +170,12 @@ export default function FinancePage() {
     fetchEntries();
   };
 
-  return (
-    <PageLayout>
-      <main style={styles.container}>
-        {/* HEADER */}
-
+return (
+  <PageLayout>
+    <main style={styles.page}>
+      
+      {/* STICKY TOP SECTION */}
+      <div style={styles.stickyTop}>
         <div style={styles.top}>
           <div>
             <h1 style={styles.title}>
@@ -171,106 +187,38 @@ export default function FinancePage() {
             </p>
           </div>
 
-          <div style={styles.totalCard}>
-            <div style={styles.totalLabel}>
-              Total
-            </div>
+          <div style={styles.topRight}>
+            <div style={styles.totalCard}>
+              <div style={styles.totalLabel}>
+                Total
+              </div>
 
-            <div style={styles.total}>
-              $
-              {total.toLocaleString(
-                undefined,
-                {
+              <div style={styles.total}>
+                $
+                {total.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
-                }
-              )}
+                })}
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* FORM */}
-
-        <div style={styles.card}>
-          <div style={styles.formGrid}>
-            <input
-              placeholder="Name"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              style={styles.input}
-            />
-
-            <input
-              type="number"
-              placeholder="Amount"
-              value={amount}
-              onChange={(e) =>
-                setAmount(e.target.value)
-              }
-              style={styles.input}
-            />
-
-            <div style={styles.dateWrapper}>
-              <input
-                ref={dateRef}
-                type="date"
-                value={dueDate}
-                onChange={(e) =>
-                  setDueDate(e.target.value)
-                }
-                style={styles.hiddenDateInput}
-              />
-
-              <button
-                type="button"
-                onClick={() =>
-                  dateRef.current?.showPicker()
-                }
-                style={styles.dateButton}
-              >
-                <span>
-                  {dueDate
-                    ? formatDate(dueDate)
-                    : "Select due date"}
-                </span>
-
-                <Calendar size={18} />
-              </button>
-            </div>
-          </div>
-
-          <div style={styles.actions}>
-            {editingId && (
-              <button
-                onClick={resetForm}
-                style={styles.cancelBtn}
-              >
-                Cancel
-              </button>
-            )}
 
             <button
-              onClick={saveEntry}
-              style={styles.button}
+              onClick={() => {
+                resetForm();
+                setShowModal(true);
+              }}
+              style={styles.addButton}
             >
-              {loading
-                ? "Saving..."
-                : editingId
-                ? "Update Entry"
-                : "Add Entry"}
+              + Add Entry
             </button>
           </div>
         </div>
+      </div>
 
-        {/* LIST */}
-
+      {/* SCROLLING LIST ONLY */}
+      <div style={styles.scrollArea}>
         <div style={styles.feed}>
           {entries.map((entry) => (
-            <div
-              key={entry.id}
-              style={styles.entryCard}
-            >
+            <div key={entry.id} style={styles.entryCard}>
               <div style={styles.entryTop}>
                 <div>
                   <div style={styles.entryTitle}>
@@ -278,33 +226,25 @@ export default function FinancePage() {
                   </div>
 
                   <div style={styles.entryDate}>
-                    Due{" "}
-                    {formatDate(entry.due_date)}
+                    Due {formatDate(entry.due_date)}
                   </div>
                 </div>
 
                 <div style={styles.amount}>
-                  $
-                  {Number(
-                    entry.amount
-                  ).toLocaleString()}
+                  ${Number(entry.amount).toLocaleString()}
                 </div>
               </div>
 
               <div style={styles.entryActions}>
                 <button
-                  onClick={() =>
-                    editEntry(entry)
-                  }
+                  onClick={() => editEntry(entry)}
                   style={styles.editBtn}
                 >
                   Edit
                 </button>
 
                 <button
-                  onClick={() =>
-                    deleteEntry(entry.id)
-                  }
+                  onClick={() => setDeleteId(entry.id)}
                   style={styles.deleteBtn}
                 >
                   Delete
@@ -313,9 +253,83 @@ export default function FinancePage() {
             </div>
           ))}
         </div>
-      </main>
-    </PageLayout>
-  );
+      </div>
+
+      {/* MODAL */}
+      <AdminModal
+        open={showModal}
+        title={editingId ? "Edit Entry" : "Add Entry"}
+        onClose={() => {
+          setShowModal(false);
+          resetForm();
+        }}
+      >
+        <div style={styles.formGrid}>
+          <input
+            placeholder="Name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={styles.input}
+          />
+
+          <input
+            type="number"
+            placeholder="Amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            style={styles.input}
+          />
+
+          <div style={styles.dateWrapper}>
+            <input
+              ref={dateRef}
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              style={styles.hiddenDateInput}
+            />
+
+            <button
+              type="button"
+              onClick={() => dateRef.current?.showPicker()}
+              style={styles.dateButton}
+            >
+              <span>
+                {dueDate ? formatDate(dueDate) : "Select due date"}
+              </span>
+
+              <Calendar size={18} />
+            </button>
+          </div>
+        </div>
+
+        <div style={styles.actions}>
+          <button onClick={saveEntry} style={styles.button}>
+            {loading
+              ? "Saving..."
+              : editingId
+              ? "Update Entry"
+              : "Add Entry"}
+          </button>
+        </div>
+      </AdminModal>
+
+      {/* DELETE */}
+      <ConfirmModal
+        open={!!deleteId}
+        title="Delete Entry"
+        description="Are you sure you want to delete this entry?"
+        confirmText="Delete"
+        onClose={() => setDeleteId(null)}
+        onConfirm={async () => {
+          if (!deleteId) return;
+          await deleteEntry(deleteId);
+          setDeleteId(null);
+        }}
+      />
+    </main>
+  </PageLayout>
+);
 }
 
 const styles: any = {
@@ -331,6 +345,13 @@ const styles: any = {
     alignItems: "center",
     gap: "1rem",
     marginBottom: "2rem",
+    flexWrap: "wrap",
+  },
+
+  topRight: {
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
     flexWrap: "wrap",
   },
 
@@ -362,11 +383,14 @@ const styles: any = {
     fontWeight: "bold",
   },
 
-  card: {
-    border: "1px solid var(--border)",
-    borderRadius: "16px",
-    padding: "1.5rem",
-    background: "var(--card)",
+  addButton: {
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    padding: "1rem 1.25rem",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "bold",
   },
 
   formGrid: {
@@ -388,7 +412,6 @@ const styles: any = {
   actions: {
     display: "flex",
     justifyContent: "flex-end",
-    gap: "1rem",
     marginTop: "1rem",
   },
 
@@ -400,15 +423,6 @@ const styles: any = {
     borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "bold",
-  },
-
-  cancelBtn: {
-    background: "transparent",
-    border: "1px solid var(--border)",
-    color: "var(--text)",
-    padding: "0.9rem 1.2rem",
-    borderRadius: "10px",
-    cursor: "pointer",
   },
 
   feed: {
@@ -488,15 +502,11 @@ const styles: any = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-
     padding: "0.9rem 1rem",
-
     borderRadius: "10px",
     border: "1px solid var(--border)",
-
     background: "var(--card)",
     color: "var(--text)",
-
     cursor: "pointer",
     fontSize: "0.95rem",
   },
