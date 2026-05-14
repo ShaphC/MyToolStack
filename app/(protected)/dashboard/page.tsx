@@ -35,6 +35,12 @@ const tools = [
     image: "/images/message.png",
   },
   {
+    name: "AI Prompt Library",
+    slug: "prompt-library",
+    description: "Create a library of AI Prompts",
+    image: "/images/prompt.png",
+  },
+  {
     name: "LinkBridge",
     slug: "link-bridge",
     description: "Share links without overthinking.",
