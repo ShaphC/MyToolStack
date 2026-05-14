@@ -257,7 +257,7 @@ export default function PromptLibraryPage() {
   ) => {
     setConstraints((prev) =>
       prev
-        ? `${prev}\n• ${flag.content}`
+        ? `${prev}\n ${flag.content}`
         : `${flag.content}`
     );
   };
