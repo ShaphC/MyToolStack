@@ -444,7 +444,29 @@ ${constraints}`;
             </>
           ) : (
             <div style={styles.empty}>
-              Create or select a prompt
+                <div style={styles.leftTop}>
+                    <button
+                        onClick={createPrompt}
+                        disabled={
+                        creatingPrompt
+                        }
+                        style={
+                        styles.primaryButtonSmall
+                        }
+                    >
+                        {creatingPrompt ? (
+                        <Loader2
+                            size={16}
+                            className="spin"
+                        />
+                        ) : (
+                        <Plus size={16} />
+                        )}
+
+                        New Prompt
+                    </button>
+                    Create or select a prompt
+                </div>
             </div>
           )}
         </section>
@@ -532,7 +554,7 @@ ${constraints}`;
                   e.target.value
                 )
               }
-              placeholder="No fluff"
+              placeholder="Write your flag..."
               style={styles.modalInput}
             />
 
@@ -621,8 +643,8 @@ const styles: any = {
   },
 
   flagsSidebar: {
-    borderRight:
-      "1px solid var(--border)",
+    // borderRight:
+    //   "1px solid var(--border)",
     padding: "1rem",
     display: "flex",
     flexDirection: "column",
@@ -632,11 +654,13 @@ const styles: any = {
   editor: {
     padding: "1rem 1.5rem",
     overflowY: "auto",
+    border: "1px solid var(--border)",
+    borderRadius: "10px",
   },
 
   promptsSidebar: {
-    borderLeft:
-      "1px solid var(--border)",
+    // borderLeft:
+    //   "1px solid var(--border)",
     padding: "1rem",
     display: "flex",
     flexDirection: "column",
@@ -774,7 +798,7 @@ const styles: any = {
   flag: {
     width: "100%",
     padding: "0.7rem 0.9rem",
-    borderRadius: "999px",
+    borderRadius: "10px",
     border: "1px solid var(--border)",
     background: "var(--card)",
     color: "var(--text)",
