@@ -307,8 +307,11 @@ ${constraints}`;
     <PageLayout>
       <main style={styles.container}>
         <div
-          className="mobile-top"
-          style={styles.mobileTop}
+        className="mobile-top"
+        style={{
+            ...styles.mobileTop,
+            flexWrap: "nowrap",
+        }}
         >
           <button
             onClick={() =>
@@ -847,36 +850,43 @@ ${constraints}`;
 }
 
 const styles: any = {
-  container: {
-    display: "grid",
-    gridTemplateColumns:
-      "220px 1fr 320px",
-    minHeight:
-      "calc(100vh - 70px)",
-    gap: "1rem",
-    position: "relative",
-  },
+    container: {
+        display: "grid",
+        gridTemplateColumns: "220px minmax(0, 1fr) 320px",
+        minHeight: "calc(100vh - 70px)",
+        gap: "1rem",
+        position: "relative",
+    },
 
-  mobileTop: {
-    display: "none",
-    gap: "0.75rem",
-    marginBottom: "1rem",
-  },
+    mobileTop: {
+        display: "none",
+        gap: "0.75rem",
+        marginBottom: "1rem",
+        width: "100%",
+    },
 
-  mobileMenuButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.5rem",
-    minWidth: "120px",
-    flexShrink: 0,
-    border: "1px solid var(--border)",
-    background: "var(--card)",
-    color: "var(--text)",
-    padding: "0.75rem 1rem",
-    borderRadius: "12px",
-    cursor: "pointer",
-  },
+    mobileMenuButton: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+
+        width: "140px",
+        height: "44px",
+
+        flexShrink: 0,
+
+        border: "1px solid var(--border)",
+        background: "var(--card)",
+        color: "var(--text)",
+
+        padding: "0 1rem",
+
+        borderRadius: "12px",
+        cursor: "pointer",
+
+        fontWeight: 500,
+    },
 
   flagsSidebar: {
     padding: "1rem",
@@ -892,13 +902,18 @@ const styles: any = {
     gap: "1rem",
   },
 
-  editor: {
-    padding: "1rem 1.25rem",
-    overflowY: "auto",
-    border: "1px solid var(--border)",
-    borderRadius: "12px",
-    minWidth: 0,
-  },
+    editor: {
+        padding: "1rem 1.25rem",
+        overflowY: "auto",
+
+        border: "1px solid var(--border)",
+        borderRadius: "12px",
+
+        minWidth: 0,
+
+        height: "calc(100vh - 110px)", // <- important
+        boxSizing: "border-box",
+    },
 
   topBar: {
     display: "flex",
