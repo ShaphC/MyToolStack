@@ -1,45 +1,104 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
+  Check,
   Copy,
   Loader2,
-  Mic,
   Sparkles,
   Wand2,
 } from "lucide-react";
 
 import PageLayout from "@/app/components/PageLayout";
-
 import VoiceRecorder from "@/app/components/write-now/VoiceRecorder";
-
 import { writingPresets } from "@/app/lib/write-now/presets";
 
 export default function MomentumPage() {
-  const [thoughts, setThoughts] =
+  const [thoughts, setThoughts] = useState("");
+  const [ideas, setIdeas] = useState<string[]>([]);
+  const [draft, setDraft] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [preset, setPreset] = useState("atomicEssay");
+
+  const [flow, setFlow] = useState<
+    | "idle"
+    | "ideas-loading"
+    | "ideas-ready"
+    | "draft-loading"
+    | "draft-ready"
+  >("idle");
+
+  const [doneMessage, setDoneMessage] =
     useState("");
 
-  const [ideas, setIdeas] = useState<
-    string[]
-  >([]);
-
-  const [draft, setDraft] =
+  const [thinkingStep, setThinkingStep] =
     useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const isBusy =
+    flow === "ideas-loading" ||
+    flow === "draft-loading";
 
-  const [copied, setCopied] =
-    useState(false);
+  useEffect(() => {
+    if (flow === "ideas-loading") {
+      const steps = [
+        "Analyzing thoughts...",
+        "Finding themes...",
+        "Extracting emotional tension...",
+        "Generating writing angles...",
+      ];
 
-  const [preset, setPreset] =
-    useState("atomicEssay"); 
+      let index = 0;
+
+      setThinkingStep(steps[0]);
+
+      const interval = setInterval(() => {
+        index =
+          (index + 1) % steps.length;
+
+        setThinkingStep(steps[index]);
+      }, 1800);
+
+      return () =>
+        clearInterval(interval);
+    }
+
+    if (flow === "draft-loading") {
+      const steps = [
+        "Structuring ideas...",
+        "Writing opening...",
+        "Refining clarity...",
+        "Polishing final draft...",
+      ];
+
+      let index = 0;
+
+      setThinkingStep(steps[0]);
+
+      const interval = setInterval(() => {
+        index =
+          (index + 1) % steps.length;
+
+        setThinkingStep(steps[index]);
+      }, 1800);
+
+      return () =>
+        clearInterval(interval);
+    }
+  }, [flow]);
+
+  const showDone = (msg: string) => {
+    setDoneMessage(msg);
+
+    setTimeout(() => {
+      setDoneMessage("");
+    }, 1800);
+  };
 
   const generateIdeas = async () => {
     if (!thoughts.trim()) return;
 
-    setLoading(true);
+    setFlow("ideas-loading");
 
     try {
       const response = await fetch(
@@ -53,18 +112,16 @@ export default function MomentumPage() {
           },
 
           body: JSON.stringify({
+            mode: "ideas",
             message: `
 You are an elite writing coach.
 
-The user is sharing raw thoughts.
+Extract:
+- themes
+- emotional tension
+- writing angles
 
-Your job:
-- identify themes
-- identify emotional tension
-- identify interesting insights
-- identify strong writing angles
-
-Return ONLY valid JSON.
+Return ONLY JSON:
 
 {
   "ideas": [
@@ -90,17 +147,21 @@ ${thoughts}
       );
 
       setIdeas(parsed.ideas || []);
+
+      setFlow("ideas-ready");
+
+      showDone("Ideas Ready");
     } catch (err) {
       console.error(err);
-    }
 
-    setLoading(false);
+      setFlow("idle");
+    }
   };
 
   const generateDraft = async (
     idea: string
   ) => {
-    setLoading(true);
+    setFlow("draft-loading");
 
     try {
       const response = await fetch(
@@ -114,19 +175,17 @@ ${thoughts}
           },
 
           body: JSON.stringify({
+            mode: "draft",
+            preset,
             message: `
-You are an expert internet writer.
-
 Write an Atomic Essay.
 
 Rules:
-- 250-350 words
+- 250–350 words
 - one core idea
-- sharp insight
 - conversational
 - concise
-- modern writing style
-- visually clean formatting
+- modern formatting
 
 Topic:
 ${idea}
@@ -139,11 +198,15 @@ ${idea}
         await response.json();
 
       setDraft(data.response);
+
+      setFlow("draft-ready");
+
+      showDone("Draft Complete");
     } catch (err) {
       console.error(err);
-    }
 
-    setLoading(false);
+      setFlow("ideas-ready");
+    }
   };
 
   const copyDraft = async () => {
@@ -170,7 +233,7 @@ ${idea}
             </div>
 
             <h1 style={styles.title}>
-              Momentum
+              WriteNow
             </h1>
 
             <p style={styles.subtitle}>
@@ -196,6 +259,7 @@ ${idea}
                         : text
                     )
                   }
+                  disabled={isBusy}
                 />
 
                 <div
@@ -207,12 +271,15 @@ ${idea}
               </div>
             </div>
 
+            {/* PRESETS */}
+
             <div style={styles.presetRow}>
               {Object.entries(
                 writingPresets
               ).map(([key, value]) => (
                 <button
                   key={key}
+                  disabled={isBusy}
                   onClick={() =>
                     setPreset(key)
                   }
@@ -228,6 +295,10 @@ ${idea}
                       preset === key
                         ? "#fff"
                         : "var(--text)",
+
+                    opacity: isBusy
+                      ? 0.7
+                      : 1,
                   }}
                 >
                   {value.label}
@@ -244,14 +315,21 @@ ${idea}
               }
               placeholder="What's on your mind?"
               style={styles.textarea}
+              disabled={isBusy}
             />
 
             <button
               onClick={generateIdeas}
-              disabled={loading}
-              style={styles.primaryButton}
+              disabled={isBusy}
+              style={{
+                ...styles.primaryButton,
+                opacity: isBusy
+                  ? 0.7
+                  : 1,
+              }}
             >
-              {loading ? (
+              {flow ===
+              "ideas-loading" ? (
                 <Loader2
                   size={18}
                   className="spin"
@@ -260,66 +338,94 @@ ${idea}
                 <Sparkles size={18} />
               )}
 
-              Generate Writing Ideas
+              {flow ===
+              "ideas-loading"
+                ? "Thinking..."
+                : "Generate Ideas"}
             </button>
           </div>
 
           {/* IDEAS */}
 
-          {ideas.length > 0 && (
+          {(flow ===
+            "ideas-loading" ||
+            flow ===
+              "ideas-ready") && (
             <div style={styles.section}>
-              <div style={styles.sectionTop}>
-                <div>
-                  <div
-                    style={
-                      styles.sectionTitle
-                    }
-                  >
-                    Suggested Angles
-                  </div>
+              <div
+                style={styles.sectionTitle}
+              >
+                Suggested Angles
+              </div>
+
+              {flow ===
+                "ideas-loading" && (
+                <div
+                  style={
+                    styles.loadingCard
+                  }
+                >
+                  <Loader2
+                    className="spin"
+                    size={28}
+                  />
 
                   <div
                     style={
-                      styles.sectionSubtitle
+                      styles.loadingText
                     }
                   >
-                    Pick a direction to
-                    expand.
+                    {thinkingStep}
                   </div>
                 </div>
-              </div>
+              )}
 
-              <div style={styles.ideaGrid}>
-                {ideas.map(
-                  (idea, index) => (
-                    <button
-                      key={index}
-                      onClick={() =>
-                        generateDraft(
-                          idea
-                        )
-                      }
-                      style={styles.ideaCard}
-                    >
-                      <Wand2 size={18} />
-
-                      <div
+              {flow ===
+                "ideas-ready" && (
+                <div
+                  style={styles.ideaGrid}
+                >
+                  {ideas.map(
+                    (idea, index) => (
+                      <button
+                        key={index}
+                        disabled={
+                          isBusy
+                        }
+                        onClick={() =>
+                          generateDraft(
+                            idea
+                          )
+                        }
                         style={
-                          styles.ideaText
+                          styles.ideaCard
                         }
                       >
-                        {idea}
-                      </div>
-                    </button>
-                  )
-                )}
-              </div>
+                        <Wand2
+                          size={18}
+                        />
+
+                        <div
+                          style={
+                            styles.ideaText
+                          }
+                        >
+                          {idea}
+                        </div>
+                      </button>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           )}
 
           {/* DRAFT */}
 
-          {draft && (
+          {(flow ===
+            "draft-loading" ||
+            flow ===
+              "draft-ready") && (
             <div style={styles.card}>
               <div style={styles.draftTop}>
                 <div>
@@ -343,9 +449,13 @@ ${idea}
 
                 <button
                   onClick={copyDraft}
-                  style={
-                    styles.secondaryButton
-                  }
+                  disabled={isBusy}
+                  style={{
+                    ...styles.secondaryButton,
+                    opacity: isBusy
+                      ? 0.7
+                      : 1,
+                  }}
                 >
                   <Copy size={16} />
 
@@ -355,36 +465,72 @@ ${idea}
                 </button>
               </div>
 
-              <textarea
-                value={draft}
-                onChange={(e) =>
-                  setDraft(
-                    e.target.value
-                  )
-                }
-                style={styles.draftEditor}
-              />
+              {flow ===
+                "draft-loading" && (
+                <div
+                  style={
+                    styles.loadingCard
+                  }
+                >
+                  <Loader2
+                    className="spin"
+                    size={28}
+                  />
+
+                  <div
+                    style={
+                      styles.loadingText
+                    }
+                  >
+                    {thinkingStep}
+                  </div>
+                </div>
+              )}
+
+              {flow ===
+                "draft-ready" && (
+                <textarea
+                  value={draft}
+                  onChange={(e) =>
+                    setDraft(
+                      e.target.value
+                    )
+                  }
+                  style={
+                    styles.draftEditor
+                  }
+                  disabled={isBusy}
+                />
+              )}
             </div>
           )}
         </div>
+
+        {/* DONE TOAST */}
+
+        {doneMessage && (
+          <div style={styles.doneToast}>
+            <Check size={16} />
+            {doneMessage}
+          </div>
+        )}
 
         <style jsx>{`
           .spin {
             animation: spin 1s linear
               infinite;
+            transform-origin: center;
+            display: inline-block;
+            will-change: transform;
           }
 
           @keyframes spin {
             from {
-              transform: rotate(
-                0deg
-              );
+              transform: rotate(0deg);
             }
 
             to {
-              transform: rotate(
-                360deg
-              );
+              transform: rotate(360deg);
             }
           }
         `}</style>
@@ -426,9 +572,9 @@ const styles: any = {
 
   title: {
     marginTop: "1rem",
-    fontSize: "3rem",
+    fontSize: "3.5rem",
     fontWeight: "bold",
-    letterSpacing: "-0.04em",
+    letterSpacing: "-0.05em",
     color: "var(--text)",
   },
 
@@ -440,37 +586,12 @@ const styles: any = {
     lineHeight: 1.7,
   },
 
-  section: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-  },
-
-  sectionTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "1rem",
-    flexWrap: "wrap",
-  },
-
-  sectionTitle: {
-    fontSize: "1.1rem",
-    fontWeight: "bold",
-    color: "var(--text)",
-  },
-
-  sectionSubtitle: {
-    marginTop: "0.35rem",
-    color: "var(--muted)",
-    fontSize: "0.95rem",
-  },
-
   card: {
     border: "1px solid var(--border)",
     background: "var(--card)",
     borderRadius: "24px",
     padding: "1.5rem",
+    width: "100%",
   },
 
   cardTop: {
@@ -517,11 +638,12 @@ const styles: any = {
     lineHeight: 1.8,
     fontFamily:
       "ui-monospace, SFMono-Regular, Menlo, monospace",
+    boxSizing: "border-box",
   },
 
   draftEditor: {
     width: "100%",
-    minHeight: "500px",
+    minHeight: "520px",
     borderRadius: "18px",
     border: "1px solid var(--border)",
     background: "var(--bg)",
@@ -533,6 +655,7 @@ const styles: any = {
     lineHeight: 1.9,
     fontFamily:
       "ui-monospace, SFMono-Regular, Menlo, monospace",
+    boxSizing: "border-box",
   },
 
   primaryButton: {
@@ -549,11 +672,15 @@ const styles: any = {
     cursor: "pointer",
     fontWeight: "bold",
     fontSize: "0.95rem",
+    minWidth: "220px",
+    height: "48px",
+    whiteSpace: "nowrap",
   },
 
   secondaryButton: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     gap: "0.5rem",
     border: "1px solid var(--border)",
     background: "var(--bg)",
@@ -562,6 +689,21 @@ const styles: any = {
     borderRadius: "12px",
     cursor: "pointer",
     fontWeight: "bold",
+    minWidth: "120px",
+    height: "42px",
+    whiteSpace: "nowrap",
+  },
+
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+
+  sectionTitle: {
+    fontSize: "1.1rem",
+    fontWeight: "bold",
+    color: "var(--text)",
   },
 
   ideaGrid: {
@@ -583,6 +725,7 @@ const styles: any = {
     flexDirection: "column",
     gap: "1rem",
     transition: "0.2s ease",
+    minHeight: "120px",
   },
 
   ideaText: {
@@ -604,5 +747,43 @@ const styles: any = {
     borderRadius: "999px",
     cursor: "pointer",
     fontWeight: "bold",
+    minHeight: "40px",
+    minWidth: "120px",
+    whiteSpace: "nowrap",
+  },
+
+  loadingCard: {
+    border: "1px solid var(--border)",
+    background: "var(--card)",
+    borderRadius: "20px",
+    minHeight: "180px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "1rem",
+  },
+
+  loadingText: {
+    color: "var(--muted)",
+    fontSize: "0.95rem",
+    fontWeight: 500,
+  },
+
+  doneToast: {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    background: "#2563eb",
+    color: "#fff",
+    padding: "0.85rem 1rem",
+    borderRadius: "14px",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    fontWeight: "bold",
+    zIndex: 9999,
+    boxShadow:
+      "0 10px 30px rgba(0,0,0,0.2)",
   },
 };

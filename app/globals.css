@@ -156,3 +156,10 @@ input:focus {
     opacity: 1;
   }
 }
+
+.spin {
+  animation: spin 1s linear infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
+  will-change: transform;
+}

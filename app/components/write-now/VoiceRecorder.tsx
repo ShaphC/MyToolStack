@@ -3,11 +3,15 @@
 import { useState, useRef } from "react";
 import { Mic, Square, Loader2 } from "lucide-react";
 
+type Props = {
+  onTranscript: (text: string) => void;
+  disabled?: boolean;
+};
+
 export default function VoiceRecorder({
   onTranscript,
-}: {
-  onTranscript: (text: string) => void;
-}) {
+  disabled = false,
+}: Props) {
   const [recording, setRecording] =
     useState(false);
 
