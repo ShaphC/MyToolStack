@@ -163,3 +163,8 @@ input:focus {
   display: inline-block;
   will-change: transform;
 }
+
+/* MOBILE HORIZONTAL SCROLL */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
