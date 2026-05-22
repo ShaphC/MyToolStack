@@ -22,31 +22,31 @@ const tools = [
     name: "Time Tracker",
     slug: "time-tracker",
     description: "Track and calculate worked time",
-    image: "/images/random.png",
+    image: "/images/tracker.png",
   },
   {
     name: "Secure Links",
     slug: "secret-generator",
     description: "Send a secure link",
-    image: "/images/random.png",
+    image: "/images/secret.png",
   },
   {
     name: "Message Repeater",
     slug: "message-repeater",
     description: "Create reusable templates for messages",
-    image: "/images/random.png",
+    image: "/images/message.png",
   },
   {
     name: "AI Prompt Library",
     slug: "prompt-library",
     description: "Create a library of AI prompts",
-    image: "/images/random.png",
+    image: "/images/prompt.png",
   },
   {
     name: "LinkBridge",
     slug: "link-bridge",
     description: "Share links without overthinking",
-    image: "/images/random.png",
+    image: "/images/bridge.png",
   },
 ];
 
