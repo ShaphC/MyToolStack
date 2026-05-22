@@ -168,3 +168,18 @@ input:focus {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.toolCard {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.toolCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow:
+    0 24px 60px rgba(37, 99, 235, 0.22),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}

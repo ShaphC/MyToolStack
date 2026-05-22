@@ -519,19 +519,37 @@ const styles: any = {
   },
 
   header: {
-    marginBottom: "2rem",
+    marginBottom: "2.5rem",
   },
 
   title: {
-    fontSize: "2.5rem",
-    fontWeight: "bold",
+    fontSize: "2.75rem",
+    fontWeight: 800,
+    letterSpacing: "-0.04em",
   },
 
   subtitle: {
     color: "var(--muted)",
-    marginTop: "0.5rem",
+    marginTop: "0.6rem",
   },
 
+  /* ---------- GLASS CARD BASE ---------- */
+  card: {
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "18px",
+    padding: "1.5rem",
+
+    backdropFilter: "blur(14px)",
+    WebkitBackdropFilter: "blur(14px)",
+
+    boxShadow:
+      "0 10px 40px rgba(0,0,0,0.25)",
+
+    transition: "all 0.25s ease",
+  },
+
+  /* ---------- STATS ---------- */
   statsGrid: {
     display: "grid",
     gridTemplateColumns:
@@ -541,22 +559,109 @@ const styles: any = {
   },
 
   statCard: {
-    background: "var(--card)",
-    border: "1px solid var(--border)",
-    borderRadius: "14px",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "16px",
     padding: "1.5rem",
+
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+
+    boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+
+    transition: "all 0.2s ease",
+  },
+
+  statCardHover: {
+    transform: "translateY(-4px)",
+    boxShadow: "0 18px 50px rgba(37,99,235,0.18)",
   },
 
   statNumber: {
-    fontSize: "2rem",
-    fontWeight: "bold",
-    marginBottom: "0.5rem",
+    fontSize: "2.2rem",
+    fontWeight: 800,
+    marginBottom: "0.4rem",
+    background:
+      "linear-gradient(135deg,#60a5fa,#a78bfa)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
   },
 
   statLabel: {
     color: "var(--muted)",
+    fontSize: "0.9rem",
   },
 
+  /* ---------- QUICK ACTIONS ---------- */
+  quickActionsGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "1rem",
+    marginBottom: "2rem",
+  },
+
+  quickActionCard: {
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+
+    padding: "1.25rem",
+    borderRadius: "18px",
+
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+
+    backdropFilter: "blur(14px)",
+    WebkitBackdropFilter: "blur(14px)",
+
+    cursor: "pointer",
+    transition: "all 0.25s ease",
+
+    boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+  },
+
+  quickActionCardHover: {
+    transform: "translateY(-6px)",
+    boxShadow: "0 25px 70px rgba(37,99,235,0.22)",
+    border: "1px solid rgba(59,130,246,0.35)",
+  },
+
+  /* ---------- ICONS (IMPORTANT) ---------- */
+  quickActionIcon: {
+    width: "60px",
+    height: "60px",
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    borderRadius: "16px",
+
+    background:
+      "radial-gradient(circle at top, rgba(59,130,246,0.35), rgba(59,130,246,0.08))",
+
+    fontSize: "1.6rem",
+
+    boxShadow:
+      "0 10px 30px rgba(59,130,246,0.25)",
+
+    flexShrink: 0,
+  },
+
+  quickActionTitle: {
+    fontSize: "1rem",
+    fontWeight: "bold",
+    marginBottom: "0.35rem",
+  },
+
+  quickActionText: {
+    color: "var(--muted)",
+    fontSize: "0.92rem",
+    lineHeight: 1.5,
+  },
+
+  /* ---------- GRID ---------- */
   dashboardGrid: {
     display: "grid",
     gap: "1.5rem",
@@ -574,13 +679,6 @@ const styles: any = {
     flexDirection: "column",
   },
 
-  card: {
-    background: "var(--card)",
-    border: "1px solid var(--border)",
-    borderRadius: "16px",
-    padding: "1.5rem",
-  },
-
   sectionHeader: {
     display: "flex",
     alignItems: "center",
@@ -589,8 +687,8 @@ const styles: any = {
   },
 
   badge: {
-    background: "rgba(37,99,235,0.12)",
-    color: "#2563eb",
+    background: "rgba(59,130,246,0.12)",
+    color: "#60a5fa",
     padding: "0.4rem 0.75rem",
     borderRadius: "999px",
     fontSize: "0.8rem",
@@ -599,10 +697,10 @@ const styles: any = {
 
   search: {
     width: "100%",
-    padding: "0.8rem 1rem",
-    borderRadius: "10px",
-    border: "1px solid var(--border)",
-    background: "var(--bg)",
+    padding: "0.85rem 1rem",
+    borderRadius: "12px",
+    border: "1px solid rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.03)",
     color: "var(--text)",
     marginBottom: "1rem",
     outline: "none",
@@ -619,115 +717,66 @@ const styles: any = {
 
   itemCard: {
     position: "relative",
-    border: "1px solid var(--border)",
-    borderRadius: "12px",
+
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "14px",
     padding: "1rem",
-    background: "var(--bg)",
+
+    background: "rgba(255,255,255,0.03)",
+
     transition: "all 0.2s ease",
   },
 
+  hoverCard: {
+    transform: "translateY(-4px)",
+    boxShadow: "0 18px 50px rgba(0,0,0,0.25)",
+    border: "1px solid rgba(59,130,246,0.35)",
+  },
+
   unreadCard: {
-    border: "1px solid #2563eb",
-    background: "rgba(37,99,235,0.06)",
+    border: "1px solid rgba(59,130,246,0.5)",
+    background: "rgba(59,130,246,0.06)",
   },
 
   readCard: {
-    opacity: 0.9,
-  },
-
-  hoverCard: {
-    transform: "translateY(-3px)",
-    boxShadow:
-      "0 10px 25px rgba(0,0,0,0.12)",
+    opacity: 0.85,
   },
 
   unreadDot: {
     position: "absolute",
-    top: "14px",
-    right: "14px",
+    top: "12px",
+    right: "12px",
     width: "10px",
     height: "10px",
     borderRadius: "50%",
-    background: "#2563eb",
+    background: "#60a5fa",
+    boxShadow: "0 0 12px rgba(59,130,246,0.6)",
   },
 
   userId: {
     fontWeight: "bold",
-    fontSize: "1rem",
-    wordBreak: "break-all",
   },
 
   meta: {
     marginTop: "0.35rem",
     color: "var(--muted)",
-    fontSize: "0.92rem",
+    fontSize: "0.9rem",
   },
 
   timestamp: {
     marginTop: "0.5rem",
-    fontSize: "0.8rem",
+    fontSize: "0.78rem",
     color: "var(--muted)",
   },
 
   message: {
-    marginTop: "0.85rem",
+    marginTop: "0.75rem",
     lineHeight: 1.6,
-    whiteSpace: "pre-wrap",
   },
 
   empty: {
     padding: "2rem",
     textAlign: "center",
     color: "var(--muted)",
-  },
-
-  quickActionsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-    gap: "1rem",
-    marginBottom: "2rem",
-  },
-
-  quickActionCard: {
-    display: "flex",
-    alignItems: "center",
-    gap: "1rem",
-
-    padding: "1.25rem",
-    borderRadius: "16px",
-
-    border: "1px solid var(--border)",
-    background: "var(--card)",
-
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
-
-  quickActionIcon: {
-    width: "56px",
-    height: "56px",
-
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderRadius: "14px",
-
-    background: "rgba(37,99,235,0.1)",
-    fontSize: "1.5rem",
-
-    flexShrink: 0,
-  },
-
-  quickActionTitle: {
-    fontSize: "1rem",
-    fontWeight: "bold",
-    marginBottom: "0.35rem",
-  },
-
-  quickActionText: {
-    color: "var(--muted)",
-    lineHeight: 1.5,
-    fontSize: "0.92rem",
   },
 };
