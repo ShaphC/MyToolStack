@@ -100,7 +100,7 @@ export default function PromptLibraryPage() {
       setSaveState("saved");
 
       fetchPrompts();
-    }, 1200);
+    }, 1000);
 
     return () => clearTimeout(timeout);
   }, [content, constraints]);
@@ -307,11 +307,8 @@ ${constraints}`;
     <PageLayout>
       <main style={styles.container}>
         <div
-        className="mobile-top"
-        style={{
-            ...styles.mobileTop,
-            flexWrap: "nowrap",
-        }}
+          className="mobile-top"
+          style={styles.mobileTop}
         >
           <button
             onClick={() =>
@@ -319,7 +316,7 @@ ${constraints}`;
             }
             style={styles.mobileMenuButton}
           >
-            <Menu size={18} />
+            <Menu size={16} />
             Flags
           </button>
 
@@ -329,12 +326,12 @@ ${constraints}`;
             }
             style={styles.mobileMenuButton}
           >
-            <Menu size={18} />
+            <Menu size={16} />
             Prompts
           </button>
         </div>
 
-        {/* FLAGS DESKTOP */}
+        {/* FLAGS */}
 
         <aside style={styles.flagsSidebar}>
           <button
@@ -343,7 +340,7 @@ ${constraints}`;
             }
             style={styles.primaryButton}
           >
-            <Plus size={16} />
+            <Plus size={15} />
             Flag
           </button>
 
@@ -382,14 +379,14 @@ ${constraints}`;
                   >
                     {creatingPrompt ? (
                       <Loader2
-                        size={16}
+                        size={14}
                         className="spin"
                       />
                     ) : (
-                      <Plus size={16} />
+                      <Plus size={14} />
                     )}
 
-                    New Prompt
+                    New
                   </button>
 
                   <div
@@ -410,7 +407,7 @@ ${constraints}`;
                     onClick={copyPrompt}
                     style={styles.copyButton}
                   >
-                    <Copy size={16} />
+                    <Copy size={14} />
 
                     {copied
                       ? "Copied"
@@ -425,7 +422,7 @@ ${constraints}`;
                     }
                     style={styles.deleteButton}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -467,7 +464,7 @@ ${constraints}`;
                             styles.removeConstraint
                           }
                         >
-                          <X size={14} />
+                          <X size={12} />
                         </button>
 
                         <div
@@ -498,11 +495,11 @@ ${constraints}`;
                 >
                   {creatingPrompt ? (
                     <Loader2
-                      size={16}
+                      size={14}
                       className="spin"
                     />
                   ) : (
-                    <Plus size={16} />
+                    <Plus size={14} />
                   )}
 
                   New Prompt
@@ -517,11 +514,11 @@ ${constraints}`;
           )}
         </section>
 
-        {/* PROMPTS DESKTOP */}
+        {/* PROMPTS */}
 
         <aside style={styles.promptsSidebar}>
           <div style={styles.searchBox}>
-            <Search size={16} />
+            <Search size={14} />
 
             <input
               value={search}
@@ -575,7 +572,7 @@ ${constraints}`;
                       styles.cardDelete
                     }
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={13} />
                   </button>
                 </div>
               )
@@ -666,159 +663,9 @@ ${constraints}`;
         </div>
       )}
 
-      {/* MOBILE FLAGS MODAL */}
-
-      {showFlagsMobileModal && (
-        <div style={styles.overlay}>
-          <div style={styles.mobileModal}>
-            <div style={styles.mobileModalTop}>
-              <h2 style={styles.modalTitle}>
-                Flags
-              </h2>
-
-              <button
-                onClick={() =>
-                  setShowFlagsMobileModal(
-                    false
-                  )
-                }
-                style={styles.closeMobile}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowFlagsMobileModal(false);
-                setShowFlagModal(true);
-              }}
-              style={styles.primaryButton}
-            >
-              <Plus size={16} />
-              New Flag
-            </button>
-
-            <div style={styles.mobileFlagsList}>
-              {flags.map((flag) => (
-                <button
-                  key={flag.id}
-                  onClick={() => {
-                    addFlagToConstraints(
-                      flag
-                    );
-
-                    setShowFlagsMobileModal(
-                      false
-                    );
-                  }}
-                  style={styles.flag}
-                >
-                  {flag.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MOBILE PROMPTS MODAL */}
-
-      {showPromptsMobileModal && (
-        <div style={styles.overlay}>
-          <div style={styles.mobileModal}>
-            <div style={styles.mobileModalTop}>
-              <h2 style={styles.modalTitle}>
-                Prompts
-              </h2>
-
-              <button
-                onClick={() =>
-                  setShowPromptsMobileModal(
-                    false
-                  )
-                }
-                style={styles.closeMobile}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div style={styles.searchBox}>
-              <Search size={16} />
-
-              <input
-                value={search}
-                onChange={(e) =>
-                  setSearch(
-                    e.target.value
-                  )
-                }
-                placeholder="Search..."
-                style={styles.searchInput}
-              />
-            </div>
-
-            <div style={styles.mobilePromptsList}>
-              {filteredPrompts.map(
-                (prompt) => (
-                  <div
-                    key={prompt.id}
-                    style={{
-                      ...styles.promptCard,
-                      border:
-                        selectedPrompt?.id ===
-                        prompt.id
-                          ? "1px solid #2563eb"
-                          : "1px solid var(--border)",
-                    }}
-                  >
-                    <button
-                      onClick={() => {
-                        openPrompt(prompt);
-
-                        setShowPromptsMobileModal(
-                          false
-                        );
-                      }}
-                      style={
-                        styles.promptContent
-                      }
-                    >
-                      <div
-                        style={
-                          styles.promptPreview
-                        }
-                      >
-                        {prompt.content ||
-                          "Untitled Prompt"}
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setShowPromptsMobileModal(false);
-                        setReopenPromptsModal(true);
-                        setDeleteId(prompt.id);
-                      }}
-                      style={
-                        styles.cardDelete
-                      }
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       <style jsx>{`
         .spin {
-          animation: spin 1s linear
-            infinite;
+          animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
@@ -850,133 +697,127 @@ ${constraints}`;
 }
 
 const styles: any = {
-    container: {
-        display: "grid",
-        gridTemplateColumns: "220px minmax(0, 1fr) 320px",
-        minHeight: "calc(100vh - 70px)",
-        gap: "1rem",
-        position: "relative",
-    },
+  container: {
+    display: "grid",
+    gridTemplateColumns:
+      "180px minmax(0, 1fr) 260px",
+    minHeight:
+      "calc(100vh - 70px)",
+    gap: "0.6rem",
+    position: "relative",
+    padding: "0.6rem",
+  },
 
-    mobileTop: {
-        display: "none",
-        gap: "0.75rem",
-        marginBottom: "1rem",
-        width: "100%",
-    },
+  mobileTop: {
+    display: "none",
+    gap: "0.5rem",
+    marginBottom: "0.5rem",
+    width: "100%",
+  },
 
-    mobileMenuButton: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0.5rem",
-
-        width: "140px",
-        height: "44px",
-
-        flexShrink: 0,
-
-        border: "1px solid var(--border)",
-        background: "var(--card)",
-        color: "var(--text)",
-
-        padding: "0 1rem",
-
-        borderRadius: "12px",
-        cursor: "pointer",
-
-        fontWeight: 500,
-    },
+  mobileMenuButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.35rem",
+    width: "120px",
+    height: "38px",
+    flexShrink: 0,
+    border: "1px solid var(--border)",
+    background: "var(--card)",
+    color: "var(--text)",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontSize: "0.9rem",
+  },
 
   flagsSidebar: {
-    padding: "1rem",
+    padding: "0.5rem",
     display: "flex",
     flexDirection: "column",
-    gap: "1rem",
+    gap: "0.5rem",
   },
 
   promptsSidebar: {
-    padding: "1rem",
+    padding: "0.5rem",
     display: "flex",
     flexDirection: "column",
-    gap: "1rem",
+    gap: "0.5rem",
   },
 
-    editor: {
-        padding: "1rem 1.25rem",
-        overflowY: "auto",
-
-        border: "1px solid var(--border)",
-        borderRadius: "12px",
-
-        minWidth: 0,
-
-        height: "calc(100vh - 110px)", // <- important
-        boxSizing: "border-box",
-    },
+  editor: {
+    padding: "0.8rem",
+    overflowY: "auto",
+    border: "1px solid var(--border)",
+    borderRadius: "12px",
+    minWidth: 0,
+    height: "calc(100vh - 90px)",
+    boxSizing: "border-box",
+  },
 
   topBar: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: "1rem",
-    marginBottom: "1rem",
+    gap: "0.5rem",
+    marginBottom: "0.6rem",
     flexWrap: "wrap",
   },
 
   leftTop: {
     display: "flex",
     alignItems: "center",
-    gap: "1rem",
+    gap: "0.5rem",
     flexWrap: "wrap",
   },
 
   saveState: {
     color: "var(--muted)",
-    fontSize: "0.9rem",
+    fontSize: "0.8rem",
   },
 
   actions: {
     display: "flex",
-    gap: "0.75rem",
+    gap: "0.4rem",
     flexWrap: "wrap",
   },
 
   promptInput: {
     width: "100%",
-    minHeight: "260px",
+    minHeight: "180px",
     border: "none",
     outline: "none",
     resize: "none",
     background: "transparent",
     color: "var(--text)",
-    fontSize: "1rem",
-    lineHeight: 1.8,
+    fontSize: "0.95rem",
+    lineHeight: 1.5,
     fontFamily:
       "ui-monospace, monospace",
   },
 
   constraintsWrap: {
-    marginTop: "2rem",
+    marginTop: "0.8rem",
     display: "flex",
     flexDirection: "column",
-    gap: "0.75rem",
+    gap: "0.5rem",
   },
 
   constraintItem: {
     display: "flex",
     alignItems: "flex-start",
-    gap: "0.75rem",
-    padding: "0.9rem 1rem",
-    borderRadius: "12px",
+    gap: "0.5rem",
+    padding: "0.65rem",
+    borderRadius: "10px",
     background: "var(--card)",
     border: "1px solid var(--border)",
     color: "var(--text)",
+    fontSize: "0.9rem",
   },
 
   removeConstraint: {
-    width: "28px",
-    height: "28px",
+    width: "22px",
+    height: "22px",
     borderRadius: "999px",
     border: "none",
     background: "#dc2626",
@@ -992,50 +833,53 @@ const styles: any = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "0.5rem",
+    gap: "0.4rem",
     width: "100%",
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "0.85rem",
-    borderRadius: "12px",
+    padding: "0.7rem",
+    borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "bold",
+    fontSize: "0.9rem",
   },
 
   primaryButtonSmall: {
     display: "flex",
     alignItems: "center",
-    gap: "0.5rem",
+    gap: "0.35rem",
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "0.75rem 1rem",
-    borderRadius: "12px",
+    padding: "0.6rem 0.8rem",
+    borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "bold",
     whiteSpace: "nowrap",
+    fontSize: "0.85rem",
   },
 
   copyButton: {
     display: "flex",
     alignItems: "center",
-    gap: "0.5rem",
+    gap: "0.35rem",
     background: "var(--card)",
     color: "var(--text)",
     border: "1px solid var(--border)",
-    padding: "0.75rem 1rem",
-    borderRadius: "12px",
+    padding: "0.6rem 0.8rem",
+    borderRadius: "10px",
     cursor: "pointer",
+    fontSize: "0.85rem",
   },
 
   deleteButton: {
-    width: "44px",
-    height: "44px",
+    width: "38px",
+    height: "38px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "12px",
+    borderRadius: "10px",
     border: "1px solid #dc2626",
     background: "transparent",
     color: "#dc2626",
@@ -1045,29 +889,30 @@ const styles: any = {
   flagsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "0.75rem",
+    gap: "0.45rem",
     overflowY: "auto",
   },
 
   flag: {
     width: "100%",
-    padding: "0.7rem 0.9rem",
-    borderRadius: "10px",
+    padding: "0.6rem 0.7rem",
+    borderRadius: "9px",
     border: "1px solid var(--border)",
     background: "var(--card)",
     color: "var(--text)",
     cursor: "pointer",
     textAlign: "left",
     wordBreak: "break-word",
+    fontSize: "0.85rem",
   },
 
   searchBox: {
     display: "flex",
     alignItems: "center",
-    gap: "0.75rem",
+    gap: "0.45rem",
     border: "1px solid var(--border)",
-    borderRadius: "12px",
-    padding: "0.8rem 1rem",
+    borderRadius: "10px",
+    padding: "0.65rem 0.75rem",
     background: "var(--card)",
   },
 
@@ -1077,24 +922,25 @@ const styles: any = {
     border: "none",
     outline: "none",
     color: "var(--text)",
+    fontSize: "0.9rem",
   },
 
   promptsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "0.75rem",
+    gap: "0.45rem",
     overflowY: "auto",
-    maxHeight: "540px",
+    maxHeight: "520px",
   },
 
   promptCard: {
     background: "var(--card)",
     color: "var(--text)",
-    borderRadius: "14px",
-    padding: "0.75rem",
+    borderRadius: "10px",
+    padding: "0.55rem",
     display: "flex",
     alignItems: "flex-start",
-    gap: "0.75rem",
+    gap: "0.45rem",
   },
 
   promptContent: {
@@ -1108,9 +954,9 @@ const styles: any = {
   },
 
   cardDelete: {
-    width: "34px",
-    height: "34px",
-    borderRadius: "10px",
+    width: "30px",
+    height: "30px",
+    borderRadius: "8px",
     border: "1px solid #dc2626",
     background: "transparent",
     color: "#dc2626",
@@ -1122,12 +968,13 @@ const styles: any = {
   },
 
   promptPreview: {
-    lineHeight: 1.5,
+    lineHeight: 1.4,
     display: "-webkit-box",
-    WebkitLineClamp: 5,
+    WebkitLineClamp: 4,
     WebkitBoxOrient: "vertical",
     overflow: "hidden",
     wordBreak: "break-word",
+    fontSize: "0.85rem",
   },
 
   empty: {
@@ -1143,7 +990,7 @@ const styles: any = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "1rem",
+    gap: "0.6rem",
   },
 
   overlay: {
@@ -1154,115 +1001,74 @@ const styles: any = {
     alignItems: "center",
     justifyContent: "center",
     zIndex: 999,
-    padding: "1rem",
+    padding: "0.8rem",
   },
 
   modal: {
     width: "100%",
-    maxWidth: "450px",
+    maxWidth: "400px",
     background: "var(--card)",
     border: "1px solid var(--border)",
-    borderRadius: "24px",
-    padding: "1.5rem",
-  },
-
-  mobileModal: {
-    width: "100%",
-    maxWidth: "500px",
-    maxHeight: "85vh",
-    overflowY: "auto",
-    background: "var(--card)",
-    border: "1px solid var(--border)",
-    borderRadius: "24px",
+    borderRadius: "18px",
     padding: "1rem",
   },
 
-  mobileModalTop: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "1rem",
-  },
-
-  mobileFlagsList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.75rem",
-    marginTop: "1rem",
-  },
-
-  mobilePromptsList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.75rem",
-    marginTop: "1rem",
-  },
-
   modalTitle: {
-    fontSize: "1.25rem",
+    fontSize: "1rem",
     fontWeight: "bold",
     color: "var(--text)",
   },
 
   modalInput: {
     width: "100%",
-    marginTop: "1rem",
-    padding: "1rem",
-    borderRadius: "14px",
+    marginTop: "0.8rem",
+    padding: "0.8rem",
+    borderRadius: "10px",
     border: "1px solid var(--border)",
     background: "var(--bg)",
     color: "var(--text)",
     outline: "none",
+    fontSize: "0.9rem",
   },
 
   modalActions: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    gap: "0.75rem",
-    marginTop: "1.5rem",
+    gap: "0.5rem",
+    marginTop: "1rem",
     flexWrap: "wrap",
-  },
-
-  closeMobile: {
-    width: "28px",
-    height: "28px",
-    borderRadius: "999px",
-    border: "none",
-    background: "#dc2626",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
   },
 
   cancelButton: {
     border: "1px solid var(--border)",
     background: "transparent",
     color: "var(--text)",
-    padding: "0.85rem 1rem",
-    borderRadius: "12px",
+    padding: "0.7rem 0.9rem",
+    borderRadius: "10px",
     cursor: "pointer",
+    fontSize: "0.85rem",
   },
 
   saveButton: {
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "0.85rem 1rem",
-    borderRadius: "12px",
+    padding: "0.7rem 0.9rem",
+    borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "bold",
+    fontSize: "0.85rem",
   },
 
   confirmDelete: {
     background: "#dc2626",
     color: "#fff",
     border: "none",
-    padding: "0.85rem 1rem",
-    borderRadius: "12px",
+    padding: "0.7rem 0.9rem",
+    borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "bold",
+    fontSize: "0.85rem",
   },
 };
