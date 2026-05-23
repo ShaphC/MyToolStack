@@ -315,6 +315,7 @@ ${constraints}`;
   return (
     <PageLayout>
       <main style={styles.page}>
+        <div style={styles.backgroundGlow} />
         {/* HERO */}
         <div style={styles.hero}>
           <div style={styles.heroBadge}>
@@ -883,10 +884,22 @@ ${constraints}`;
 const styles: any = {
   page: {
     minHeight: "100vh",
-    background: "var(--bg)",
+    background: `
+      radial-gradient(
+        circle at top,
+        rgba(37,99,235,0.10),
+        rgba(0,0,0,0) 40%
+      ),
+      radial-gradient(
+        circle at bottom,
+        rgba(168,85,247,0.08),
+        rgba(0,0,0,0) 50%
+      ),
+      var(--bg)
+    `,
     color: "var(--text)",
-    padding:
-      "1.25rem 1.25rem 2rem",
+    padding: "1.25rem 1.25rem 2rem",
+    overflowX: "hidden",
   },
 
   hero: {
@@ -950,10 +963,30 @@ const styles: any = {
 
   container: {
     display: "grid",
-    gridTemplateColumns:
-      "240px minmax(0,1fr) 320px",
+    gridTemplateColumns: "240px minmax(0,1fr) 320px",
     gap: "1.2rem",
     alignItems: "stretch",
+    position: "relative",
+    zIndex: 1,
+  },
+
+  backgroundGlow: {
+    position: "fixed",
+    inset: 0,
+    pointerEvents: "none",
+    background: `
+      radial-gradient(
+        circle at 20% 10%,
+        rgba(59,130,246,0.10),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(168,85,247,0.08),
+        transparent 45%
+      )
+    `,
+    zIndex: 0,
   },
 
   sidebar: {
