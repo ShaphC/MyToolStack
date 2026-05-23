@@ -56,11 +56,20 @@ export default function PromptLibraryPage() {
   const [copied, setCopied] =
     useState(false);
 
-  const [showFlagsMobileModal,setShowFlagsMobileModal]=useState(false);
+  const [
+    showFlagsMobileModal,
+    setShowFlagsMobileModal,
+  ] = useState(false);
 
-  const [showPromptsMobileModal,setShowPromptsMobileModal]=useState(false);
+  const [
+    showPromptsMobileModal,
+    setShowPromptsMobileModal,
+  ] = useState(false);
 
-  const [reopenPromptsModal,setReopenPromptsModal]=useState(false);
+  const [
+    reopenPromptsModal,
+    setReopenPromptsModal,
+  ] = useState(false);
 
   const textareaRef =
     useRef<HTMLTextAreaElement | null>(
@@ -305,7 +314,25 @@ ${constraints}`;
 
   return (
     <PageLayout>
-      <main style={styles.container}>
+      <main style={styles.page}>
+        {/* HERO */}
+        <div style={styles.hero}>
+          <div style={styles.heroBadge}>
+            ✨ AI Writing Workspace
+          </div>
+
+          <h1 style={styles.title}>
+            Prompt Library
+          </h1>
+
+          <p style={styles.subtitle}>
+            Build reusable prompts,
+            constraints, and AI workflows
+            in one organized workspace.
+          </p>
+        </div>
+
+        {/* MOBILE TOP */}
         <div
           className="mobile-top"
           style={styles.mobileTop}
@@ -331,43 +358,168 @@ ${constraints}`;
           </button>
         </div>
 
-        {/* FLAGS */}
-
-        <aside style={styles.flagsSidebar}>
-          <button
-            onClick={() =>
-              setShowFlagModal(true)
-            }
-            style={styles.primaryButton}
+        {/* MAIN GRID */}
+        <div style={styles.container}>
+          {/* FLAGS */}
+          <aside
+            className="desktop-sidebar"
+            style={styles.sidebar}
           >
-            <Plus size={15} />
-            Flag
-          </button>
-
-          <div style={styles.flagsList}>
-            {flags.map((flag) => (
+            <div style={styles.sidebarCard}>
               <button
-                key={flag.id}
                 onClick={() =>
-                  addFlagToConstraints(
-                    flag
-                  )
+                  setShowFlagModal(true)
                 }
-                style={styles.flag}
+                style={styles.primaryButton}
               >
-                {flag.label}
+                <Plus size={15} />
+                New Flag
               </button>
-            ))}
-          </div>
-        </aside>
 
-        {/* EDITOR */}
+              <div style={styles.sidebarTitle}>
+                Constraints
+              </div>
 
-        <section style={styles.editor}>
-          {selectedPrompt ? (
-            <>
-              <div style={styles.topBar}>
-                <div style={styles.leftTop}>
+              <div style={styles.flagsList}>
+                {flags.map((flag) => (
+                  <button
+                    key={flag.id}
+                    onClick={() =>
+                      addFlagToConstraints(
+                        flag
+                      )
+                    }
+                    style={styles.flag}
+                  >
+                    {flag.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          {/* EDITOR */}
+          <section style={styles.editor}>
+            {selectedPrompt ? (
+              <>
+                <div style={styles.topBar}>
+                  <div style={styles.leftTop}>
+                    <button
+                      onClick={createPrompt}
+                      disabled={
+                        creatingPrompt
+                      }
+                      style={
+                        styles.primaryButtonSmall
+                      }
+                    >
+                      {creatingPrompt ? (
+                        <Loader2
+                          size={14}
+                          className="spin"
+                        />
+                      ) : (
+                        <Plus size={14} />
+                      )}
+
+                      New
+                    </button>
+
+                    <div
+                      style={styles.saveState}
+                    >
+                      {saveState ===
+                        "saving" &&
+                        "Saving..."}
+
+                      {saveState ===
+                        "saved" &&
+                        "Saved ✓"}
+                    </div>
+                  </div>
+
+                  <div style={styles.actions}>
+                    <button
+                      onClick={copyPrompt}
+                      style={styles.copyButton}
+                    >
+                      <Copy size={14} />
+
+                      {copied
+                        ? "Copied"
+                        : "Copy"}
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        setDeleteId(
+                          selectedPrompt.id
+                        )
+                      }
+                      style={styles.deleteButton}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+
+                <textarea
+                  ref={textareaRef}
+                  value={content}
+                  onChange={(e) =>
+                    setContent(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Write your prompt..."
+                  style={styles.promptInput}
+                />
+
+                {constraintLines.length >
+                  0 && (
+                  <div
+                    style={
+                      styles.constraintsWrap
+                    }
+                  >
+                    {constraintLines.map(
+                      (line, index) => (
+                        <div
+                          key={index}
+                          style={
+                            styles.constraintItem
+                          }
+                        >
+                          <button
+                            onClick={() =>
+                              removeConstraint(
+                                line
+                              )
+                            }
+                            style={
+                              styles.removeConstraint
+                            }
+                          >
+                            <X size={12} />
+                          </button>
+
+                          <div
+                            style={{
+                              wordBreak:
+                                "break-word",
+                            }}
+                          >
+                            {line}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div style={styles.empty}>
+                <div style={styles.emptyWrap}>
                   <button
                     onClick={createPrompt}
                     disabled={
@@ -386,442 +538,533 @@ ${constraints}`;
                       <Plus size={14} />
                     )}
 
-                    New
+                    New Prompt
                   </button>
 
-                  <div
-                    style={styles.saveState}
-                  >
-                    {saveState ===
-                      "saving" &&
-                      "Saving..."}
-
-                    {saveState ===
-                      "saved" &&
-                      "Saved ✓"}
+                  <div>
+                    Create or select a
+                    prompt
                   </div>
                 </div>
+              </div>
+            )}
+          </section>
 
-                <div style={styles.actions}>
-                  <button
-                    onClick={copyPrompt}
-                    style={styles.copyButton}
-                  >
-                    <Copy size={14} />
+          {/* PROMPTS */}
+          <aside
+            className="desktop-sidebar"
+            style={styles.sidebar}
+          >
+            <div style={styles.sidebarCard}>
+              <div style={styles.searchBox}>
+                <Search size={14} />
 
-                    {copied
-                      ? "Copied"
-                      : "Copy"}
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      setDeleteId(
-                        selectedPrompt.id
-                      )
-                    }
-                    style={styles.deleteButton}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
+                <input
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Search..."
+                  style={styles.searchInput}
+                />
               </div>
 
-              <textarea
-                ref={textareaRef}
-                value={content}
+              <div style={styles.sidebarTitle}>
+                Saved Prompts
+              </div>
+
+              <div style={styles.promptsList}>
+                {filteredPrompts.map(
+                  (prompt) => (
+                    <div
+                      key={prompt.id}
+                      style={{
+                        ...styles.promptCard,
+                        border:
+                          selectedPrompt?.id ===
+                          prompt.id
+                            ? "1px solid rgba(59,130,246,0.5)"
+                            : "1px solid rgba(255,255,255,0.06)",
+                      }}
+                    >
+                      <button
+                        onClick={() =>
+                          openPrompt(prompt)
+                        }
+                        style={
+                          styles.promptContent
+                        }
+                      >
+                        <div
+                          style={
+                            styles.promptPreview
+                          }
+                        >
+                          {prompt.content ||
+                            "Untitled Prompt"}
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setShowPromptsMobileModal(false);
+
+                          setReopenPromptsModal(
+                            true
+                          );
+
+                          setDeleteId(
+                            prompt.id
+                          );
+                        }}
+                        style={
+                          styles.cardDelete
+                        }
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        {/* MOBILE FLAGS MODAL */}
+        {showFlagsMobileModal && (
+          <div style={styles.overlay}>
+            <div style={styles.mobileSheet}>
+              <div style={styles.modalTop}>
+                <h2 style={styles.modalTitle}>
+                  Flags
+                </h2>
+
+                <button
+                  onClick={() =>
+                    setShowFlagsMobileModal(
+                      false
+                    )
+                  }
+                  style={
+                    styles.closeModalButton
+                  }
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <button
+                onClick={() =>
+                  setShowFlagModal(true)
+                }
+                style={styles.primaryButton}
+              >
+                <Plus size={15} />
+                New Flag
+              </button>
+
+              <div style={styles.flagsList}>
+                {flags.map((flag) => (
+                  <button
+                    key={flag.id}
+                    onClick={() => {
+                      addFlagToConstraints(
+                        flag
+                      );
+
+                      setShowFlagsMobileModal(
+                        false
+                      );
+                    }}
+                    style={styles.flag}
+                  >
+                    {flag.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MOBILE PROMPTS MODAL */}
+        {showPromptsMobileModal && (
+          <div style={styles.overlay}>
+            <div style={styles.mobileSheet}>
+              <div style={styles.modalTop}>
+                <h2 style={styles.modalTitle}>
+                  Prompts
+                </h2>
+
+                <button
+                  onClick={() =>
+                    setShowPromptsMobileModal(
+                      false
+                    )
+                  }
+                  style={
+                    styles.closeModalButton
+                  }
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div style={styles.searchBox}>
+                <Search size={14} />
+
+                <input
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Search..."
+                  style={styles.searchInput}
+                />
+              </div>
+
+              <div style={styles.promptsList}>
+                {filteredPrompts.map(
+                  (prompt) => (
+                    <div
+                      key={prompt.id}
+                      style={
+                        styles.promptCard
+                      }
+                    >
+                      <button
+                        onClick={() =>
+                          openPrompt(prompt)
+                        }
+                        style={
+                          styles.promptContent
+                        }
+                      >
+                        <div
+                          style={
+                            styles.promptPreview
+                          }
+                        >
+                          {prompt.content ||
+                            "Untitled Prompt"}
+                        </div>
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FLAG MODAL */}
+        {showFlagModal && (
+          <div style={styles.overlay}>
+            <div style={styles.modal}>
+              <h2 style={styles.modalTitle}>
+                Create Flag
+              </h2>
+
+              <input
+                value={flagLabel}
                 onChange={(e) =>
-                  setContent(
+                  setFlagLabel(
                     e.target.value
                   )
                 }
-                placeholder="Write your prompt..."
-                style={styles.promptInput}
+                placeholder="Write your flag..."
+                style={styles.modalInput}
               />
 
-              {constraintLines.length >
-                0 && (
-                <div
-                  style={
-                    styles.constraintsWrap
-                  }
-                >
-                  {constraintLines.map(
-                    (line, index) => (
-                      <div
-                        key={index}
-                        style={
-                          styles.constraintItem
-                        }
-                      >
-                        <button
-                          onClick={() =>
-                            removeConstraint(
-                              line
-                            )
-                          }
-                          style={
-                            styles.removeConstraint
-                          }
-                        >
-                          <X size={12} />
-                        </button>
-
-                        <div
-                          style={{
-                            wordBreak:
-                              "break-word",
-                          }}
-                        >
-                          {line}
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
-              )}
-            </>
-          ) : (
-            <div style={styles.empty}>
-              <div style={styles.emptyWrap}>
+              <div style={styles.modalActions}>
                 <button
-                  onClick={createPrompt}
-                  disabled={
-                    creatingPrompt
+                  onClick={() =>
+                    setShowFlagModal(false)
                   }
-                  style={
-                    styles.primaryButtonSmall
-                  }
+                  style={styles.cancelButton}
                 >
-                  {creatingPrompt ? (
-                    <Loader2
-                      size={14}
-                      className="spin"
-                    />
-                  ) : (
-                    <Plus size={14} />
-                  )}
-
-                  New Prompt
+                  Cancel
                 </button>
 
-                <div>
-                  Create or select a
-                  prompt
-                </div>
+                <button
+                  onClick={createFlag}
+                  style={styles.saveButton}
+                >
+                  Save
+                </button>
               </div>
             </div>
-          )}
-        </section>
-
-        {/* PROMPTS */}
-
-        <aside style={styles.promptsSidebar}>
-          <div style={styles.searchBox}>
-            <Search size={14} />
-
-            <input
-              value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
-              placeholder="Search..."
-              style={styles.searchInput}
-            />
           </div>
+        )}
 
-          <div style={styles.promptsList}>
-            {filteredPrompts.map(
-              (prompt) => (
-                <div
-                  key={prompt.id}
-                  style={{
-                    ...styles.promptCard,
-                    border:
-                      selectedPrompt?.id ===
-                      prompt.id
-                        ? "1px solid #2563eb"
-                        : "1px solid var(--border)",
+        {/* DELETE */}
+        {deleteId && (
+          <div style={styles.overlay}>
+            <div style={styles.modal}>
+              <h2 style={styles.modalTitle}>
+                Delete Prompt?
+              </h2>
+
+              <div style={styles.modalActions}>
+                <button
+                  onClick={() => {
+                    setDeleteId(null);
+
+                    if (
+                      reopenPromptsModal
+                    ) {
+                      setShowPromptsMobileModal(
+                        true
+                      );
+
+                      setReopenPromptsModal(
+                        false
+                      );
+                    }
                   }}
+                  style={styles.cancelButton}
                 >
-                  <button
-                    onClick={() =>
-                      openPrompt(prompt)
-                    }
-                    style={
-                      styles.promptContent
-                    }
-                  >
-                    <div
-                      style={
-                        styles.promptPreview
-                      }
-                    >
-                      {prompt.content ||
-                        "Untitled Prompt"}
-                    </div>
-                  </button>
+                  Cancel
+                </button>
 
-                  <button
-                    onClick={() => {
-                      setShowPromptsMobileModal(false);
-                      setReopenPromptsModal(true);
-                      setDeleteId(prompt.id);
-                    }}
-                    style={
-                      styles.cardDelete
-                    }
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
-              )
-            )}
+                <button
+                  onClick={async () => {
+                    await deletePrompt(
+                      deleteId
+                    );
+
+                    setReopenPromptsModal(
+                      false
+                    );
+                  }}
+                  style={styles.confirmDelete}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
-        </aside>
+        )}
+
+        <style jsx>{`
+          .spin {
+            animation: spin 1s linear infinite;
+          }
+
+          @keyframes spin {
+            from {
+              transform: rotate(0deg);
+            }
+
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          @media (max-width: 1000px) {
+            .desktop-sidebar {
+              display: none !important;
+            }
+
+            .mobile-top {
+              display: flex !important;
+            }
+          }
+        `}</style>
       </main>
-
-      {/* FLAG MODAL */}
-
-      {showFlagModal && (
-        <div style={styles.overlay}>
-          <div style={styles.modal}>
-            <h2 style={styles.modalTitle}>
-              Create Flag
-            </h2>
-
-            <input
-              value={flagLabel}
-              onChange={(e) =>
-                setFlagLabel(
-                  e.target.value
-                )
-              }
-              placeholder="Write your flag..."
-              style={styles.modalInput}
-            />
-
-            <div style={styles.modalActions}>
-              <button
-                onClick={() =>
-                  setShowFlagModal(
-                    false
-                  )
-                }
-                style={styles.cancelButton}
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={createFlag}
-                style={styles.saveButton}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* DELETE */}
-
-      {deleteId && (
-        <div style={styles.overlay}>
-          <div style={styles.modal}>
-            <h2 style={styles.modalTitle}>
-              Delete Prompt?
-            </h2>
-
-            <div style={styles.modalActions}>
-              <button
-                onClick={() => {
-                  setDeleteId(null);
-
-                  if (reopenPromptsModal) {
-                    setShowPromptsMobileModal(true);
-                    setReopenPromptsModal(false);
-                  }
-                }}
-                style={styles.cancelButton}
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={async () => {
-                  await deletePrompt(deleteId);
-
-                  setReopenPromptsModal(false);
-                }}
-                style={styles.confirmDelete}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
-        .spin {
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @media (max-width: 1000px) {
-          main {
-            grid-template-columns: 1fr !important;
-          }
-
-          aside {
-            display: none !important;
-          }
-
-          .mobile-top {
-            display: flex !important;
-          }
-        }
-      `}</style>
     </PageLayout>
   );
 }
 
 const styles: any = {
-  container: {
-    display: "grid",
-    gridTemplateColumns:
-      "180px minmax(0, 1fr) 260px",
-    minHeight:
-      "calc(100vh - 70px)",
-    gap: "0.6rem",
-    position: "relative",
-    padding: "0.6rem",
+  page: {
+    minHeight: "100vh",
+    background: "var(--bg)",
+    color: "var(--text)",
+    padding:
+      "1.25rem 1.25rem 2rem",
+  },
+
+  hero: {
+    marginBottom: "1rem",
+  },
+
+  heroBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    padding: "0.5rem 0.9rem",
+    borderRadius: "999px",
+    border:
+      "1px solid rgba(59,130,246,0.22)",
+    background:
+      "rgba(37,99,235,0.08)",
+    color: "#60a5fa",
+    fontSize: "0.82rem",
+    fontWeight: 700,
+    marginBottom: "0.7rem",
+  },
+
+  title: {
+    fontSize:
+      "clamp(2rem, 5vw, 3.2rem)",
+    fontWeight: 800,
+    letterSpacing: "-0.05em",
+    marginBottom: "0.55rem",
+    lineHeight: 1,
+  },
+
+  subtitle: {
+    color: "var(--muted)",
+    lineHeight: 1.7,
+    maxWidth: "720px",
+    fontSize: "1rem",
   },
 
   mobileTop: {
     display: "none",
-    gap: "0.5rem",
-    marginBottom: "0.5rem",
-    width: "100%",
+    gap: "0.7rem",
+    marginBottom: "1rem",
   },
 
   mobileMenuButton: {
+    flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "0.35rem",
-    width: "120px",
-    height: "38px",
-    flexShrink: 0,
-    border: "1px solid var(--border)",
-    background: "var(--card)",
+    gap: "0.45rem",
+    padding: "0.9rem",
+    borderRadius: "16px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.04)",
     color: "var(--text)",
-    borderRadius: "10px",
     cursor: "pointer",
-    fontSize: "0.9rem",
+    fontWeight: 600,
   },
 
-  flagsSidebar: {
-    padding: "0.5rem",
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.5rem",
+  container: {
+    display: "grid",
+    gridTemplateColumns:
+      "240px minmax(0,1fr) 320px",
+    gap: "1.2rem",
+    alignItems: "stretch",
   },
 
-  promptsSidebar: {
-    padding: "0.5rem",
+  sidebar: {
+    minHeight: 0,
+  },
+
+  sidebarCard: {
+    height: "calc(100vh - 260px)",
     display: "flex",
     flexDirection: "column",
-    gap: "0.5rem",
+    gap: "1rem",
+    padding: "1rem",
+    borderRadius: "28px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.04)",
+    backdropFilter: "blur(18px)",
+    overflow: "hidden",
+  },
+
+  sidebarTitle: {
+    fontWeight: 700,
+    fontSize: "0.95rem",
   },
 
   editor: {
-    padding: "0.8rem",
-    overflowY: "auto",
-    border: "1px solid var(--border)",
-    borderRadius: "12px",
+    height: "calc(100vh - 260px)",
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: "32px",
+    padding: "1.5rem",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.04)",
+    backdropFilter: "blur(18px)",
+    overflow: "hidden",
     minWidth: 0,
-    height: "calc(100vh - 90px)",
-    boxSizing: "border-box",
   },
 
   topBar: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: "0.5rem",
-    marginBottom: "0.6rem",
+    gap: "1rem",
+    marginBottom: "1rem",
     flexWrap: "wrap",
   },
 
   leftTop: {
     display: "flex",
     alignItems: "center",
-    gap: "0.5rem",
-    flexWrap: "wrap",
+    gap: "0.8rem",
   },
 
   saveState: {
     color: "var(--muted)",
-    fontSize: "0.8rem",
+    fontSize: "0.85rem",
   },
 
   actions: {
     display: "flex",
-    gap: "0.4rem",
-    flexWrap: "wrap",
+    gap: "0.6rem",
   },
 
   promptInput: {
+    flex: 1,
     width: "100%",
-    minHeight: "180px",
     border: "none",
     outline: "none",
     resize: "none",
     background: "transparent",
     color: "var(--text)",
-    fontSize: "0.95rem",
-    lineHeight: 1.5,
+    fontSize: "1rem",
+    lineHeight: 1.7,
     fontFamily:
       "ui-monospace, monospace",
+    overflowY: "auto",
   },
 
   constraintsWrap: {
-    marginTop: "0.8rem",
+    marginTop: "1rem",
     display: "flex",
     flexDirection: "column",
-    gap: "0.5rem",
+    gap: "0.7rem",
+    overflowY: "auto",
   },
 
   constraintItem: {
     display: "flex",
     alignItems: "flex-start",
-    gap: "0.5rem",
-    padding: "0.65rem",
-    borderRadius: "10px",
-    background: "var(--card)",
-    border: "1px solid var(--border)",
-    color: "var(--text)",
+    gap: "0.6rem",
+    padding: "0.85rem",
+    borderRadius: "18px",
+    background:
+      "rgba(255,255,255,0.04)",
+    border:
+      "1px solid rgba(255,255,255,0.06)",
     fontSize: "0.9rem",
+    lineHeight: 1.5,
   },
 
   removeConstraint: {
-    width: "22px",
-    height: "22px",
+    width: "24px",
+    height: "24px",
     borderRadius: "999px",
     border: "none",
-    background: "#dc2626",
-    color: "#fff",
+    background:
+      "rgba(239,68,68,0.18)",
+    color: "#f87171",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -833,87 +1076,94 @@ const styles: any = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "0.4rem",
+    gap: "0.45rem",
     width: "100%",
-    background: "#2563eb",
-    color: "#fff",
+    padding: "0.9rem",
+    borderRadius: "16px",
     border: "none",
-    padding: "0.7rem",
-    borderRadius: "10px",
+    background:
+      "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "0.9rem",
+    fontWeight: 700,
+    boxShadow:
+      "0 10px 30px rgba(37,99,235,0.28)",
   },
 
   primaryButtonSmall: {
     display: "flex",
     alignItems: "center",
-    gap: "0.35rem",
-    background: "#2563eb",
-    color: "#fff",
+    gap: "0.45rem",
     border: "none",
-    padding: "0.6rem 0.8rem",
-    borderRadius: "10px",
+    borderRadius: "14px",
+    padding: "0.8rem 1rem",
+    background:
+      "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
     cursor: "pointer",
-    fontWeight: "bold",
-    whiteSpace: "nowrap",
-    fontSize: "0.85rem",
+    fontWeight: 700,
   },
 
   copyButton: {
     display: "flex",
     alignItems: "center",
-    gap: "0.35rem",
-    background: "var(--card)",
+    gap: "0.45rem",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "14px",
+    padding: "0.8rem 1rem",
+    background:
+      "rgba(255,255,255,0.04)",
     color: "var(--text)",
-    border: "1px solid var(--border)",
-    padding: "0.6rem 0.8rem",
-    borderRadius: "10px",
     cursor: "pointer",
-    fontSize: "0.85rem",
+    fontWeight: 600,
   },
 
   deleteButton: {
-    width: "38px",
-    height: "38px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: "10px",
-    border: "1px solid #dc2626",
-    background: "transparent",
-    color: "#dc2626",
+    width: "46px",
+    height: "46px",
+    borderRadius: "14px",
+    border:
+      "1px solid rgba(239,68,68,0.2)",
+    background:
+      "rgba(239,68,68,0.08)",
+    color: "#f87171",
     cursor: "pointer",
   },
 
   flagsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "0.45rem",
+    gap: "0.7rem",
     overflowY: "auto",
   },
 
   flag: {
     width: "100%",
-    padding: "0.6rem 0.7rem",
-    borderRadius: "9px",
-    border: "1px solid var(--border)",
-    background: "var(--card)",
+    padding: "0.85rem",
+    borderRadius: "16px",
+    border:
+      "1px solid rgba(255,255,255,0.06)",
+    background:
+      "rgba(255,255,255,0.03)",
     color: "var(--text)",
     cursor: "pointer",
     textAlign: "left",
     wordBreak: "break-word",
-    fontSize: "0.85rem",
+    fontSize: "0.88rem",
+    transition: "all 0.2s ease",
   },
 
   searchBox: {
     display: "flex",
     alignItems: "center",
-    gap: "0.45rem",
-    border: "1px solid var(--border)",
-    borderRadius: "10px",
-    padding: "0.65rem 0.75rem",
-    background: "var(--card)",
+    gap: "0.6rem",
+    padding: "0.85rem 1rem",
+    borderRadius: "16px",
+    border:
+      "1px solid rgba(255,255,255,0.06)",
+    background:
+      "rgba(255,255,255,0.03)",
   },
 
   searchInput: {
@@ -922,153 +1172,181 @@ const styles: any = {
     border: "none",
     outline: "none",
     color: "var(--text)",
-    fontSize: "0.9rem",
+    fontSize: "0.92rem",
   },
 
   promptsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "0.45rem",
+    gap: "0.7rem",
     overflowY: "auto",
-    maxHeight: "520px",
   },
 
   promptCard: {
-    background: "var(--card)",
-    color: "var(--text)",
-    borderRadius: "10px",
-    padding: "0.55rem",
     display: "flex",
     alignItems: "flex-start",
-    gap: "0.45rem",
+    gap: "0.5rem",
+    padding: "0.8rem",
+    borderRadius: "18px",
+    background:
+      "rgba(255,255,255,0.03)",
   },
 
   promptContent: {
     flex: 1,
     background: "transparent",
     border: "none",
-    color: "var(--text)",
     textAlign: "left",
     cursor: "pointer",
-    minWidth: 0,
+    color: "var(--text)",
   },
 
   cardDelete: {
-    width: "30px",
-    height: "30px",
-    borderRadius: "8px",
-    border: "1px solid #dc2626",
-    background: "transparent",
-    color: "#dc2626",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    width: "34px",
+    height: "34px",
+    borderRadius: "10px",
+    border:
+      "1px solid rgba(239,68,68,0.18)",
+    background:
+      "rgba(239,68,68,0.08)",
+    color: "#f87171",
     cursor: "pointer",
     flexShrink: 0,
   },
 
   promptPreview: {
-    lineHeight: 1.4,
+    lineHeight: 1.5,
     display: "-webkit-box",
     WebkitLineClamp: 4,
     WebkitBoxOrient: "vertical",
     overflow: "hidden",
     wordBreak: "break-word",
-    fontSize: "0.85rem",
+    fontSize: "0.88rem",
   },
 
   empty: {
-    height: "100%",
+    flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "var(--muted)",
     textAlign: "center",
+    color: "var(--muted)",
   },
 
   emptyWrap: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "0.6rem",
+    gap: "1rem",
   },
 
   overlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.5)",
+    background: "rgba(0,0,0,0.7)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     zIndex: 999,
-    padding: "0.8rem",
+    padding: "1rem",
   },
 
   modal: {
     width: "100%",
-    maxWidth: "400px",
-    background: "var(--card)",
-    border: "1px solid var(--border)",
-    borderRadius: "18px",
-    padding: "1rem",
+    maxWidth: "420px",
+    padding: "1.4rem",
+    borderRadius: "24px",
+    background: "#0f172a",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+  },
+
+  mobileSheet: {
+    width: "100%",
+    maxWidth: "500px",
+    maxHeight: "85vh",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+    padding: "1.2rem",
+    borderRadius: "28px",
+    background: "#0f172a",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+  },
+
+  modalTop: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  closeModalButton: {
+    width: "38px",
+    height: "38px",
+    borderRadius: "12px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.04)",
+    color: "#fff",
+    cursor: "pointer",
   },
 
   modalTitle: {
     fontSize: "1rem",
-    fontWeight: "bold",
-    color: "var(--text)",
+    fontWeight: 700,
   },
 
   modalInput: {
     width: "100%",
-    marginTop: "0.8rem",
-    padding: "0.8rem",
-    borderRadius: "10px",
-    border: "1px solid var(--border)",
-    background: "var(--bg)",
-    color: "var(--text)",
+    marginTop: "1rem",
+    padding: "0.9rem",
+    borderRadius: "14px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.04)",
+    color: "#fff",
     outline: "none",
-    fontSize: "0.9rem",
   },
 
   modalActions: {
     display: "flex",
-    alignItems: "center",
     justifyContent: "flex-end",
-    gap: "0.5rem",
+    gap: "0.7rem",
     marginTop: "1rem",
-    flexWrap: "wrap",
   },
 
   cancelButton: {
-    border: "1px solid var(--border)",
+    padding: "0.85rem 1rem",
+    borderRadius: "14px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
     background: "transparent",
-    color: "var(--text)",
-    padding: "0.7rem 0.9rem",
-    borderRadius: "10px",
+    color: "#fff",
     cursor: "pointer",
-    fontSize: "0.85rem",
   },
 
   saveButton: {
-    background: "#2563eb",
-    color: "#fff",
+    padding: "0.85rem 1rem",
+    borderRadius: "14px",
     border: "none",
-    padding: "0.7rem 0.9rem",
-    borderRadius: "10px",
+    background:
+      "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "0.85rem",
+    fontWeight: 700,
   },
 
   confirmDelete: {
+    padding: "0.85rem 1rem",
+    borderRadius: "14px",
+    border: "none",
     background: "#dc2626",
     color: "#fff",
-    border: "none",
-    padding: "0.7rem 0.9rem",
-    borderRadius: "10px",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "0.85rem",
+    fontWeight: 700,
   },
 };
