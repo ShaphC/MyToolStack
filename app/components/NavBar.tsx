@@ -49,15 +49,51 @@ function ThemeToggle() {
   );
 }
 
+function LogoWithText({
+  onClick,
+}: {
+  onClick: () => void;
+}) {
+  const { theme } = useTheme();
+
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.6rem",
+        cursor: "pointer",
+        fontWeight: 800,
+        fontSize: "1.05rem",
+      }}
+    >
+      <img
+        src={
+          theme === "dark"
+            ? "/images/logo-dark.png"
+            : "/images/logo-light.png"
+        }
+        alt="SimpleStack Logo"
+        style={{
+          width: "28px",
+          height: "28px",
+          objectFit: "contain",
+        }}
+      />
+
+      <span>SimpleStack</span>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
-
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -68,7 +104,6 @@ export default function Navbar() {
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
 
     const {
@@ -123,13 +158,20 @@ export default function Navbar() {
     }
   };
 
+  const goHome = () => {
+    if (loggedIn) {
+      router.push("/dashboard");
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <>
       <nav style={styles.nav}>
         {/* MOBILE NAV */}
         {isMobile ? (
           <div style={styles.mobileNav}>
-            {/* LEFT */}
             <button
               onClick={() => setOpen(!open)}
               style={styles.hamburger}
@@ -137,21 +179,10 @@ export default function Navbar() {
               ☰
             </button>
 
-            {/* CENTER */}
-            <div
-              style={styles.mobileLogo}
-              onClick={() => {
-                if (loggedIn) {
-                  router.push("/dashboard");
-                } else {
-                  router.push("/");
-                }
-              }}
-            >
-              ⚡ SimpleStack
+            <div style={styles.mobileLogo}>
+              <LogoWithText onClick={goHome} />
             </div>
 
-            {/* RIGHT */}
             <div>
               <ThemeToggle />
             </div>
@@ -160,86 +191,41 @@ export default function Navbar() {
           /* DESKTOP NAV */
           <div style={styles.desktopNav}>
             {/* LEFT */}
-            <div
-              style={styles.logo}
-              onClick={() => {
-                if (loggedIn) {
-                  router.push("/dashboard");
-                } else {
-                  router.push("/");
-                }
-              }}
-            >
-              ⚡ SimpleStack
-            </div>
+            <LogoWithText onClick={goHome} />
 
             {/* CENTER */}
             <div style={styles.centerLinks}>
               {!loggedIn ? (
                 <>
-                  <button
-                    onClick={() => scrollTo("features")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => scrollTo("features")} style={styles.link}>
                     Features
                   </button>
-
-                  <button
-                    onClick={() => scrollTo("pricing")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => scrollTo("pricing")} style={styles.link}>
                     Pricing
                   </button>
-
-                  <button
-                    onClick={() => scrollTo("improvements")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => scrollTo("improvements")} style={styles.link}>
                     Improvements
                   </button>
-
-                  <button
-                    onClick={() => scrollTo("contact")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => scrollTo("contact")} style={styles.link}>
                     Contact
                   </button>
                 </>
               ) : (
                 <>
-                  <button
-                    onClick={() => router.push("/dashboard")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => router.push("/dashboard")} style={styles.link}>
                     Dashboard
                   </button>
-
-                  <button
-                    onClick={() => router.push("/improvements")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => router.push("/improvements")} style={styles.link}>
                     Improvements
                   </button>
-
-                  <button
-                    onClick={() => router.push("/requests")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => router.push("/requests")} style={styles.link}>
                     Requests
                   </button>
-
-                  <button
-                    onClick={() => router.push("/contact")}
-                    style={styles.link}
-                  >
+                  <button onClick={() => router.push("/contact")} style={styles.link}>
                     Contact
                   </button>
-
                   {isAdmin && (
-                    <button
-                      onClick={() => router.push("/admin")}
-                      style={styles.link}
-                    >
+                    <button onClick={() => router.push("/admin")} style={styles.link}>
                       Admin
                     </button>
                   )}
@@ -253,25 +239,15 @@ export default function Navbar() {
 
               {!loggedIn ? (
                 <>
-                  <button
-                    onClick={() => router.push("/login")}
-                    style={styles.login}
-                  >
+                  <button onClick={() => router.push("/login")} style={styles.login}>
                     Login
                   </button>
-
-                  <button
-                    onClick={() => router.push("/signup")}
-                    style={styles.signup}
-                  >
+                  <button onClick={() => router.push("/signup")} style={styles.signup}>
                     Sign Up
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={logout}
-                  style={styles.login}
-                >
+                <button onClick={logout} style={styles.login}>
                   Logout
                 </button>
               )}
@@ -285,91 +261,45 @@ export default function Navbar() {
         <div style={styles.dropdown}>
           {!loggedIn ? (
             <>
-              <button
-                onClick={() => scrollTo("features")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => scrollTo("features")} style={styles.mobileLink}>
                 Features
               </button>
-
-              <button
-                onClick={() => scrollTo("pricing")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => scrollTo("pricing")} style={styles.mobileLink}>
                 Pricing
               </button>
-
-              <button
-                onClick={() => scrollTo("improvements")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => scrollTo("improvements")} style={styles.mobileLink}>
                 Improvements
               </button>
-
-              <button
-                onClick={() => scrollTo("contact")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => scrollTo("contact")} style={styles.mobileLink}>
                 Contact
               </button>
-
-              <button
-                onClick={() => router.push("/login")}
-                style={styles.mobileButton}
-              >
+              <button onClick={() => router.push("/login")} style={styles.mobileButton}>
                 Login
               </button>
-
-              <button
-                onClick={() => router.push("/signup")}
-                style={styles.mobilePrimary}
-              >
+              <button onClick={() => router.push("/signup")} style={styles.mobilePrimary}>
                 Sign Up
               </button>
             </>
           ) : (
             <>
-              <button
-                onClick={() => router.push("/dashboard")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => router.push("/dashboard")} style={styles.mobileLink}>
                 Dashboard
               </button>
-
-              <button
-                onClick={() => router.push("/improvements")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => router.push("/improvements")} style={styles.mobileLink}>
                 Improvements
               </button>
-
-              <button
-                onClick={() => router.push("/requests")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => router.push("/requests")} style={styles.mobileLink}>
                 Requests
               </button>
-
-              <button
-                onClick={() => router.push("/contact")}
-                style={styles.mobileLink}
-              >
+              <button onClick={() => router.push("/contact")} style={styles.mobileLink}>
                 Contact
               </button>
-
               {isAdmin && (
-                <button
-                  onClick={() => router.push("/admin")}
-                  style={styles.mobileLink}
-                >
+                <button onClick={() => router.push("/admin")} style={styles.mobileLink}>
                   Admin
                 </button>
               )}
-
-              <button
-                onClick={logout}
-                style={styles.mobileLogout}
-              >
+              <button onClick={logout} style={styles.mobileLogout}>
                 Logout
               </button>
             </>
@@ -413,16 +343,8 @@ const styles: any = {
   },
 
   mobileLogo: {
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: "1.1rem",
-    cursor: "pointer",
-  },
-
-  logo: {
-    fontWeight: "bold",
-    fontSize: "1.1rem",
-    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
   },
 
   centerLinks: {
