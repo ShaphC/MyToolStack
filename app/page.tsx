@@ -375,7 +375,7 @@ export default function HomePage() {
         <Footer />
       </div>
 
-      <EmailCapture />
+      {/* <EmailCapture /> */}
     </main>
   );
 }
