@@ -260,25 +260,27 @@ export default function HomePage() {
             ))}
           </div>
 
-          <Button
-            onClick={async () => {
-              const { data } =
-                await supabase.auth.getUser();
+          <div style={styles.changelogButtonWrap}>
+            <Button
+              onClick={async () => {
+                const { data } =
+                  await supabase.auth.getUser();
 
-              if (!data.user) {
-                router.push(
-                  "/login?redirect=/improvements"
-                );
+                if (!data.user) {
+                  router.push(
+                    "/login?redirect=/improvements"
+                  );
 
-                return;
-              }
+                  return;
+                }
 
-              router.push("/improvements");
-            }}
-            style={styles.secondaryBtn}
-          >
-            View Full Changelog
-          </Button>
+                router.push("/improvements");
+              }}
+              style={styles.secondaryBtn}
+            >
+              View Full Changelog
+            </Button>
+          </div>
         </section>
 
         {/* PRICING */}
@@ -742,5 +744,11 @@ const styles: any = {
     textAlign: "center",
     padding: "8rem 1.5rem",
     position: "relative",
+  },
+
+  changelogButtonWrap: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "2rem",
   },
 };
