@@ -297,7 +297,7 @@ export default function HomePage() {
 
               <p style={styles.price}>$0</p>
 
-              <div>
+              <div style={styles.featureList}>
                 <div>✔ Core tools</div>
                 <div>✔ Local usage</div>
                 <div>✔ Free to Use</div>
@@ -318,13 +318,16 @@ export default function HomePage() {
             </div>
 
             <div style={styles.proCard}>
+              <div style={styles.proBadge}>
+                MOST POPULAR
+              </div>
               <h3>Pro</h3>
 
               <p style={styles.price}>
                 $19.99/mo
               </p>
 
-              <div>
+              <div style={styles.featureList}>
                 <div>✔ Premium features</div>
                 <div>
                   ✔ Full access to all tools
@@ -361,9 +364,22 @@ export default function HomePage() {
 
         {/* CTA */}
         <section style={styles.ctaSection}>
-          <h2>
+          <div style={styles.ctaGlow} />
+
+          <h2 style={styles.ctaTitle}>
             Get access to tools that make work easier
           </h2>
+
+          <p style={styles.ctaText}>
+            From day one, managing workflows, repetitive tasks,
+            and scattered tools can slow everything down.
+            SimpleStack helps freelancers, creators, and operators
+            stay organized, move faster, and focus on meaningful work.
+          </p>
+
+          <p style={styles.ctaHighlight}>
+            Start free. Upgrade only when you need more.
+          </p>
 
           <Button
             onClick={() => router.push("/login")}
@@ -707,50 +723,79 @@ improvementTextModern: {
   },
 
   priceCard: {
+    position: "relative",
+
+    overflow: "hidden",
+
     border:
       "1px solid rgba(255,255,255,0.08)",
-
-    background: "rgba(255,255,255,0.03)",
-
-    backdropFilter: "blur(14px)",
-
-    padding: "2.5rem",
-
-    borderRadius: "28px",
-
-    minHeight: "420px",
-
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-
-  proCard: {
-    border:
-      "1px solid rgba(59,130,246,0.4)",
 
     background: `
       linear-gradient(
         180deg,
-        rgba(37,99,235,0.12),
+        rgba(255,255,255,0.06),
         rgba(255,255,255,0.03)
       )
     `,
 
-    backdropFilter: "blur(14px)",
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
 
     padding: "2.5rem",
 
-    borderRadius: "28px",
+    borderRadius: "30px",
 
-    minHeight: "420px",
-
-    boxShadow:
-      "0 20px 60px rgba(37,99,235,0.18)",
+    minHeight: "440px",
 
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+
+    boxShadow: `
+      0 10px 40px rgba(0,0,0,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.04)
+    `,
+
+    transition: "all 0.25s ease",
+  },
+
+  proCard: {
+    position: "relative",
+
+    overflow: "hidden",
+
+    border:
+      "1px solid rgba(59,130,246,0.35)",
+
+    background: `
+      linear-gradient(
+        180deg,
+        rgba(37,99,235,0.16),
+        rgba(255,255,255,0.04)
+      )
+    `,
+
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
+
+    padding: "2.5rem",
+
+    borderRadius: "30px",
+
+    minHeight: "440px",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+
+    boxShadow: `
+      0 20px 60px rgba(37,99,235,0.22),
+      inset 0 1px 0 rgba(255,255,255,0.06)
+    `,
+
+    transform: "translateY(-8px)",
+
+    transition: "all 0.25s ease",
   },
 
   price: {
@@ -778,15 +823,125 @@ improvementTextModern: {
     textAlign: "center",
   },
 
-  ctaSection: {
-    textAlign: "center",
-    padding: "8rem 1.5rem",
-    position: "relative",
-  },
-
   changelogButtonWrap: {
     display: "flex",
     justifyContent: "center",
     marginTop: "2rem",
+  },
+
+  ctaSection: {
+    position: "relative",
+    overflow: "hidden",
+
+    textAlign: "center",
+
+    padding: "8rem 1.5rem",
+
+    borderTop: "1px solid rgba(255,255,255,0.06)",
+  },
+
+  ctaGlow: {
+    position: "absolute",
+
+    inset: 0,
+
+    background: `
+      radial-gradient(
+        circle at top,
+        rgba(59,130,246,0.18),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at bottom,
+        rgba(139,92,246,0.12),
+        transparent 40%
+      )
+    `,
+
+    pointerEvents: "none",
+  },
+
+  ctaTitle: {
+    position: "relative",
+
+    fontSize: "clamp(2.5rem, 6vw, 4rem)",
+
+    fontWeight: 800,
+
+    letterSpacing: "-0.05em",
+
+    maxWidth: "800px",
+
+    margin: "0 auto",
+  },
+
+  ctaText: {
+    position: "relative",
+
+    marginTop: "1.75rem",
+
+    maxWidth: "760px",
+
+    marginInline: "auto",
+
+    color: "var(--muted)",
+
+    lineHeight: 1.9,
+
+    fontSize: "1.08rem",
+  },
+
+  ctaHighlight: {
+    position: "relative",
+
+    marginTop: "1.5rem",
+
+    color: "#60a5fa",
+
+    fontWeight: 700,
+
+    fontSize: "1rem",
+  },
+
+  cardGlow: {
+    position: "absolute",
+    top: "-80px",
+    right: "-80px",
+    width: "180px",
+    height: "180px",
+    background:
+      "radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%)",
+    pointerEvents: "none",
+  },
+
+  featureList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+    marginTop: "1.5rem",
+    color: "var(--muted)",
+    lineHeight: 1.6,
+  },
+
+  proBadge: {
+    alignSelf: "flex-start",
+
+    padding: "0.45rem 0.8rem",
+
+    borderRadius: "999px",
+
+    background: "rgba(37,99,235,0.18)",
+
+    border: "1px solid rgba(59,130,246,0.3)",
+
+    color: "#60a5fa",
+
+    fontSize: "0.75rem",
+
+    fontWeight: 800,
+
+    letterSpacing: "0.05em",
+
+    marginBottom: "1.25rem",
   },
 };
