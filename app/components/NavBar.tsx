@@ -323,6 +323,8 @@ const styles: any = {
     backdropFilter: "blur(14px)",
 
     padding: "1rem 1.5rem",
+
+    height: "88px",
   },
 
   desktopNav: {
