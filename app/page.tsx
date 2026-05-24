@@ -150,61 +150,64 @@ export default function HomePage() {
           </h2>
 
           <p style={styles.sectionSubtitle}>
-            Simple tools that remove friction from everyday
-            work.
+            Simple tools that remove friction from everyday work.
           </p>
 
-          <div
-            style={
-              isMobile
-                ? styles.benefitGridMobile
-                : styles.benefitGridDesktop
-            }
-            className={
-              isMobile ? "hide-scrollbar" : ""
-            }
-          >
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitCardInner}>
-                <div style={styles.benefitIcon}>
-                  ⚡
-                </div>
+          <div style={styles.benefitsGrid}>
+            <div style={styles.benefitModernCard}>
+              <div style={styles.benefitGlow} />
 
-                <h3>Move faster</h3>
+              <div style={styles.benefitModernIcon}>
+                ⚡
+              </div>
 
-                <p>
-                  Spend less time on repetitive tasks and
-                  more time getting meaningful work done.
+              <div style={styles.benefitContent}>
+                <h3 style={styles.benefitModernTitle}>
+                  Move faster
+                </h3>
+
+                <p style={styles.benefitModernText}>
+                  Spend less time repeating the same tasks and more
+                  time doing meaningful work that actually moves
+                  things forward.
                 </p>
               </div>
             </div>
 
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitCardInner}>
-                <div style={styles.benefitIcon}>
-                  ✨
-                </div>
+            <div style={styles.benefitModernCard}>
+              <div style={styles.benefitGlow} />
 
-                <h3>Less clutter</h3>
+              <div style={styles.benefitModernIcon}>
+                ✨
+              </div>
 
-                <p>
+              <div style={styles.benefitContent}>
+                <h3 style={styles.benefitModernTitle}>
+                  Less clutter
+                </h3>
+
+                <p style={styles.benefitModernText}>
                   Clean tools without bloated dashboards,
-                  unnecessary setup, or distractions.
+                  unnecessary setup, or overwhelming interfaces.
                 </p>
               </div>
             </div>
 
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitCardInner}>
-                <div style={styles.benefitIcon}>
-                  🎯
-                </div>
+            <div style={styles.benefitModernCard}>
+              <div style={styles.benefitGlow} />
 
-                <h3>Stay focused</h3>
+              <div style={styles.benefitModernIcon}>
+                🎯
+              </div>
 
-                <p>
-                  Keep your workflow simple so you can focus
-                  on what actually matters.
+              <div style={styles.benefitContent}>
+                <h3 style={styles.benefitModernTitle}>
+                  Stay focused
+                </h3>
+
+                <p style={styles.benefitModernText}>
+                  Keep your workflow simple so you can focus on what
+                  actually matters instead of fighting your tools.
                 </p>
               </div>
             </div>
@@ -221,39 +224,36 @@ export default function HomePage() {
           </h2>
 
           <p style={styles.sectionSubtitle}>
-            SimpleStack is actively being improved every
-            week.
+            SimpleStack is actively being improved every week.
           </p>
 
-          <div style={styles.improvementsFeed}>
-            {improvements.map((item, index) => (
+          <div style={styles.improvementsFeedModern}>
+            {improvements.map((item) => (
               <div
                 key={item.id}
                 style={{
-                  ...styles.improvementItem,
+                  ...styles.improvementModernStackCard,
                   borderLeft: `6px solid ${item.color}`,
-                  background:
-                    index % 2 === 0
-                      ? "rgba(255,255,255,0.03)"
-                      : "rgba(255,255,255,0.05)",
                 }}
               >
-                <div style={styles.improvementTop}>
+                <div style={styles.improvementGlow} />
+
+                <div style={styles.improvementTopModern}>
                   <span
                     style={{
-                      ...styles.improvementDot,
+                      ...styles.improvementDotModern,
                       background: item.color,
                     }}
                   />
 
-                  <span style={styles.improvementDate}>
+                  <span style={styles.improvementDateModern}>
                     {new Date(
                       item.created_at
                     ).toLocaleDateString()}
                   </span>
                 </div>
 
-                <div style={styles.improvementText}>
+                <div style={styles.improvementTextModern}>
                   {item.text}
                 </div>
               </div>
@@ -270,7 +270,6 @@ export default function HomePage() {
                   router.push(
                     "/login?redirect=/improvements"
                   );
-
                   return;
                 }
 
@@ -516,148 +515,188 @@ const styles: any = {
     marginInline: "auto",
   },
 
-  benefitGridDesktop: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "stretch",
-    gap: "1rem",
+benefitsGrid: {
+  display: "grid",
+  gridTemplateColumns:
+    "repeat(auto-fit, minmax(280px, 1fr))",
+  gap: "1.5rem",
+  maxWidth: "1200px",
+  margin: "3rem auto 0",
+},
 
-    marginTop: "3rem",
+benefitModernCard: {
+  position: "relative",
 
-    flexWrap: "wrap",
+  overflow: "hidden",
 
-    maxWidth: "1000px",
-    marginInline: "auto",
-  },
+  display: "flex",
+  flexDirection: "column",
 
-  benefitGridMobile: {
-    display: "flex",
+  gap: "1.5rem",
 
-    gap: "0.85rem",
+  padding: "2rem",
 
-    overflowX: "auto",
-    overflowY: "hidden",
+  borderRadius: "28px",
 
-    paddingBottom: "1rem",
-    marginTop: "2rem",
+  background: `
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.03)
+    )
+  `,
 
-    scrollSnapType: "x mandatory",
+  border: "1px solid rgba(255,255,255,0.08)",
 
-    WebkitOverflowScrolling: "touch",
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
 
-    scrollbarWidth: "none",
+  boxShadow: `
+    0 10px 40px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.04)
+  `,
 
-    msOverflowStyle: "none",
+  transition: "all 0.25s ease",
 
-    paddingInline: "1rem",
+  minHeight: "280px",
+},
 
-    justifyContent: "flex-start",
-  },
+benefitGlow: {
+  position: "absolute",
 
-  benefitCard: {
-    flex: "0 0 260px",
+  top: "-80px",
+  right: "-80px",
 
-    width: "260px",
+  width: "180px",
+  height: "180px",
 
-    scrollSnapAlign: "center",
+  background:
+    "radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%)",
 
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    textAlign: "center",
+  pointerEvents: "none",
+},
 
-    padding: "1.5rem 1.25rem",
+benefitModernIcon: {
+  width: "82px",
+  height: "82px",
 
-    border: "1px solid var(--border)",
+  borderRadius: "24px",
 
-    borderRadius: "22px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 
-    background: "rgba(255,255,255,0.03)",
+  fontSize: "2rem",
 
-    backdropFilter: "blur(10px)",
+  background: `
+    linear-gradient(
+      180deg,
+      rgba(59,130,246,0.22),
+      rgba(59,130,246,0.08)
+    )
+  `,
 
-    boxSizing: "border-box",
+  border: "1px solid rgba(59,130,246,0.25)",
 
-    transition: "all 0.2s ease",
+  boxShadow: `
+    0 10px 30px rgba(37,99,235,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.12)
+  `,
+},
 
-    minHeight: "260px",
+benefitContent: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.85rem",
+},
 
-    justifyContent: "flex-start",
-  },
+benefitModernTitle: {
+  fontSize: "1.35rem",
+  fontWeight: 700,
+  letterSpacing: "-0.03em",
+  margin: 0,
+},
 
-  benefitCardInner: {
-    maxWidth: "220px",
+benefitModernText: {
+  color: "var(--muted)",
+  lineHeight: 1.8,
+  fontSize: "0.98rem",
+  margin: 0,
+},
 
-    width: "100%",
+improvementsFeedModern: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "1.25rem",
+  maxWidth: "850px",
+  margin: "3rem auto 2rem",
+},
 
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-start",
+improvementModernStackCard: {
+  position: "relative",
+  overflow: "hidden",
 
-    textAlign: "center",
+  padding: "1.75rem",
 
-    margin: "0 auto",
-  },
+  borderRadius: "24px",
 
-    benefitIcon: {
-      width: "64px",
-      height: "64px",
+  background: `
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.03)
+    )
+  `,
 
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+  border: "1px solid rgba(255,255,255,0.08)",
 
-      fontSize: "1.8rem",
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
 
-      borderRadius: "18px",
+  boxShadow: `
+    0 10px 35px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.04)
+  `,
 
-      background: "rgba(37,99,235,0.15)",
+  transition: "all 0.25s ease",
+},
 
-      marginBottom: "1.5rem",
+improvementGlow: {
+  position: "absolute",
+  top: "-80px",
+  right: "-80px",
+  width: "180px",
+  height: "180px",
+  background:
+    "radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%)",
+  pointerEvents: "none",
+},
 
-      marginInline: "auto",
-    },
+improvementTopModern: {
+  display: "flex",
+  alignItems: "center",
+  gap: "0.75rem",
+  marginBottom: "0.75rem",
+},
 
-  improvementsFeed: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-    maxWidth: "850px",
-    margin: "3rem auto 2rem",
-  },
+improvementDotModern: {
+  width: "10px",
+  height: "10px",
+  borderRadius: "50%",
+},
 
-  improvementItem: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid var(--border)",
-    backdropFilter: "blur(12px)",
-    padding: "1.25rem",
-    borderRadius: "18px",
-    transition: "all 0.25s ease",
-  },
+improvementDateModern: {
+  fontSize: "0.85rem",
+  color: "var(--muted)",
+  fontWeight: 600,
+},
 
-  improvementTop: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.6rem",
-    marginBottom: "0.75rem",
-  },
-
-  improvementDot: {
-    width: "10px",
-    height: "10px",
-    borderRadius: "50%",
-  },
-
-  improvementDate: {
-    fontSize: "0.82rem",
-    color: "var(--muted)",
-  },
-
-  improvementText: {
-    lineHeight: 1.7,
-    color: "var(--text)",
-  },
+improvementTextModern: {
+  fontSize: "1rem",
+  lineHeight: 1.8,
+  color: "var(--text)",
+  letterSpacing: "-0.01em",
+},
 
   pricingGrid: {
     display: "grid",
