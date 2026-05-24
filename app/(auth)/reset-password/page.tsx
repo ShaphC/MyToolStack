@@ -69,6 +69,8 @@ const styles: any = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+
+    paddingTop: "90px",
   },
 
   card: {
