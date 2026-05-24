@@ -404,6 +404,8 @@ const styles: any = {
     color: "var(--text)",
     fontFamily: "sans-serif",
     overflowX: "hidden",
+
+    paddingTop: "90px",
   },
 
   container: {

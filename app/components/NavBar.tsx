@@ -319,7 +319,7 @@ const styles: any = {
     zIndex: 1000,
 
     background: "var(--bg)",
-    borderBottom: "1px solid rgba(0,0,0,0.08)",
+    borderBottom: "var(--border)",
     backdropFilter: "blur(14px)",
 
     padding: "1rem 1.5rem",

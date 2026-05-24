@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
+import { useTheme } from "@/app/context/ThemeContext";
 
 export default function Footer() {
   const router = useRouter();
+
+  const { theme } = useTheme();
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -55,8 +58,8 @@ export default function Footer() {
         >
           {/* LOGO */}
           <div style={isMobile ? styles.mobileSection : {}}>
-            <h4
-              style={styles.logo}
+            <div
+              style={styles.logoWrap}
               onClick={() => {
                 if (loggedIn) {
                   router.push("/dashboard");
@@ -65,10 +68,21 @@ export default function Footer() {
                 }
               }}
             >
-              ⚡ SimpleStack
-            </h4>
-          </div>
+              <img
+                src={
+                  theme === "dark"
+                    ? "/images/logo-dark.png"
+                    : "/images/logo-light.png"
+                }
+                alt="SimpleStack Logo"
+                style={styles.logoImage}
+              />
 
+              <span style={styles.logoText}>
+                SimpleStack
+              </span>
+            </div>
+          </div>
           {/* PRODUCT */}
           <div style={isMobile ? styles.mobileSection : {}}>
             <h4>Product</h4>
@@ -130,7 +144,7 @@ export default function Footer() {
 
 const styles: any = {
   footer: {
-    borderTop: "1px solid #e5e7eb",
+    borderTop: "var(--border)",
     marginTop: "3rem",
     padding: "3rem 2rem",
     background: "var(--bg)",
@@ -159,11 +173,24 @@ const styles: any = {
     alignItems: "center",
   },
 
-  logo: {
+  logoWrap: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.7rem",
     cursor: "pointer",
-    fontWeight: "bold",
   },
 
+  logoImage: {
+    width: "28px",
+    height: "28px",
+    objectFit: "contain",
+  },
+
+  logoText: {
+    fontWeight: 800,
+    fontSize: "1.05rem",
+    letterSpacing: "-0.03em",
+  },
   link: {
     cursor: "pointer",
     marginTop: "0.5rem",
