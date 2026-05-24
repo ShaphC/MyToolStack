@@ -89,7 +89,7 @@ export default function Footer() {
 
             <p
               style={styles.link}
-              onClick={() => router.push("/#features")}
+              onClick={() => router.push("/#benefits")}
             >
               Features
             </p>

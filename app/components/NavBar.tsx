@@ -197,7 +197,7 @@ export default function Navbar() {
             <div style={styles.centerLinks}>
               {!loggedIn ? (
                 <>
-                  <button onClick={() => scrollTo("features")} style={styles.link}>
+                  <button onClick={() => scrollTo("benefits")} style={styles.link}>
                     Features
                   </button>
                   <button onClick={() => scrollTo("pricing")} style={styles.link}>

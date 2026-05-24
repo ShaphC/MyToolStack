@@ -12,16 +12,43 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordHint, setShowPasswordHint] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [shake, setShake] = useState(false);
+
+  const validatePassword = (password: string) => {
+    const minLength = password.length >= 8;
+
+    const hasUppercase = /[A-Z]/.test(password);
+
+    const hasLowercase = /[a-z]/.test(password);
+
+    const hasSpecialChar =
+      /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      minLength &&
+      hasUppercase &&
+      hasLowercase &&
+      hasSpecialChar
+    );
+  };
 
   const signup = async () => {
     setErrorMsg("");
 
     if (!email || !password) {
       triggerError("Please fill all fields");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      triggerError(
+        "Password must be at least 8 characters and include uppercase, lowercase, and a special character."
+      );
+
       return;
     }
 
@@ -84,6 +111,12 @@ export default function Signup() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onFocus={() => setShowPasswordHint(true)}
+                onBlur={() => {
+                  if (!password) {
+                    setShowPasswordHint(false);
+                  }
+                }}
                 style={styles.input}
               />
 
@@ -118,6 +151,20 @@ export default function Signup() {
                 </div>
               </button>
             </div>
+
+            {showPasswordHint && (
+              <p style={styles.passwordHint}>
+                Password must contain:
+                <br />
+                • At least 8 characters
+                <br />
+                • 1 uppercase letter
+                <br />
+                • 1 lowercase letter
+                <br />
+                • 1 special character
+              </p>
+            )}
 
             {/* ERROR */}
             {errorMsg && (
@@ -259,9 +306,14 @@ const styles: any = {
   },
 
   error: {
-    color: "#dc2626",
-    fontSize: "0.85rem",
+    color: "#ef4444",
+    fontSize: "0.9rem",
     textAlign: "center",
+    lineHeight: 1.5,
+    background: "rgba(239,68,68,0.08)",
+    border: "1px solid rgba(239,68,68,0.2)",
+    padding: "0.75rem",
+    borderRadius: "10px",
   },
 
   bottomText: {
@@ -277,5 +329,13 @@ const styles: any = {
 
   shake: {
     animation: "shake 0.4s",
+  },
+
+  passwordHint: {
+    color: "var(--muted)",
+    fontSize: "0.85rem",
+    lineHeight: 1.6,
+    marginTop: "-0.2rem",
+    marginBottom: "0.5rem",
   },
 };
