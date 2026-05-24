@@ -312,11 +312,16 @@ export default function Navbar() {
 
 const styles: any = {
   nav: {
-    position: "sticky",
+    position: "fixed",
     top: 0,
-    zIndex: 100,
+    left: 0,
+    width: "100%",
+    zIndex: 1000,
+
     background: "var(--bg)",
     borderBottom: "1px solid rgba(0,0,0,0.08)",
+    backdropFilter: "blur(14px)",
+
     padding: "1rem 1.5rem",
   },
 
