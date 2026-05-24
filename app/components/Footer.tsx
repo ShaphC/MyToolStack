@@ -91,7 +91,7 @@ export default function Footer() {
               style={styles.link}
               onClick={() => router.push("/#benefits")}
             >
-              Features
+              Benefits
             </p>
 
             <p

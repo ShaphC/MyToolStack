@@ -198,7 +198,7 @@ export default function Navbar() {
               {!loggedIn ? (
                 <>
                   <button onClick={() => scrollTo("benefits")} style={styles.link}>
-                    Features
+                    Benefits
                   </button>
                   <button onClick={() => scrollTo("pricing")} style={styles.link}>
                     Pricing
@@ -261,8 +261,8 @@ export default function Navbar() {
         <div style={styles.dropdown}>
           {!loggedIn ? (
             <>
-              <button onClick={() => scrollTo("features")} style={styles.mobileLink}>
-                Features
+              <button onClick={() => scrollTo("benefits")} style={styles.mobileLink}>
+                Benefits
               </button>
               <button onClick={() => scrollTo("pricing")} style={styles.mobileLink}>
                 Pricing
@@ -391,12 +391,27 @@ const styles: any = {
   },
 
   dropdown: {
+    position: "fixed",
+    top: "72px",
+    left: 0,
+    width: "100%",
+
+    zIndex: 999,
+
     display: "flex",
     flexDirection: "column",
     gap: "1rem",
+
     padding: "1.5rem",
+
     background: "var(--card)",
+    backdropFilter: "blur(18px)",
+
     borderBottom: "1px solid var(--border)",
+
+    boxSizing: "border-box",
+
+    boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
   },
 
   mobileLink: {
