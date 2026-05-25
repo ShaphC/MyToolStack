@@ -15,6 +15,12 @@ import {
 
 const tools = [
   {
+    name: "AI Prompt Library",
+    slug: "prompt-library",
+    description: "Create a library of AI prompts",
+    icon: Brain,
+  },
+  {
     name: "Random Number Generator",
     slug: "random-generator",
     description: "Generate random numbers with custom digit length",
@@ -43,12 +49,6 @@ const tools = [
     slug: "message-repeater",
     description: "Create reusable templates for messages",
     icon: MessageSquareText,
-  },
-  {
-    name: "AI Prompt Library",
-    slug: "prompt-library",
-    description: "Create a library of AI prompts",
-    icon: Brain,
   },
   {
     name: "LinkBridge",
