@@ -134,7 +134,7 @@ export default function HomePage() {
         </div>
 
         <h3 style={{ marginTop: "2rem" }}>
-          SimpleStack gives you tools that remove the
+          SappStack gives you tools that remove the
           friction.
         </h3>
       </section>
@@ -146,7 +146,7 @@ export default function HomePage() {
           style={styles.section}
         >
           <h2 style={styles.sectionTitle}>
-            Why people use SimpleStack
+            Why people use SappStack
           </h2>
 
           <p style={styles.sectionSubtitle}>
@@ -224,7 +224,7 @@ export default function HomePage() {
           </h2>
 
           <p style={styles.sectionSubtitle}>
-            SimpleStack is actively being improved every week.
+            SappStack is actively being improved every week.
           </p>
 
           <div style={styles.improvementsFeedModern}>
@@ -373,7 +373,7 @@ export default function HomePage() {
           <p style={styles.ctaText}>
             From day one, managing workflows, repetitive tasks,
             and scattered tools can slow everything down.
-            SimpleStack helps freelancers, creators, and operators
+            SappStack helps freelancers, creators, and operators
             stay organized, move faster, and focus on meaningful work.
           </p>
 
@@ -385,7 +385,7 @@ export default function HomePage() {
             onClick={() => router.push("/login")}
             style={styles.cta}
           >
-            Start Using SimpleStack
+            Start Using SappStack
           </Button>
         </section>
 

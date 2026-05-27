@@ -20,6 +20,11 @@ export async function POST(req: Request) {
       `${process.env.NEXT_PUBLIC_AI_URL}/v1/transcribe`,
       {
         method: "POST",
+        headers: {
+
+          Authorization: "Bearer super-secret-key",
+
+        },
         body: form,
       }
     );

@@ -74,7 +74,7 @@ function LogoWithText({
             ? "/images/logo-dark.png"
             : "/images/logo-light.png"
         }
-        alt="SimpleStack Logo"
+        alt="SappStack Logo"
         style={{
           width: "28px",
           height: "28px",
@@ -82,7 +82,7 @@ function LogoWithText({
         }}
       />
 
-      <span>SimpleStack</span>
+      <span>SappStack</span>
     </div>
   );
 }

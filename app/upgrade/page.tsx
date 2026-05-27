@@ -21,7 +21,7 @@ export default function UpgradePage() {
 
         <div style={styles.container}>
           <div style={styles.badge}>
-            SIMPLESTACK PRO
+            SAPPSTACK PRO
           </div>
 
           <h1 style={styles.title}>
