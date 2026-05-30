@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: {
 
-          Authorization: "Bearer super-secret-key",
+          Authorization: `Bearer ${process.env.AI_API_KEY}`,
 
         },
         body: form,
