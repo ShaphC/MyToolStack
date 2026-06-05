@@ -21,6 +21,12 @@ const tools = [
     icon: Brain,
   },
   {
+    name: "Voice Recorder",
+    slug: "voice",
+    description: "Record voice, transcribe instantly, and manage transcripts",
+    icon: MessageSquareText,
+  },
+  {
     name: "Random Number Generator",
     slug: "random-generator",
     description: "Generate random numbers with custom digit length",
