@@ -280,7 +280,7 @@ export default function ThoughtFlow() {
     <PageLayout>
       <main style={styles.page}>
         <div style={styles.container}>
-          <h1 style={styles.title}>Voice Recorder</h1>
+          <h1 style={styles.title}>ThoughtFlow</h1>
 
           {/* HISTORY BUTTON */}
           <button
