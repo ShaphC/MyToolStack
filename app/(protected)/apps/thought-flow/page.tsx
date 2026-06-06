@@ -37,6 +37,8 @@ export default function ThoughtFlow() {
 
   const [search, setSearch] = useState("");
 
+  const [confirmDelete, setConfirmDelete] = useState<TranscriptItem | null>(null);
+
   const isBusy = isTranscribing;
 
   const MAX_RECORD_TIME = 600; // 10 minutes
@@ -267,6 +269,11 @@ export default function ThoughtFlow() {
     setActiveItem(null);
   };
 
+  const goBackToHistory = () => {
+    setActiveItem(null);
+    setHistoryOpen(true);
+  };
+
   const disabled = isBusy;
 
   return (
@@ -356,60 +363,98 @@ export default function ThoughtFlow() {
           </div>
         </div>
 
-        {/* HISTORY MODAL */}
         {historyOpen && (
-          <div style={styles.modalOverlay} onClick={closeAll}>
-            <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-              <h3>History</h3>
+          <div
+            style={styles.modalOverlay}
+            onClick={closeAll}
+          >
+            <div
+              style={styles.modal}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div style={styles.modalHeader}>
+                <div />
 
-              <input
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                style={styles.search}
-              />
+                <div>History</div>
 
-              {filteredHistory.length === 0 ? (
-                <p style={styles.empty}>No results</p>
-              ) : (
-                filteredHistory.map((item) => (
-                  <div
-                    key={item.id}
-                    style={styles.historyItem}
-                    onClick={() => openItem(item)}
-                  >
-                    {item.text.split("\n")[0]}
-                  </div>
-                ))
-              )}
+                <button
+                  onClick={closeAll}
+                  style={styles.closeBtn}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div style={styles.searchContainer}>
+                <input
+                  placeholder="Search transcripts..."
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(e.target.value)
+                  }
+                  style={styles.search}
+                />
+              </div>
+
+              <div style={styles.historyList}>
+                {filteredHistory.length === 0 ? (
+                  <p style={styles.empty}>
+                    No results
+                  </p>
+                ) : (
+                  filteredHistory.map((item) => (
+                    <div
+                      key={item.id}
+                      style={styles.historyItem}
+                      onClick={() => openItem(item)}
+                    >
+                      {item.text
+                        .split("\n")[0]
+                        .slice(0, 120)}
+
+                      {item.text.length > 120 &&
+                        "..."}
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
         )}
 
-        {/* ITEM MODAL (UPDATED HEADER) */}
         {activeItem && (
-          <div style={styles.modalOverlay} onClick={closeAll}>
-            <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-              
-              {/* FIXED HEADER */}
+          <div
+            style={styles.modalOverlay}
+            onClick={closeAll}
+          >
+            <div
+              style={styles.modal}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div style={styles.modalHeader}>
-                <button onClick={closeAll} style={styles.backBtn}>
+                <button
+                  onClick={goBackToHistory}
+                  style={styles.backBtn}
+                >
                   ← Back
                 </button>
 
                 <div>Transcript</div>
 
                 <button
-                  onClick={() => deleteTranscript(activeItem.id)}
+                  onClick={() =>
+                    deleteTranscript(activeItem.id)
+                  }
                   style={styles.trashBtn}
                 >
                   🗑
                 </button>
               </div>
 
-              {/* SCROLLABLE BODY */}
               <div style={styles.modalBody}>
-                <p style={styles.modalText}>{activeItem.text}</p>
+                <p style={styles.modalText}>
+                  {activeItem.text}
+                </p>
               </div>
             </div>
           </div>
@@ -536,7 +581,7 @@ const styles: any = {
     maxWidth: "600px",
     background: "var(--card)",
     borderRadius: "16px",
-    maxHeight: "80vh",
+    height: "85vh",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
@@ -573,8 +618,9 @@ const styles: any = {
   },
 
   modalBody: {
-    padding: "1.2rem",
     overflowY: "auto",
+    padding: "1.25rem",
+    flex: 1,
   },
 
   modalText: {
@@ -583,25 +629,49 @@ const styles: any = {
   },
 
   search: {
-    margin: "1rem",
-    padding: "0.75rem",
-    borderRadius: "10px",
+    width: "100%",
+    padding: "0.9rem 1rem",
+    borderRadius: "14px",
     border: "1px solid var(--border)",
-    background: "var(--bg)",
+    background: "rgba(255,255,255,0.04)",
     color: "var(--text)",
+    fontSize: "0.95rem",
+    outline: "none",
   },
 
   historyItem: {
-    padding: "0.75rem",
+    padding: "1rem",
     border: "1px solid var(--border)",
-    borderRadius: "12px",
-    margin: "0 1rem 0.75rem",
+    borderRadius: "14px",
+    marginBottom: "0.75rem",
     cursor: "pointer",
+    background: "rgba(255,255,255,0.03)",
+    transition: "all .15s ease",
   },
 
   warningText: {
     color: "#f59e0b",
     fontSize: "0.85rem",
     marginTop: "-0.5rem",
+  },
+
+  closeBtn: {
+    justifySelf: "end",
+    background: "transparent",
+    border: "none",
+    color: "var(--text)",
+    cursor: "pointer",
+    fontSize: "1.2rem",
+  },
+
+  searchContainer: {
+    padding: "1rem",
+    borderBottom: "1px solid var(--border)",
+  },
+
+  historyList: {
+    overflowY: "auto",
+    flex: 1,
+    padding: "1rem",
   },
 };
