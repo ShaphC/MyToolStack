@@ -442,9 +442,7 @@ export default function ThoughtFlow() {
                 <div>Transcript</div>
 
                 <button
-                  onClick={() =>
-                    deleteTranscript(activeItem.id)
-                  }
+                  onClick={() => setConfirmDelete(activeItem)}
                   style={styles.trashBtn}
                 >
                   🗑
@@ -459,6 +457,45 @@ export default function ThoughtFlow() {
             </div>
           </div>
         )}
+
+        {confirmDelete && (
+        <div
+          style={styles.modalOverlay}
+          onClick={() => setConfirmDelete(null)}
+        >
+          <div
+            style={styles.confirmModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ marginTop: 0 }}>
+              Delete Transcript?
+            </h3>
+
+            <p style={styles.confirmText}>
+              This action cannot be undone.
+            </p>
+
+            <div style={styles.confirmActions}>
+              <button
+                style={styles.cancelBtn}
+                onClick={() => setConfirmDelete(null)}
+              >
+                Cancel
+              </button>
+
+              <button
+                style={styles.deleteBtn}
+                onClick={async () => {
+                  await deleteTranscript(confirmDelete.id);
+                  setConfirmDelete(null);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </main>
     </PageLayout>
   );
@@ -673,5 +710,46 @@ const styles: any = {
     overflowY: "auto",
     flex: 1,
     padding: "1rem",
+  },
+
+  confirmModal: {
+    width: "100%",
+    maxWidth: "420px",
+    background: "var(--card)",
+    borderRadius: "18px",
+    padding: "1.5rem",
+    border: "1px solid var(--border)",
+  },
+
+  confirmText: {
+    color: "var(--muted)",
+    lineHeight: 1.6,
+    marginTop: "0.5rem",
+  },
+
+  confirmActions: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "0.75rem",
+    marginTop: "1.5rem",
+  },
+
+  cancelBtn: {
+    background: "transparent",
+    border: "1px solid var(--border)",
+    color: "var(--text)",
+    padding: "0.75rem 1rem",
+    borderRadius: "10px",
+    cursor: "pointer",
+  },
+
+  deleteBtn: {
+    background: "#dc2626",
+    border: "none",
+    color: "#fff",
+    padding: "0.75rem 1rem",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: 600,
   },
 };
