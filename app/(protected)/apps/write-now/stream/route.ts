@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_AI_URL}/v1/chat/stream`,
+    `${process.env.AI_URL}/v1/chat/stream`,
     {
       method: "POST",
 

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     form.append("file", file);
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_AI_URL}/v1/transcribe`,
+      `${process.env.AI_URL}/v1/transcribe`,
       {
         method: "POST",
         headers: {

@@ -7,7 +7,7 @@ export async function POST(
     const body = await request.json();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AI_URL}/v1/chat`,
+      `${process.env.AI_URL}/v1/chat`,
       {
         method: "POST",
 

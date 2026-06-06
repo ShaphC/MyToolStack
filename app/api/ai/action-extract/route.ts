@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const aiRes = await fetch(
-      `${process.env.NEXT_PUBLIC_AI_URL}/v1/action-extract`,
+      `${process.env.AI_URL}/v1/action-extract`,
       {
         method: "POST",
         headers: {
