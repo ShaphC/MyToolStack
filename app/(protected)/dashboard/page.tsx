@@ -21,8 +21,8 @@ const tools = [
     icon: Brain,
   },
   {
-    name: "Voice Recorder",
-    slug: "voice",
+    name: "ThoughtFlow",
+    slug: "thought-flow",
     description: "Record voice, transcribe instantly, and manage transcripts",
     icon: MessageSquareText,
   },
