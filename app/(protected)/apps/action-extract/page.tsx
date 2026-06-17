@@ -328,7 +328,7 @@ export default function ActionExtract() {
                       styles.secondaryButton
                     }
                   >
-                    Save to SappStack
+                    Save to AppliStack
                   </button>
                 </>
               )}

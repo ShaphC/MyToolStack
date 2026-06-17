@@ -133,7 +133,7 @@ export default function HomePage() {
         </div>
 
         <h3 style={{ marginTop: "2rem" }}>
-          SappStack gives you tools that remove the friction.
+          AppliStack gives you tools that remove the friction.
         </h3>
       </section>
 
@@ -141,7 +141,7 @@ export default function HomePage() {
         {/* BENEFITS */}
         <section id="benefits" style={styles.section}>
           <h2 style={styles.sectionTitle}>
-            Why people use SappStack
+            Why people use AppliStack
           </h2>
 
           <p style={styles.sectionSubtitle}>
@@ -197,7 +197,7 @@ export default function HomePage() {
           </h2>
 
           <p style={styles.sectionSubtitle}>
-            SappStack is actively being improved every week.
+            AppliStack is actively being improved every week.
           </p>
 
           <div style={styles.improvementsFeedModern}>

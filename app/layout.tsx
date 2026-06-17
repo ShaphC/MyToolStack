@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SappStack",
+  title: "AppliStack",
   description: "Build your own internal tools",
 };
 

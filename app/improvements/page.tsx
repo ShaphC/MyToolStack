@@ -32,7 +32,7 @@ export default function ImprovementsPage() {
           <h1 style={styles.title}>🚀 Site Improvements</h1>
 
           <p style={styles.subtitle}>
-            Everything being improved inside SappStack
+            Everything being improved inside AppliStack
           </p>
 
           <div style={styles.feed}>

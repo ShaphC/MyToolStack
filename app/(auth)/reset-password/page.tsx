@@ -15,7 +15,7 @@ export default function ResetPassword() {
     setLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://SappStack.vercel.app//update-password",
+      redirectTo: "https://AppliStack.vercel.app//update-password",
     });
 
     setLoading(false);

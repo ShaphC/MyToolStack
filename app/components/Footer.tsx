@@ -74,12 +74,12 @@ export default function Footer() {
                     ? "/images/logo-dark.png"
                     : "/images/logo-light.png"
                 }
-                alt="SappStack Logo"
+                alt="AppliStack Logo"
                 style={styles.logoImage}
               />
 
               <span style={styles.logoText}>
-                SappStack
+                AppliStack
               </span>
             </div>
           </div>
@@ -134,7 +134,7 @@ export default function Footer() {
         </div>
 
         <p style={styles.copy}>
-          © {new Date().getFullYear()} SappStack.
+          © {new Date().getFullYear()} AppliStack.
           All rights reserved.
         </p>
       </div>

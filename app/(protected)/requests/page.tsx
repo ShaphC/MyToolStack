@@ -81,7 +81,7 @@ export default function RequestsPage() {
 
           <p style={styles.subtitle}>
             Tell us what tool or app you’d like
-            added to SappStack.
+            added to AppliStack.
           </p>
 
           {!user && (
