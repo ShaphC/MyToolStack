@@ -201,7 +201,7 @@ export default function Navbar() {
                     Benefits
                   </button>
                   <button onClick={() => scrollTo("pricing")} style={styles.link}>
-                    Pricing
+                    Access
                   </button>
                   <button onClick={() => scrollTo("improvements")} style={styles.link}>
                     Improvements
