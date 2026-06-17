@@ -30,6 +30,28 @@ export default function Signup() {
         }),
       });
 
+      const emailRes = await fetch("/api/send-application-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          reason,
+        }),
+      });
+
+      // const emailData = await emailRes.json();
+
+      // console.log("EMAIL RESPONSE:", emailData);
+
+      if (!emailRes.ok) {
+
+        throw new Error(emailData.error || "Email failed");
+
+      }
+
       setStep(1);
     } catch (error) {
       console.error(error);

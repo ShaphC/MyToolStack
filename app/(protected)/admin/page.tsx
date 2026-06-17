@@ -30,12 +30,9 @@ export default function AdminPage() {
     };
 
     checkMobile();
-
     window.addEventListener("resize", checkMobile);
 
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const checkAdmin = async () => {
@@ -87,7 +84,6 @@ export default function AdminPage() {
     setContacts(data || []);
   };
 
-  // ✅ RENAMED: app_requests -> applications
   const fetchApplications = async () => {
     const { data } = await supabase
       .from("applications")
@@ -104,16 +100,40 @@ export default function AdminPage() {
   ) => {
     await supabase
       .from(table)
-      .update({
-        is_read: !current,
-      })
+      .update({ is_read: !current })
       .eq("id", id);
 
-    if (table === "contact_messages") {
-      fetchContacts();
-    } else {
-      fetchApplications();
-    }
+    if (table === "contact_messages") fetchContacts();
+    else fetchApplications();
+  };
+
+  // ✅ APPROVE / REJECT + EMAIL TRIGGER
+  const updateApplicationStatus = async (
+    id: string,
+    email: string,
+    name: string,
+    status: "approved" | "rejected"
+  ) => {
+    // 1. update database
+    await supabase
+      .from("applications")
+      .update({ status })
+      .eq("id", id);
+
+    // 2. send email notification
+    await fetch("/api/send-application-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        name,
+        status,
+      }),
+    });
+
+    fetchApplications();
   };
 
   if (loading) {
@@ -176,9 +196,9 @@ export default function AdminPage() {
 
           <div style={styles.statCard}>
             <div style={styles.statNumber}>
-              {requests.filter((r) => !r.is_read).length}
+              {requests.filter((r) => r.status === "pending").length}
             </div>
-            <div style={styles.statLabel}>Unread Applications</div>
+            <div style={styles.statLabel}>Pending Applications</div>
           </div>
         </div>
 
@@ -238,7 +258,7 @@ export default function AdminPage() {
               <div style={styles.sectionHeader}>
                 <h2>Applications</h2>
                 <div style={styles.badge}>
-                  {requests.filter((r) => !r.is_read).length} unread
+                  {requests.filter((r) => r.status === "pending").length} pending
                 </div>
               </div>
 
@@ -258,37 +278,81 @@ export default function AdminPage() {
                       key={req.id}
                       onMouseEnter={() => setHovered(req.id)}
                       onMouseLeave={() => setHovered(null)}
-                      onClick={() =>
-                        toggleRead("applications", req.id, req.is_read)
-                      }
                       style={{
                         ...styles.itemCard,
                         ...(req.is_read ? styles.readCard : styles.unreadCard),
                         ...(hovered === req.id ? styles.hoverCard : {}),
                       }}
                     >
+                      {/* STATUS */}
+                      <div style={{ ...styles.meta, fontWeight: "bold" }}>
+                        Status: {req.status || "pending"}
+                      </div>
+
                       {!req.is_read && <div style={styles.unreadDot} />}
 
                       <div style={styles.userId}>{req.email}</div>
 
-                      <div style={styles.meta}>
-                        Name: {req.name}
-                      </div>
-
-                      <div style={styles.meta}>
-                        Reason: {req.reason}
-                      </div>
+                      <div style={styles.meta}>Name: {req.name}</div>
+                      <div style={styles.meta}>Reason: {req.reason}</div>
 
                       <div style={styles.timestamp}>
                         {new Date(req.created_at).toLocaleString()}
                       </div>
+
+                      {/* ACTION BUTTONS */}
+                      {(!req.status || req.status === "pending") && (
+                        <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+                          <button
+                            onClick={() =>
+                              updateApplicationStatus(
+                                req.id,
+                                req.email,
+                                req.name,
+                                "approved"
+                              )
+                            }
+                            style={{
+                              padding: "6px 10px",
+                              borderRadius: "8px",
+                              border: "none",
+                              cursor: "pointer",
+                              background: "#22c55e",
+                              color: "white",
+                            }}
+                          >
+                            Approve
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              updateApplicationStatus(
+                                req.id,
+                                req.email,
+                                req.name,
+                                "rejected"
+                              )
+                            }
+                            style={{
+                              padding: "6px 10px",
+                              borderRadius: "8px",
+                              border: "none",
+                              cursor: "pointer",
+                              background: "#ef4444",
+                              color: "white",
+                            }}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))
                 )}
               </div>
             </div>
 
-            {/* CONTACTS */}
+            {/* CONTACTS (UNCHANGED) */}
             <div style={styles.card}>
               <div style={styles.sectionHeader}>
                 <h2>Contact Messages</h2>
@@ -314,11 +378,7 @@ export default function AdminPage() {
                       onMouseEnter={() => setHovered(msg.id)}
                       onMouseLeave={() => setHovered(null)}
                       onClick={() =>
-                        toggleRead(
-                          "contact_messages",
-                          msg.id,
-                          msg.is_read
-                        )
+                        toggleRead("contact_messages", msg.id, msg.is_read)
                       }
                       style={{
                         ...styles.itemCard,
