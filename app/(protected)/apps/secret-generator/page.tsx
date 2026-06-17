@@ -229,8 +229,9 @@ const styles: any = {
     minHeight: "100vh",
     background: "var(--bg)",
     color: "var(--text)",
-    overflowX: "hidden",
-    padding: "2rem 1.5rem 4rem",
+    padding: "7rem 1.5rem 4rem",
+    position: "relative",
+    overflow: "hidden",
   },
 
   container: {

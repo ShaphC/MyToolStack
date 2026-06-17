@@ -1,341 +1,406 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/app/lib/supabase";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import PageLayout from "@/app/components/PageLayout";
 
 export default function Signup() {
-  const router = useRouter();
+  const [step, setStep] = useState(0);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordHint, setShowPasswordHint] = useState(false);
+  const [reason, setReason] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [shake, setShake] = useState(false);
 
-  const validatePassword = (password: string) => {
-    const minLength = password.length >= 8;
-
-    const hasUppercase = /[A-Z]/.test(password);
-
-    const hasLowercase = /[a-z]/.test(password);
-
-    const hasSpecialChar =
-      /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-    return (
-      minLength &&
-      hasUppercase &&
-      hasLowercase &&
-      hasSpecialChar
-    );
-  };
-
-  const signup = async () => {
-    setErrorMsg("");
-
-    if (!email || !password) {
-      triggerError("Please fill all fields");
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      triggerError(
-        "Password must be at least 8 characters and include uppercase, lowercase, and a special character."
-      );
-
-      return;
-    }
+  const submitApplication = async () => {
+    if (!name || !email || !reason) return;
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          reason,
+        }),
+      });
 
-    setLoading(false);
-
-    if (error) {
-      triggerError(error.message);
-      return;
+      setStep(1);
+    } catch (error) {
+      console.error(error);
     }
 
-    alert("Check your email to confirm your account.");
-  };
-
-  const triggerError = (msg: string) => {
-    setErrorMsg(msg);
-    setShake(true);
-    setTimeout(() => setShake(false), 400);
-  };
-
-  const handleKeyDown = (e: any) => {
-    if (e.key === "Enter") signup();
+    setLoading(false);
   };
 
   return (
     <PageLayout>
-      <div style={styles.page}>
-        <main style={styles.container}>
-          <div
-            style={{
-              ...styles.card,
-              ...(shake ? styles.shake : {}),
-            }}
-          >
-            <h1 style={styles.title}>Create Account</h1>
-            <p style={styles.subtitle}>
-              Start using your tools instantly
-            </p>
+      <main style={styles.page}>
+        <div style={styles.glow} />
 
-            {/* EMAIL */}
-            <input
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={handleKeyDown}
-              style={styles.input}
-            />
+        <div style={styles.container}>
+          <div style={styles.card}>
+            {step === 0 && (
+              <>
+                <div style={styles.hero}>
+                  <div style={styles.badge}>
+                    Early Access
+                  </div>
 
-            {/* PASSWORD WITH PROPER EYE */}
-            <div style={styles.inputWrapper}>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setShowPasswordHint(true)}
-                onBlur={() => {
-                  if (!password) {
-                    setShowPasswordHint(false);
-                  }
-                }}
-                style={styles.input}
-              />
+                  <h1 style={styles.title}>
+                    Join the Waitlist
+                  </h1>
 
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={styles.iconBtn}
-              >
-                <div
-                  style={styles.eye}
-                  onMouseDown={() => setShowPassword(true)}
-                  onMouseUp={() => setShowPassword(false)}
-                  onMouseLeave={() => setShowPassword(false)}
-                  onTouchStart={() => setShowPassword(true)}
-                  onTouchEnd={() => setShowPassword(false)}
-                >
-                  {/* 👁 SVG ICON */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    width="20"
-                    fill="#6b7280"
-                  >
-                    <path d="M12 6c-5 0-9.27 3.11-11 6 1.73 2.89 6 6 11 6s9.27-3.11 
-                    11-6c-1.73-2.89-6-6-11-6zm0 10c-2.21 
-                    0-4-1.79-4-4s1.79-4 4-4 
-                    4 1.79 4 4-1.79 4-4 
-                    4zm0-6.5A2.5 2.5 0 1 0 12 
-                    14a2.5 2.5 0 0 0 0-5z" />
-                  </svg>
+                  <p style={styles.subtitle}>
+                    We're accepting a small number
+                    of users while the platform
+                    evolves.
+                  </p>
                 </div>
-              </button>
+
+                <div style={styles.form}>
+                  <input
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) =>
+                      setName(e.target.value)
+                    }
+                    style={styles.input}
+                  />
+
+                  <input
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
+                    style={styles.input}
+                  />
+
+                  <textarea
+                    placeholder="Why would you like access?"
+                    value={reason}
+                    onChange={(e) =>
+                      setReason(e.target.value)
+                    }
+                    style={styles.textarea}
+                  />
+
+                  <button
+                    onClick={submitApplication}
+                    disabled={loading}
+                    style={styles.primaryBtn}
+                  >
+                    {loading
+                      ? "Submitting..."
+                      : "Submit Application"}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 1 && (
+              <div style={styles.slide}>
+                <h2 style={styles.slideTitle}>
+                  Thank You
+                </h2>
+
+                <p style={styles.slideText}>
+                  Thank you for your interest in
+                  this application.
+                </p>
+
+                <button
+                  style={styles.primaryBtn}
+                  onClick={() => setStep(2)}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div style={styles.slide}>
+                <h2 style={styles.slideTitle}>
+                  Small & Focused
+                </h2>
+
+                <p style={styles.slideText}>
+                  We're intentionally keeping the
+                  user base small so we can work
+                  closely with early users and
+                  improve the platform based on
+                  real feedback.
+                </p>
+
+                <div style={styles.buttonRow}>
+                  <button
+                    style={styles.secondaryBtn}
+                    onClick={() => setStep(1)}
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    style={styles.primaryBtn}
+                    onClick={() => setStep(3)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div style={styles.slide}>
+                <h2 style={styles.slideTitle}>
+                  What's Next?
+                </h2>
+
+                <p style={styles.slideText}>
+                  If accepted, you'll receive an
+                  email invitation with
+                  instructions to create your
+                  account.
+                </p>
+
+                <div style={styles.buttonRow}>
+                  <button
+                    style={styles.secondaryBtn}
+                    onClick={() => setStep(2)}
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    style={styles.primaryBtn}
+                    onClick={() =>
+                      (window.location.href = "/")
+                    }
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div style={styles.dots}>
+              {[0, 1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  style={{
+                    ...styles.dot,
+                    ...(step === i
+                      ? styles.activeDot
+                      : {}),
+                  }}
+                />
+              ))}
             </div>
-
-            {showPasswordHint && (
-              <p style={styles.passwordHint}>
-                Password must contain:
-                <br />
-                • At least 8 characters
-                <br />
-                • 1 uppercase letter
-                <br />
-                • 1 lowercase letter
-                <br />
-                • 1 special character
-              </p>
-            )}
-
-            {/* ERROR */}
-            {errorMsg && (
-              <p style={styles.error}>{errorMsg}</p>
-            )}
-
-            {/* BUTTON */}
-            <button
-              onClick={signup}
-              disabled={loading}
-              style={{
-                ...styles.button,
-                ...(loading ? styles.buttonDisabled : {}),
-              }}
-            >
-              {loading ? (
-                <div style={styles.spinner}></div>
-              ) : (
-                "Sign Up"
-              )}
-            </button>
-
-            <p style={styles.bottomText}>
-              Already have an account?{" "}
-              <Link href="/login" style={styles.link}>
-                Login
-              </Link>
-            </p>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </PageLayout>
   );
 }
 
-/* ---------- STYLES ---------- */
-
 const styles: any = {
   page: {
     minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    background: "#ffffff",
+    padding: "7rem 1.5rem 4rem",
+    position: "relative",
+  },
+
+  glow: {
+    position: "absolute",
+    inset: 0,
+
+    background: `
+      radial-gradient(
+        circle at top left,
+        rgba(37,99,235,0.18),
+        transparent 35%
+      ),
+
+      radial-gradient(
+        circle at bottom right,
+        rgba(139,92,246,0.18),
+        transparent 35%
+      )
+    `,
   },
 
   container: {
-    background: "var(--bg)",
-    color: "var(--text)",
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    maxWidth: "700px",
+    margin: "0 auto",
+    position: "relative",
+    zIndex: 1,
   },
 
   card: {
-    width: "100%",
-    maxWidth: "380px",
     padding: "2rem",
-    background: "var(--card)",
-    border: "2px solid var(--border)",
-    borderRadius: "12px",
+
+    borderRadius: "28px",
+
+    background:
+      "rgba(255,255,255,0.04)",
+
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+
+    backdropFilter: "blur(18px)",
+
     display: "flex",
     flexDirection: "column",
-    gap: "0.75rem",
+    gap: "1.5rem",
   },
 
-  title: {
-    fontSize: "1.8rem",
-    fontWeight: "bold",
+  hero: {
     textAlign: "center",
   },
 
-  subtitle: {
-    textAlign: "center",
-    color: "var(--muted)",
+  badge: {
+    display: "inline-block",
+
+    padding: "0.5rem 1rem",
+
+    borderRadius: "999px",
+
+    background:
+      "rgba(37,99,235,0.12)",
+
+    color: "#60a5fa",
+
     marginBottom: "1rem",
   },
 
-  input: {
-    width: "100%",
-    padding: "0.75rem",
-    background: "var(--card)",
-    color: "var(--text)",
-    border: "2px solid var(--border)",
-    borderRadius: "8px",
+  title: {
+    fontSize: "3rem",
+    fontWeight: 800,
   },
 
-  inputWrapper: {
-    position: "relative",
-    width: "100%",
+  subtitle: {
+    marginTop: "1rem",
+    color: "var(--muted)",
   },
 
-  // inputWithIcon: {
-  //   width: "100%",
-  //   padding: "0.75rem",
-  //   paddingRight: "2.8rem",
-  //   border: "2px solid #1d4ed8",
-  //   borderRadius: "8px",
-  // },
-
-  iconBtn: {
-    position: "absolute",
-    right: "8px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
+  form: {
     display: "flex",
-    alignItems: "center",
+    flexDirection: "column",
+    gap: "1rem",
   },
 
-  button: {
-    background: "#1d4ed8",
-    color: "#fff",
+  input: {
+    padding: "1rem",
+
+    borderRadius: "16px",
+
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+
+    background:
+      "rgba(255,255,255,0.03)",
+
+    color: "var(--text)",
+  },
+
+  textarea: {
+    minHeight: "140px",
+
+    padding: "1rem",
+
+    borderRadius: "16px",
+
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+
+    background:
+      "rgba(255,255,255,0.03)",
+
+    color: "var(--text)",
+
+    resize: "vertical",
+  },
+
+  primaryBtn: {
+    padding: "1rem",
+
+    borderRadius: "14px",
+
     border: "none",
-    padding: "0.75rem",
-    borderRadius: "8px",
-    fontWeight: "bold",
+
+    background: "#2563eb",
+
+    color: "#fff",
+
+    fontWeight: 700,
+
     cursor: "pointer",
-    marginTop: "0.5rem",
+  },
+
+  secondaryBtn: {
+    padding: "1rem",
+
+    borderRadius: "14px",
+
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+
+    background:
+      "rgba(255,255,255,0.04)",
+
+    color: "var(--text)",
+
+    cursor: "pointer",
+  },
+
+  slide: {
+    textAlign: "center",
+
+    padding: "2rem 1rem",
+
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
+  },
+
+  slideTitle: {
+    fontSize: "2rem",
+    fontWeight: 800,
+  },
+
+  slideText: {
+    color: "var(--muted)",
+    lineHeight: 1.8,
+  },
+
+  buttonRow: {
+    display: "flex",
+    gap: "1rem",
+    justifyContent: "center",
+  },
+
+  dots: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    gap: "0.5rem",
   },
 
-  buttonDisabled: {
-    opacity: 0.6,
-    cursor: "not-allowed",
+  dot: {
+    width: "8px",
+    height: "8px",
+    borderRadius: "999px",
+    background: "#6b7280",
+    transition: "all 0.25s ease",
   },
 
-  spinner: {
-    width: "18px",
-    height: "18px",
-    border: "3px solid #fff",
-    borderTop: "3px solid transparent",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-  },
-
-  error: {
-    color: "#ef4444",
-    fontSize: "0.9rem",
-    textAlign: "center",
-    lineHeight: 1.5,
-    background: "rgba(239,68,68,0.08)",
-    border: "1px solid rgba(239,68,68,0.2)",
-    padding: "0.75rem",
-    borderRadius: "10px",
-  },
-
-  bottomText: {
-    textAlign: "center",
-    marginTop: "1rem",
-  },
-
-  link: {
-    color: "#1d4ed8",
-    fontWeight: "bold",
-    textDecoration: "none",
-  },
-
-  shake: {
-    animation: "shake 0.4s",
-  },
-
-  passwordHint: {
-    color: "var(--muted)",
-    fontSize: "0.85rem",
-    lineHeight: 1.6,
-    marginTop: "-0.2rem",
-    marginBottom: "0.5rem",
+  activeDot: {
+    width: "24px",
+    background: "#2563eb",
   },
 };
