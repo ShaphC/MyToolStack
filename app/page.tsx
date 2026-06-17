@@ -112,11 +112,12 @@ export default function HomePage() {
             Access Your Tools
           </Button>
 
+          {/* UPDATED CTA TEXT ONLY */}
           <Button
-            onClick={() => scrollTo("features")}
+            onClick={() => scrollTo("access-model")}
             style={styles.secondaryBtn}
           >
-            See What's Included
+            What’s Required for Access
           </Button>
         </div>
       </section>
@@ -128,23 +129,17 @@ export default function HomePage() {
         <div style={styles.problemGrid}>
           <div>⚡ Repeating the same tasks</div>
           <div>⚡ Jumping between too many apps</div>
-          <div>
-            ⚡ Wasting time on unnecessary friction
-          </div>
+          <div>⚡ Wasting time on unnecessary friction</div>
         </div>
 
         <h3 style={{ marginTop: "2rem" }}>
-          SappStack gives you tools that remove the
-          friction.
+          SappStack gives you tools that remove the friction.
         </h3>
       </section>
 
       <div style={styles.container}>
         {/* BENEFITS */}
-        <section
-          id="benefits"
-          style={styles.section}
-        >
+        <section id="benefits" style={styles.section}>
           <h2 style={styles.sectionTitle}>
             Why people use SappStack
           </h2>
@@ -156,58 +151,39 @@ export default function HomePage() {
           <div style={styles.benefitsGrid}>
             <div style={styles.benefitModernCard}>
               <div style={styles.benefitGlow} />
-
-              <div style={styles.benefitModernIcon}>
-                ⚡
-              </div>
-
-              <div style={styles.benefitContent}>
+              <div style={styles.benefitModernIcon}>⚡</div>
+              <div>
                 <h3 style={styles.benefitModernTitle}>
                   Move faster
                 </h3>
-
                 <p style={styles.benefitModernText}>
-                  Spend less time repeating the same tasks and more
-                  time doing meaningful work that actually moves
-                  things forward.
+                  Spend less time repeating tasks and more time doing meaningful work.
                 </p>
               </div>
             </div>
 
             <div style={styles.benefitModernCard}>
               <div style={styles.benefitGlow} />
-
-              <div style={styles.benefitModernIcon}>
-                ✨
-              </div>
-
-              <div style={styles.benefitContent}>
+              <div style={styles.benefitModernIcon}>✨</div>
+              <div>
                 <h3 style={styles.benefitModernTitle}>
                   Less clutter
                 </h3>
-
                 <p style={styles.benefitModernText}>
-                  Clean tools without bloated dashboards,
-                  unnecessary setup, or overwhelming interfaces.
+                  Clean tools without bloated dashboards or setup friction.
                 </p>
               </div>
             </div>
 
             <div style={styles.benefitModernCard}>
               <div style={styles.benefitGlow} />
-
-              <div style={styles.benefitModernIcon}>
-                🎯
-              </div>
-
-              <div style={styles.benefitContent}>
+              <div style={styles.benefitModernIcon}>🎯</div>
+              <div>
                 <h3 style={styles.benefitModernTitle}>
                   Stay focused
                 </h3>
-
                 <p style={styles.benefitModernText}>
-                  Keep your workflow simple so you can focus on what
-                  actually matters instead of fighting your tools.
+                  Focus on what matters instead of tool overload.
                 </p>
               </div>
             </div>
@@ -215,10 +191,7 @@ export default function HomePage() {
         </section>
 
         {/* IMPROVEMENTS */}
-        <section
-          id="improvements"
-          style={styles.section}
-        >
+        <section id="improvements" style={styles.section}>
           <h2 style={styles.sectionTitle}>
             🚀 Latest Improvements
           </h2>
@@ -236,8 +209,6 @@ export default function HomePage() {
                   borderLeft: `6px solid ${item.color}`,
                 }}
               >
-                <div style={styles.improvementGlow} />
-
                 <div style={styles.improvementTopModern}>
                   <span
                     style={{
@@ -245,11 +216,8 @@ export default function HomePage() {
                       background: item.color,
                     }}
                   />
-
                   <span style={styles.improvementDateModern}>
-                    {new Date(
-                      item.created_at
-                    ).toLocaleDateString()}
+                    {new Date(item.created_at).toLocaleDateString()}
                   </span>
                 </div>
 
@@ -267,9 +235,7 @@ export default function HomePage() {
                   await supabase.auth.getUser();
 
                 if (!data.user) {
-                  router.push(
-                    "/login?redirect=/improvements"
-                  );
+                  router.push("/login?redirect=/improvements");
                   return;
                 }
 
@@ -282,83 +248,74 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* PRICING */}
-        <section
-          id="pricing"
-          style={styles.section}
-        >
+        {/* =======================
+            REPLACED PRICING SECTION
+           ======================= */}
+        <section id="access-model" style={styles.section}>
           <h2 style={styles.sectionTitle}>
-            Simple Pricing
+            Access Model
           </h2>
 
-          <div style={styles.pricingGrid}>
-            <div style={styles.priceCard}>
-              <h3>Free</h3>
+          <p style={styles.note}>
+            Applications help us keep the platform focused on serious users.
+          </p>
 
-              <p style={styles.price}>$0</p>
+          <div style={styles.pricingGrid}>
+            {/* LEFT CARD (reused priceCard style) */}
+            <div style={styles.priceCard}>
+              <h3>Step 1</h3>
+
+              <p style={styles.price}>Apply</p>
 
               <div style={styles.featureList}>
-                <div>✔ Core tools</div>
-                <div>✔ Local usage</div>
-                <div>✔ Free to Use</div>
+                <div>✔ Core Tools</div>
+                <div>✔ Continuous updates</div>
+                <div>✔ Early Access Improvements</div>
               </div>
 
               <p style={styles.mostPopular}>
-                For Casual Users
+                Application Required
               </p>
 
               <Button
-                onClick={() =>
-                  router.push("/login")
-                }
+                onClick={() => router.push("/signup")}
                 style={styles.cta}
               >
-                Try Now
+                Start Application
               </Button>
             </div>
 
+            {/* RIGHT CARD (reused proCard style) */}
             <div style={styles.proCard}>
               <div style={styles.proBadge}>
-                MOST POPULAR
+                APPROVAL REQUIRED
               </div>
-              <h3>Pro</h3>
 
-              <p style={styles.price}>
-                $19.99/mo
-              </p>
+              <h3>Step 2</h3>
+
+              <p style={styles.price}>Get Access</p>
 
               <div style={styles.featureList}>
-                <div>✔ Premium features</div>
-                <div>
-                  ✔ Full access to all tools
-                </div>
-                <div>
-                  ✔ Access to future releases
-                </div>
+                <div>✔ Approved users get instant access</div>
+                <div>✔ Full tool suite unlocked</div>
+                <div>✔ Future updates included</div>
               </div>
 
               <p style={styles.mostPopular}>
-                Most Popular
+                Not automatic
               </p>
 
               <Button
-                onClick={() =>
-                  router.push("/upgrade")
-                }
+                onClick={() => router.push("/signup")}
                 style={styles.cta}
               >
-                Upgrade
+                Apply Now
               </Button>
             </div>
           </div>
 
-          <p style={styles.note}>
-            Start free. Upgrade only when you need more.
-          </p>
-
           <p style={styles.trust}>
-            Built for freelancers, creators, and operators
-            who want to move faster.
+            Built for freelancers, creators, and operators who want to move faster.
           </p>
         </section>
 
@@ -371,21 +328,18 @@ export default function HomePage() {
           </h2>
 
           <p style={styles.ctaText}>
-            From day one, managing workflows, repetitive tasks,
-            and scattered tools can slow everything down.
-            SappStack helps freelancers, creators, and operators
-            stay organized, move faster, and focus on meaningful work.
+            From day one, managing workflows, repetitive tasks, and scattered tools can slow everything down.
           </p>
 
           <p style={styles.ctaHighlight}>
-            Start free. Upgrade only when you need more.
+            No pricing. Just access through application.
           </p>
 
           <Button
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/signup")}
             style={styles.cta}
           >
-            Start Using SappStack
+            Request Access
           </Button>
         </section>
 

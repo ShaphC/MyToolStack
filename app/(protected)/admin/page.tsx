@@ -40,7 +40,6 @@ export default function AdminPage() {
 
   const checkAdmin = async () => {
     const { data: authData } = await supabase.auth.getUser();
-
     const user = authData.user;
 
     if (!user) {
@@ -64,7 +63,7 @@ export default function AdminPage() {
     await Promise.all([
       fetchUsers(),
       fetchContacts(),
-      fetchRequests(),
+      fetchApplications(),
     ]);
 
     setLoading(false);
@@ -88,9 +87,10 @@ export default function AdminPage() {
     setContacts(data || []);
   };
 
-  const fetchRequests = async () => {
+  // ✅ RENAMED: app_requests -> applications
+  const fetchApplications = async () => {
     const { data } = await supabase
-      .from("app_requests")
+      .from("applications")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -98,7 +98,7 @@ export default function AdminPage() {
   };
 
   const toggleRead = async (
-    table: "contact_messages" | "app_requests",
+    table: "contact_messages" | "applications",
     id: string,
     current: boolean
   ) => {
@@ -112,7 +112,7 @@ export default function AdminPage() {
     if (table === "contact_messages") {
       fetchContacts();
     } else {
-      fetchRequests();
+      fetchApplications();
     }
   };
 
@@ -146,12 +146,9 @@ export default function AdminPage() {
         {/* HEADER */}
         <div style={styles.header}>
           <div>
-            <h1 style={styles.title}>
-              Admin Dashboard
-            </h1>
-
+            <h1 style={styles.title}>Admin Dashboard</h1>
             <p style={styles.subtitle}>
-              Manage users, requests, and platform activity.
+              Manage users, applications, and platform activity.
             </p>
           </div>
         </div>
@@ -159,192 +156,131 @@ export default function AdminPage() {
         {/* STATS */}
         <div style={styles.statsGrid}>
           <div style={styles.statCard}>
-            <div style={styles.statNumber}>
-              {users.length}
-            </div>
-
-            <div style={styles.statLabel}>
-              Total Users
-            </div>
+            <div style={styles.statNumber}>{users.length}</div>
+            <div style={styles.statLabel}>Total Users</div>
           </div>
 
           <div style={styles.statCard}>
             <div style={styles.statNumber}>
               {users.filter((u) => u.plan === "pro").length}
             </div>
-
-            <div style={styles.statLabel}>
-              Pro Users
-            </div>
+            <div style={styles.statLabel}>Pro Users</div>
           </div>
 
           <div style={styles.statCard}>
             <div style={styles.statNumber}>
               {contacts.filter((c) => !c.is_read).length}
             </div>
-
-            <div style={styles.statLabel}>
-              Unread Contacts
-            </div>
+            <div style={styles.statLabel}>Unread Contacts</div>
           </div>
 
           <div style={styles.statCard}>
             <div style={styles.statNumber}>
               {requests.filter((r) => !r.is_read).length}
             </div>
-
-            <div style={styles.statLabel}>
-              Unread Requests
-            </div>
+            <div style={styles.statLabel}>Unread Applications</div>
           </div>
         </div>
 
-
         {/* QUICK ACTIONS */}
         <div style={styles.quickActionsGrid}>
-          
-          {/* IMPROVEMENTS */}
           <div
             onClick={() => router.push("/admin/improvements")}
             style={styles.quickActionCard}
           >
             <div style={styles.quickActionIcon}>🚀</div>
-
             <div>
-              <h3 style={styles.quickActionTitle}>
-                Manage Improvements
-              </h3>
-
+              <h3 style={styles.quickActionTitle}>Manage Improvements</h3>
               <p style={styles.quickActionText}>
                 Add updates that appear on the homepage changelog.
               </p>
             </div>
           </div>
 
-          {/* TASKS */}
           <div
             onClick={() => router.push("/admin/tasks")}
             style={styles.quickActionCard}
           >
             <div style={styles.quickActionIcon}>📝</div>
-
             <div>
-              <h3 style={styles.quickActionTitle}>
-                Manage Tasks
-              </h3>
-
+              <h3 style={styles.quickActionTitle}>Manage Tasks</h3>
               <p style={styles.quickActionText}>
                 Track planned work, priorities, and progress.
               </p>
             </div>
           </div>
 
-          {/* FINANCE */}
           <div
             onClick={() => router.push("/admin/finance")}
             style={styles.quickActionCard}
           >
             <div style={styles.quickActionIcon}>💸</div>
-
             <div>
-              <h3 style={styles.quickActionTitle}>
-                Finance Tracker
-              </h3>
-
+              <h3 style={styles.quickActionTitle}>Finance Tracker</h3>
               <p style={styles.quickActionText}>
                 Track upcoming payments, due dates, and totals.
               </p>
             </div>
           </div>
-
         </div>
 
         {/* GRID */}
         <div
           style={{
             ...styles.dashboardGrid,
-            gridTemplateColumns: isMobile
-              ? "1fr"
-              : "1.2fr 0.8fr",
+            gridTemplateColumns: isMobile ? "1fr" : "1.2fr 0.8fr",
           }}
         >
           {/* LEFT */}
           <div style={styles.leftColumn}>
-            {/* REQUESTS */}
+            {/* APPLICATIONS */}
             <div style={styles.card}>
               <div style={styles.sectionHeader}>
-                <h2>App Requests</h2>
-
+                <h2>Applications</h2>
                 <div style={styles.badge}>
-                  {
-                    requests.filter((r) => !r.is_read)
-                      .length
-                  }{" "}
-                  unread
+                  {requests.filter((r) => !r.is_read).length} unread
                 </div>
               </div>
 
               <input
-                placeholder="Search requests..."
+                placeholder="Search applications..."
                 value={searchRequests}
-                onChange={(e) =>
-                  setSearchRequests(e.target.value)
-                }
+                onChange={(e) => setSearchRequests(e.target.value)}
                 style={styles.search}
               />
 
               <div style={styles.list}>
                 {filteredRequests.length === 0 ? (
-                  <div style={styles.empty}>
-                    No requests found.
-                  </div>
+                  <div style={styles.empty}>No applications found.</div>
                 ) : (
                   filteredRequests.map((req) => (
                     <div
                       key={req.id}
-                      onMouseEnter={() =>
-                        setHovered(req.id)
-                      }
-                      onMouseLeave={() =>
-                        setHovered(null)
-                      }
+                      onMouseEnter={() => setHovered(req.id)}
+                      onMouseLeave={() => setHovered(null)}
                       onClick={() =>
-                        toggleRead(
-                          "app_requests",
-                          req.id,
-                          req.is_read
-                        )
+                        toggleRead("applications", req.id, req.is_read)
                       }
                       style={{
                         ...styles.itemCard,
-                        ...(req.is_read
-                          ? styles.readCard
-                          : styles.unreadCard),
-                        ...(hovered === req.id
-                          ? styles.hoverCard
-                          : {}),
+                        ...(req.is_read ? styles.readCard : styles.unreadCard),
+                        ...(hovered === req.id ? styles.hoverCard : {}),
                       }}
                     >
-                      {!req.is_read && (
-                        <div style={styles.unreadDot} />
-                      )}
+                      {!req.is_read && <div style={styles.unreadDot} />}
 
-                      <div style={styles.userId}>
-                        {req.email}
+                      <div style={styles.userId}>{req.email}</div>
+
+                      <div style={styles.meta}>
+                        Name: {req.name}
                       </div>
 
                       <div style={styles.meta}>
-                        {req.title}
+                        Reason: {req.reason}
                       </div>
 
                       <div style={styles.timestamp}>
-                        {new Date(
-                          req.created_at
-                        ).toLocaleString()}
-                      </div>
-
-                      <div style={styles.message}>
-                        {req.request}
+                        {new Date(req.created_at).toLocaleString()}
                       </div>
                     </div>
                   ))
@@ -356,40 +292,27 @@ export default function AdminPage() {
             <div style={styles.card}>
               <div style={styles.sectionHeader}>
                 <h2>Contact Messages</h2>
-
                 <div style={styles.badge}>
-                  {
-                    contacts.filter((c) => !c.is_read)
-                      .length
-                  }{" "}
-                  unread
+                  {contacts.filter((c) => !c.is_read).length} unread
                 </div>
               </div>
 
               <input
                 placeholder="Search contacts..."
                 value={searchContacts}
-                onChange={(e) =>
-                  setSearchContacts(e.target.value)
-                }
+                onChange={(e) => setSearchContacts(e.target.value)}
                 style={styles.search}
               />
 
               <div style={styles.list}>
                 {filteredContacts.length === 0 ? (
-                  <div style={styles.empty}>
-                    No contact messages found.
-                  </div>
+                  <div style={styles.empty}>No contact messages found.</div>
                 ) : (
                   filteredContacts.map((msg) => (
                     <div
                       key={msg.id}
-                      onMouseEnter={() =>
-                        setHovered(msg.id)
-                      }
-                      onMouseLeave={() =>
-                        setHovered(null)
-                      }
+                      onMouseEnter={() => setHovered(msg.id)}
+                      onMouseLeave={() => setHovered(null)}
                       onClick={() =>
                         toggleRead(
                           "contact_messages",
@@ -399,35 +322,18 @@ export default function AdminPage() {
                       }
                       style={{
                         ...styles.itemCard,
-                        ...(msg.is_read
-                          ? styles.readCard
-                          : styles.unreadCard),
-                        ...(hovered === msg.id
-                          ? styles.hoverCard
-                          : {}),
+                        ...(msg.is_read ? styles.readCard : styles.unreadCard),
+                        ...(hovered === msg.id ? styles.hoverCard : {}),
                       }}
                     >
-                      {!msg.is_read && (
-                        <div style={styles.unreadDot} />
-                      )}
+                      {!msg.is_read && <div style={styles.unreadDot} />}
 
-                      <div style={styles.userId}>
-                        {msg.email}
-                      </div>
-
-                      <div style={styles.meta}>
-                        {msg.subject}
-                      </div>
-
+                      <div style={styles.userId}>{msg.email}</div>
+                      <div style={styles.meta}>{msg.subject}</div>
                       <div style={styles.timestamp}>
-                        {new Date(
-                          msg.created_at
-                        ).toLocaleString()}
+                        {new Date(msg.created_at).toLocaleString()}
                       </div>
-
-                      <div style={styles.message}>
-                        {msg.message}
-                      </div>
+                      <div style={styles.message}>{msg.message}</div>
                     </div>
                   ))
                 )}
@@ -440,57 +346,35 @@ export default function AdminPage() {
             <div style={styles.card}>
               <div style={styles.sectionHeader}>
                 <h2>Users</h2>
-
-                <div style={styles.badge}>
-                  {users.length} total
-                </div>
+                <div style={styles.badge}>{users.length} total</div>
               </div>
 
               <input
                 placeholder="Search users..."
                 value={searchUsers}
-                onChange={(e) =>
-                  setSearchUsers(e.target.value)
-                }
+                onChange={(e) => setSearchUsers(e.target.value)}
                 style={styles.search}
               />
 
               <div style={styles.list}>
                 {filteredUsers.length === 0 ? (
-                  <div style={styles.empty}>
-                    No users found.
-                  </div>
+                  <div style={styles.empty}>No users found.</div>
                 ) : (
                   filteredUsers.map((user) => (
-                    <div
-                      key={user.id}
-                      style={styles.itemCard}
-                    >
-                      <div style={styles.userId}>
-                        {user.email}
-                      </div>
-
+                    <div key={user.id} style={styles.itemCard}>
+                      <div style={styles.userId}>{user.email}</div>
                       <div style={styles.meta}>
                         Plan: {user.plan || "free"}
                       </div>
-
                       <div style={styles.meta}>
-                        Status:{" "}
-                        {user.status || "active"}
+                        Status: {user.status || "active"}
                       </div>
-
                       <div style={styles.meta}>
-                        Admin:{" "}
-                        {user.is_admin
-                          ? "Yes"
-                          : "No"}
+                        Admin: {user.is_admin ? "Yes" : "No"}
                       </div>
-
                       <div style={styles.timestamp}>
                         Joined{" "}
-                        {new Date(
-                          user.created_at
-                        ).toLocaleDateString()}
+                        {new Date(user.created_at).toLocaleDateString()}
                       </div>
                     </div>
                   ))
