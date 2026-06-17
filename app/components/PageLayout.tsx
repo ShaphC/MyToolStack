@@ -37,7 +37,13 @@ const styles: any = {
     flex: 1,
     display: "flex",
     justifyContent: "center",
-    padding: "2rem 1rem",
+
+    // Navbar offset
+    paddingTop: "8rem",
+
+    paddingLeft: "1rem",
+    paddingRight: "1rem",
+    paddingBottom: "2rem",
   },
 
   container: {
