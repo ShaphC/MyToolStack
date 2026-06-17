@@ -1,23 +1,35 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(
+  process.env.RESEND_API_KEY
+);
 
 export async function POST(req: Request) {
-  const { email } = await req.json();
-
   try {
-    await resend.emails.send({
-      from: "Your App <onboarding@resend.dev>",
+    const { email } = await req.json();
+
+    const result = await resend.emails.send({
+      from: "AppliStack <onboarding@resend.dev>",
       to: email,
       subject: "Welcome 🎉",
       html: `
-        <h1>Welcome to your tools</h1>
-        <p>You now have access to all your apps.</p>
+        <h1>Welcome to AppliStack</h1>
+        <p>Thanks for joining.</p>
       `,
     });
 
-    return Response.json({ success: true });
+    console.log(result);
+
+    return Response.json({
+      success: true,
+      result,
+    });
   } catch (error) {
-    return Response.json({ error });
+    console.error(error);
+
+    return Response.json(
+      { error },
+      { status: 500 }
+    );
   }
 }
