@@ -46,11 +46,11 @@ export default function Signup() {
 
       // console.log("EMAIL RESPONSE:", emailData);
 
-      if (!emailRes.ok) {
+      // if (!emailRes.ok) {
 
-        throw new Error(emailData.error || "Email failed");
+      //   throw new Error(emailData.error || "Email failed");
 
-      }
+      // }
 
       setStep(1);
     } catch (error) {
