@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/app/components/NavBar";
+import PageLayout from "@/app/components/PageLayout";
 
 export default function Home() {
   const [number, setNumber] = useState<number | null>(null);
@@ -33,9 +33,7 @@ export default function Home() {
   };
 
   return (
-    <>
-      <Navbar />
-
+    <PageLayout>
       <main style={styles.page}>
         <div style={styles.container}>
           {/* HERO */}
@@ -100,115 +98,81 @@ export default function Home() {
           </div>
         </div>
       </main>
-    </>
+    </PageLayout>
   );
 }
 
 const styles: any = {
-container: {
-  maxWidth: "680px",
-  margin: "0 auto",
-},
+  container: {
+    maxWidth: "680px",
+    margin: "0 auto",
+  },
 
   page: {
-  minHeight: "100vh",
-  background: "var(--bg)",
-  color: "var(--text)",
-  overflowX: "hidden",
+    minHeight: "100vh",
+    background: "var(--bg)",
+    color: "var(--text)",
+    overflowX: "hidden",
+  },
 
-  // reduced top spacing
-  padding: "2rem 1.5rem 4rem",
-},
+  hero: {
+    textAlign: "center",
+    marginBottom: "1.75rem",
+  },
 
-hero: {
-  textAlign: "center",
+  title: {
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontWeight: 800,
+    letterSpacing: "-0.05em",
+    lineHeight: 1,
+  },
 
-  // MUCH smaller spacing
-  marginBottom: "1.75rem",
-},
+  subtitle: {
+    marginTop: "0.85rem",
+    color: "var(--muted)",
+    fontSize: "1rem",
+    lineHeight: 1.6,
+    maxWidth: "560px",
+    marginInline: "auto",
+  },
 
-title: {
-  // smaller title
-  fontSize: "clamp(2rem, 5vw, 3.5rem)",
+  card: {
+    borderRadius: "28px",
+    padding: "1.5rem",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+    width: "100%",
+  },
 
-  fontWeight: 800,
+  numberBox: {
+    padding: "2rem 1.5rem",
+    borderRadius: "24px",
+    marginBottom: "1.5rem",
+    background: `
+      radial-gradient(
+        circle at top,
+        rgba(37,99,235,0.22),
+        rgba(255,255,255,0.02)
+      )
+    `,
+    border: "1px solid rgba(59,130,246,0.22)",
+    boxShadow:
+      "0 20px 60px rgba(37,99,235,0.18)",
+    textAlign: "center",
+  },
 
-  letterSpacing: "-0.05em",
-
-  lineHeight: 1,
-},
-
-subtitle: {
-  marginTop: "0.85rem",
-
-  color: "var(--muted)",
-
-  fontSize: "1rem",
-
-  lineHeight: 1.6,
-
-  maxWidth: "560px",
-
-  marginInline: "auto",
-},
-
-card: {
-  borderRadius: "28px",
-
-  padding: "1.5rem",
-
-  background: "rgba(255,255,255,0.04)",
-
-  border: "1px solid rgba(255,255,255,0.08)",
-
-  backdropFilter: "blur(16px)",
-  WebkitBackdropFilter: "blur(16px)",
-
-  boxShadow:
-    "0 20px 60px rgba(0,0,0,0.25)",
-
-  width: "100%",
-},
-
-numberBox: {
-  // less vertical height
-  padding: "2rem 1.5rem",
-
-  borderRadius: "24px",
-
-  // tighter spacing
-  marginBottom: "1.5rem",
-
-  background: `
-    radial-gradient(
-      circle at top,
-      rgba(37,99,235,0.22),
-      rgba(255,255,255,0.02)
-    )
-  `,
-
-  border: "1px solid rgba(59,130,246,0.22)",
-
-  boxShadow:
-    "0 20px 60px rgba(37,99,235,0.18)",
-
-  textAlign: "center",
-},
-
-number: {
-  // slightly smaller number
-  fontSize: "clamp(2.5rem, 8vw, 5rem)",
-
-  fontWeight: 800,
-
-  letterSpacing: "0.08em",
-
-  background:
-    "linear-gradient(135deg,#60a5fa,#a78bfa)",
-
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-},
+  number: {
+    fontSize: "clamp(2.5rem, 8vw, 5rem)",
+    fontWeight: 800,
+    letterSpacing: "0.08em",
+    background:
+      "linear-gradient(135deg,#60a5fa,#a78bfa)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
 
   controls: {
     display: "flex",
@@ -228,15 +192,10 @@ number: {
 
   lengthBadge: {
     background: "rgba(59,130,246,0.12)",
-
     color: "#60a5fa",
-
     borderRadius: "999px",
-
     padding: "0.45rem 0.85rem",
-
     fontSize: "0.85rem",
-
     fontWeight: 700,
   },
 
@@ -253,52 +212,31 @@ number: {
 
   primaryBtn: {
     flex: 1,
-
     minWidth: "220px",
-
     background: "#2563eb",
-
     color: "#fff",
-
     border: "none",
-
     padding: "1rem 1.4rem",
-
     borderRadius: "14px",
-
     cursor: "pointer",
-
     fontWeight: 700,
-
     fontSize: "0.95rem",
-
     boxShadow:
       "0 15px 40px rgba(37,99,235,0.35)",
-
     transition: "all 0.2s ease",
   },
 
   secondaryBtn: {
     minWidth: "140px",
-
     background: "rgba(255,255,255,0.04)",
-
     color: "var(--text)",
-
     border: "1px solid rgba(255,255,255,0.08)",
-
     padding: "1rem 1.4rem",
-
     borderRadius: "14px",
-
     cursor: "pointer",
-
     fontWeight: 700,
-
     fontSize: "0.95rem",
-
     backdropFilter: "blur(12px)",
-
     transition: "all 0.2s ease",
   },
 };
