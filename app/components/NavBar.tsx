@@ -197,17 +197,17 @@ export default function Navbar() {
             <div style={styles.centerLinks}>
               {!loggedIn ? (
                 <>
+                  <button onClick={() => scrollTo("home")} style={styles.link}>
+                    Home
+                  </button>                  
                   <button onClick={() => scrollTo("benefits")} style={styles.link}>
                     Benefits
                   </button>
-                  <button onClick={() => scrollTo("improvements")} style={styles.link}>
-                    Improvements
+                  <button onClick={() => scrollTo("updates")} style={styles.link}>
+                    Updates
                   </button>
                   <button onClick={() => scrollTo("access-model")} style={styles.link}>
                     Access
-                  </button>
-                  <button onClick={() => scrollTo("contact")} style={styles.link}>
-                    Contact
                   </button>
                 </>
               ) : (
@@ -215,8 +215,8 @@ export default function Navbar() {
                   <button onClick={() => router.push("/dashboard")} style={styles.link}>
                     Dashboard
                   </button>
-                  <button onClick={() => router.push("/improvements")} style={styles.link}>
-                    Improvements
+                  <button onClick={() => router.push("/updates")} style={styles.link}>
+                    Updates
                   </button>
                   <button onClick={() => router.push("/requests")} style={styles.link}>
                     Requests
@@ -267,8 +267,8 @@ export default function Navbar() {
               <button onClick={() => scrollTo("pricing")} style={styles.mobileLink}>
                 Pricing
               </button>
-              <button onClick={() => scrollTo("improvements")} style={styles.mobileLink}>
-                Improvements
+              <button onClick={() => scrollTo("updates")} style={styles.mobileLink}>
+                Updates
               </button>
               <button onClick={() => scrollTo("contact")} style={styles.mobileLink}>
                 Contact
@@ -285,8 +285,8 @@ export default function Navbar() {
               <button onClick={() => router.push("/dashboard")} style={styles.mobileLink}>
                 Dashboard
               </button>
-              <button onClick={() => router.push("/improvements")} style={styles.mobileLink}>
-                Improvements
+              <button onClick={() => router.push("/updates")} style={styles.mobileLink}>
+                Updates
               </button>
               <button onClick={() => router.push("/requests")} style={styles.mobileLink}>
                 Requests

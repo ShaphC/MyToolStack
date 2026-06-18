@@ -80,6 +80,7 @@ export default function HomePage() {
 
       {/* HERO */}
       <section
+        id="home"
         style={{
           ...styles.hero,
           opacity: mounted ? 1 : 0,
