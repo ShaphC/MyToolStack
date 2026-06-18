@@ -261,14 +261,17 @@ export default function Navbar() {
         <div style={styles.dropdown}>
           {!loggedIn ? (
             <>
+              <button onClick={() => scrollTo("home")} style={styles.link}>
+                Home
+              </button> 
               <button onClick={() => scrollTo("benefits")} style={styles.mobileLink}>
                 Benefits
               </button>
-              <button onClick={() => scrollTo("pricing")} style={styles.mobileLink}>
-                Pricing
-              </button>
               <button onClick={() => scrollTo("updates")} style={styles.mobileLink}>
                 Updates
+              </button>
+              <button onClick={() => scrollTo("access-model")} style={styles.mobileLink}>
+                Access
               </button>
               <button onClick={() => scrollTo("contact")} style={styles.mobileLink}>
                 Contact
