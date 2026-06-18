@@ -192,9 +192,9 @@ export default function HomePage() {
         </section>
 
         {/* IMPROVEMENTS */}
-        <section id="improvements" style={styles.section}>
+        <section id="updates" style={styles.section}>
           <h2 style={styles.sectionTitle}>
-            🚀 Latest Improvements
+            🚀 Latest Updates
           </h2>
 
           <p style={styles.sectionSubtitle}>
