@@ -96,9 +96,15 @@ export default function Footer() {
 
             <p
               style={styles.link}
-              onClick={() => router.push("/#pricing")}
+              onClick={() => router.push("/#updates")}
             >
-              Pricing
+              Updates
+            </p>
+                        <p
+              style={styles.link}
+              onClick={() => router.push("/#access-model")}
+            >
+              Access
             </p>
           </div>
 
