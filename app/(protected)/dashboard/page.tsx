@@ -11,6 +11,7 @@ import {
   MessageSquareText,
   Brain,
   Share2,
+  NotebookText,
 } from "lucide-react";
 
 const tools = [
@@ -25,6 +26,12 @@ const tools = [
     slug: "thought-flow",
     description: "Record voice, transcribe instantly, and manage transcripts",
     icon: MessageSquareText,
+  },
+  {
+    name: "NoteFlow",
+    slug: "noteflow",
+    description: "Capture, edit, and organize notes with instant autosave in a fast Google Keep-style workspace",
+    icon: NotebookText,
   },
   {
     name: "Random Number Generator",
